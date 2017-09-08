@@ -1,0 +1,35 @@
+.sat-attached-overlay {
+
+  &.sat-overlay-before.sat-overlay-above {
+    transform-origin: right bottom;
+  }
+
+  &.sat-overlay-before.sat-overlay-center {
+    transform-origin: right center;
+  }
+
+  &.sat-overlay-before.sat-overlay-below {
+    transform-origin: right top;
+  }
+
+  &.sat-overlay-center.sat-overlay-above {
+    transform-origin: center bottom;
+  }
+
+  &.sat-overlay-center.sat-overlay-below {
+    transform-origin: center top;
+  }
+
+  &.sat-overlay-after.sat-overlay-above {
+    transform-origin: left bottom;
+  }
+
+  &.sat-overlay-after.sat-overlay-center {
+    transform-origin: left center;
+  }
+
+  &.sat-overlay-after.sat-overlay-below {
+    transform-origin: left top;
+  }
+
+}
