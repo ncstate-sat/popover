@@ -3,19 +3,19 @@
 ## Building
 
 ```
-yarn build
+npm build
 ```
 
 ## Watching
 
 ```
-yarn watch
+npm watch
 ```
 
 ## Demo server
 
 ```
-yarn start
+npm start
 ```
 
 ## Other

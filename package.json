@@ -1,6 +1,6 @@
 {
   "name": "sat-attached-overlay",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -8,7 +8,7 @@
     "start": "ng serve",
     "lib": "npm run build && npm run watch",
     "build": "ng-packagr && npm run copylib",
-    "watch": "chokidar 'lib' -c 'yarn build'",
+    "watch": "chokidar 'lib' -c 'npm build'",
     "copylib": "bash ./scripts/copy_lib_dist.sh",
     "test": "ng test",
     "lint": "ng lint",
