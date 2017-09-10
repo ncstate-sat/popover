@@ -16,9 +16,9 @@ import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
       <md-card>
         <md-card-title>Click the buttons</md-card-title>
         <md-card-content>
-          <button md-raised-button [satAttachedOverlayTriggerFor]="overlay1">Woo! ↘</button>
-          <button md-raised-button [satAttachedOverlayTriggerFor]="overlay2">Woo! ←</button>
-          <button md-raised-button [satAttachedOverlayTriggerFor]="overlay3">Woo! ·</button>
+          <button md-raised-button [satAttachOverlay]="overlay1">Woo! ↘</button>
+          <button md-raised-button [satAttachOverlay]="overlay2">Woo! ←</button>
+          <button md-raised-button [satAttachOverlay]="overlay3">Woo! ·</button>
         </md-card-content>
       </md-card>
 
@@ -27,8 +27,8 @@ import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
         <md-card-content>
           <md-select
             #fancyTrigger="satTrigger"
-            [satAttachedOverlayTriggerFor]="overlayFancy"
-            [satToggleOnClick]="false"
+            [satAttachOverlay]="overlayFancy"
+            [satDisableClick]="true"
             (change)="changeSelectValue($event)">
             <md-option value="boring">Boring</md-option>
             <md-option value="standard">Standard</md-option>

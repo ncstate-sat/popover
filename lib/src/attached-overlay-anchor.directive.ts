@@ -1,10 +1,10 @@
 import {
-  AfterViewInit,
   Directive,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
+  OnInit,
   OnDestroy,
   Output,
   ViewContainerRef
@@ -26,138 +26,148 @@ import {
   SatOverlayPositionX,
   SatOverlayPositionY
 } from './attached-overlay.component';
-
+import { getNoAttachedOverlayError } from './attached-overlay.errors';
 
 @Directive({
-  selector: '[satAttachedOverlayTriggerFor]',
-  exportAs: 'satTrigger'
+  selector: '[satOverlayAnchorFor]',
+  exportAs: 'satOverlayAnchor'
 })
-export class SatAttachedOverlayTrigger implements AfterViewInit, OnDestroy {
+export class SatOverlayAnchor implements OnInit, OnDestroy {
 
-  /** References the associated attached overlay instance. */
-  @Input('satAttachedOverlayTriggerFor') attachedOverlay: SatAttachedOverlayComponent;
+  /** References the attached overlay instance. */
+  @Input('satOverlayAnchorFor')
+  get attachedOverlay() { return this._attachedOverlay; }
+  set attachedOverlay(value: SatAttachedOverlayComponent) {
+    this._validateAttachedOverlay(value);
+    this._attachedOverlay = value;
+  }
+  private _attachedOverlay: SatAttachedOverlayComponent;
 
   /** Whether clicking the target element will automatically toggle the element. */
-  @Input('satToggleOnClick') toggleOnClick = true;
+  @Input('satDisableClick') disableClick = false;
 
-  /** Event emitted when the attached overlay is opened. */
-  @Output() onAttachedOverlayOpen = new EventEmitter<void>();
+  /** Emits when the attached overlay is opened. */
+  @Output() overlayOpened = new EventEmitter<void>();
 
-  /** Event emitted when the attached overlay is closed. */
-  @Output() onAttachedOverlayClose = new EventEmitter<any>();
+  /** Emits when the attached overlay is closed. */
+  @Output() overlayClosed = new EventEmitter<any>();
+
+  /** Gets whether the overlay is presently open. */
+  overlayOpen(): boolean {
+    return this._overlayOpen;
+  }
 
   /** Whether the attached overlay is presently open. */
-  attachedOverlayOpen = false;
+  private _overlayOpen = false;
 
   /** Reference to a template portal where the overlay will be attached. */
-  private portal: TemplatePortal<any>;
+  private _portal: TemplatePortal<any>;
 
   /** Reference to the overlay containing the attached overlay component. */
-  private overlayRef: OverlayRef;
+  private _overlayRef: OverlayRef;
 
-  /** Emits when the component is destroyed. */
-  private destroy = new Subject<void>();
+  /** Emits when the directive is destroyed. */
+  private _onDestroy = new Subject<void>();
 
   constructor(
-    private overlay: Overlay,
-    private elementRef: ElementRef,
-    private viewContainerRef: ViewContainerRef
+    private _overlay: Overlay,
+    private _elementRef: ElementRef,
+    private _viewContainerRef: ViewContainerRef
   ) { }
 
-  ngAfterViewInit() {
-    this.checkIsAttachedOverlay();
-    this.attachedOverlay.close
-      .takeUntil(this.destroy)
-      .subscribe(() => this.closeAttachedOverlay());
+  ngOnInit() {
+    this._validateAttachedOverlay(this.attachedOverlay);
+    this.attachedOverlay.closed
+      .takeUntil(this._onDestroy)
+      .subscribe(() => this.closeOverlay());
   }
 
   ngOnDestroy() {
-    this.destroy.next();
-    this.destroy.complete();
-
-    this.destroyAttachedOverlay();
-  }
-
-  /** Toggle the attached overlay when element is clicked */
-  @HostListener('click')
-  triggerClicked(): void {
-    if (this.toggleOnClick) {
-      this.toggleAttachedOverlay();
-    }
+    this._onDestroy.next();
+    this._onDestroy.complete();
+    this.destroyOverlay();
   }
 
   /** Toggles the attached overlay between the open and closed states. */
-  toggleAttachedOverlay(): void {
-    return this.attachedOverlayOpen ? this.closeAttachedOverlay() : this.openAttachedOverlay();
+  toggleOverlay(): void {
+    return this.overlayOpen ? this.closeOverlay() : this.openOverlay();
   }
 
   /** Opens the attached overlay. */
-  openAttachedOverlay(): void {
-    if (!this.attachedOverlayOpen) {
-      this.createOverlay();
-      this.overlayRef.attach(this.portal);
-      this.subscribeToBackdrop();
+  openOverlay(): void {
+    if (!this.overlayOpen) {
+      this._createOverlay();
+      this._overlayRef.attach(this._portal);
+      this._subscribeToBackdrop();
 
       // Save and emit
-      this.attachedOverlayOpen = true;
-      this.onAttachedOverlayOpen.emit();
+      this._overlayOpen = true;
+      this.overlayOpened.emit();
     }
   }
 
   /** Closes the attached overlay. */
-  closeAttachedOverlay(value?: any): void {
-    if (this.overlayRef) {
-      this.overlayRef.detach();
+  closeOverlay(value?: any): void {
+    if (this._overlayRef) {
+      this._overlayRef.detach();
 
       // Save and emit
-      this.attachedOverlayOpen = false;
+      this._overlayOpen = false;
       value === undefined
-        ? this.onAttachedOverlayClose.emit()
-        : this.onAttachedOverlayClose.emit(value);
+        ? this.overlayClosed.emit()
+        : this.overlayClosed.emit(value);
     }
   }
 
   /** Removes the attached overlay from the DOM. */
-  destroyAttachedOverlay(): void {
-    if (this.overlayRef) {
-      this.overlayRef.dispose();
-      this.overlayRef = null;
+  destroyOverlay(): void {
+    if (this._overlayRef) {
+      this._overlayRef.dispose();
+      this._overlayRef = null;
+    }
+  }
+
+  /** Toggle the attached overlay when host element is clicked. */
+  @HostListener('click')
+  private _anchorClicked(): void {
+    if (!this.disableClick) {
+      this.toggleOverlay();
     }
   }
 
   /** Throws an error if the attached overlay instance is not provided. */
-  private checkIsAttachedOverlay(): void {
-    if (!this.attachedOverlay) {
-      throw new Error('satAttachedOverlayTriggerFor: must pass in a attached overlay instance');
+  private _validateAttachedOverlay(overlay: SatAttachedOverlayComponent): void {
+    if (!overlay || !(overlay instanceof SatAttachedOverlayComponent)) {
+      throw getNoAttachedOverlayError();
     }
   }
 
-  /** Emit close event when backdrop is clicked for as long as overlay is open. */
-  private subscribeToBackdrop(): void {
-    this.overlayRef
+  /** Emit close event when backdrop is clicked for as long as  the overlay is open. */
+  private _subscribeToBackdrop(): void {
+    this._overlayRef
       .backdropClick()
-      .takeUntil(this.onAttachedOverlayClose)
-      .takeUntil(this.destroy)
+      .takeUntil(this.overlayClosed)
+      .takeUntil(this._onDestroy)
       .subscribe(() => this.attachedOverlay.emitCloseEvent());
   }
 
   /** Create an overlay to be attached to the portal. */
-  private createOverlay(): void {
-    if (!this.overlayRef) {
-      this.portal = new TemplatePortal(this.attachedOverlay.templateRef, this.viewContainerRef);
-      const config = this.getOverlayConfig();
-      this.subscribeToPositionChanges(config.positionStrategy as ConnectedPositionStrategy);
-      this.overlayRef = this.overlay.create(config);
+  private _createOverlay(): void {
+    if (!this._overlayRef) {
+      this._portal = new TemplatePortal(this.attachedOverlay.templateRef, this._viewContainerRef);
+      const config = this._getOverlayConfig();
+      this._subscribeToPositionChanges(config.positionStrategy as ConnectedPositionStrategy);
+      this._overlayRef = this._overlay.create(config);
     }
   }
 
   /** Create and return a config for creating the overlay. */
-  private getOverlayConfig(): OverlayState {
+  private _getOverlayConfig(): OverlayState {
     const overlayState = new OverlayState();
-    overlayState.positionStrategy = this.getPosition();
+    overlayState.positionStrategy = this._getPosition();
     overlayState.hasBackdrop = true;
     overlayState.backdropClass = 'cdk-overlay-transparent-backdrop';
-    overlayState.scrollStrategy = this.overlay.scrollStrategies.reposition();
+    overlayState.scrollStrategy = this._overlay.scrollStrategies.reposition();
 
     return overlayState;
   }
@@ -166,9 +176,9 @@ export class SatAttachedOverlayTrigger implements AfterViewInit, OnDestroy {
    * Listen to changes in the position of the overlay and set the correct classes,
    * ensuring that the animation origin is correct, even with a fallback position.
    */
-  private subscribeToPositionChanges(position: ConnectedPositionStrategy): void {
+  private _subscribeToPositionChanges(position: ConnectedPositionStrategy): void {
     position.onPositionChange
-      .takeUntil(this.destroy)
+      .takeUntil(this._onDestroy)
       .subscribe(change => {
         const posX = convertFromHorizontalPos(change.connectionPair.overlayX, true);
         const posY = convertFromVerticalPos(change.connectionPair.overlayY, true);
@@ -177,11 +187,10 @@ export class SatAttachedOverlayTrigger implements AfterViewInit, OnDestroy {
   }
 
   /** Create and return a position strategy based on config provided to the component instance. */
-  private getPosition(): ConnectedPositionStrategy {
+  private _getPosition(): ConnectedPositionStrategy {
     // Get config values from the attached overlay
-    const overlap = this.attachedOverlay.overlapTrigger;
+    const overlap = this.attachedOverlay.overlapAnchor;
 
-    console.log('overlap', overlap);
     const xPos = this.attachedOverlay.xPosition;
     const yPos = this.attachedOverlay.yPosition;
 
@@ -195,13 +204,13 @@ export class SatAttachedOverlayTrigger implements AfterViewInit, OnDestroy {
     const originX = convertToHorizontalPos(xPos, overlap);
     const originY = convertToVerticalPos(yPos, overlap);
 
-    // Generate a position strategy with iterative fall back solutions
+    // Generate a position strategy with iterative fallback solutions
     //       1 2 3
     //  ↖︎ => 4 5 6
     //       7 8 9
-    return this.overlay.position()
+    return this._overlay.position()
       // Original Y position (1)
-      .connectedTo(this.elementRef,
+      .connectedTo(this._elementRef,
         {originX: originX, originY: originY},
         {overlayX: overlayX, overlayY: overlayY}
       )

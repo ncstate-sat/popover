@@ -23,16 +23,15 @@ export type SatOverlayPositionY = 'above'  | 'center' | 'below';
 
 @Component({
   selector: 'sat-attached-overlay',
-  exportAs: 'satAttachedOverlay',
   encapsulation: ViewEncapsulation.None,
   animations: [transformOverlay],
   styleUrls: ['./attached-overlay.component.scss'],
   template: `
     <ng-template>
-      <div class="sat-attached-overlay"
-        [ngClass]="classList"
+      <div class="sat-attached-overlay-container"
         #focusTrapElement
-        (keydown)="handleKeydown($event)"
+        [ngClass]="_classList"
+        (keydown)="_handleKeydown($event)"
         [@transformOverlay]="'showing'"
         (@transformOverlay.done)="onAnimationDone($event)">
         <ng-content></ng-content>
@@ -49,6 +48,7 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
     this._xPosition = val;
     this.setPositionClasses();
   }
+  private _xPosition: SatOverlayPositionX = 'center';
 
   /** Position of the overlay on the y axis. */
   @Input()
@@ -57,38 +57,36 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
     this._yPosition = val;
     this.setPositionClasses();
   }
+  private _yPosition: SatOverlayPositionY = 'center';
 
-  /** Whether the overlay should overlap its trigger. */
-  @Input() overlapTrigger = true;
+  /** Whether the overlay should overlap its anchor. */
+  @Input() overlapAnchor = true;
 
   /** Reference to template so it can be placed within a portal. */
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
-  /** Event emitted whenever the overlay is closed. */
-  @Output() close = new EventEmitter<void>();
+  /** Emits when the overlay is opened. */
+  @Output() opened = new EventEmitter<void>();
+
+  /** Emits when the overlay is closed. */
+  @Output() closed = new EventEmitter<any>();
 
   /** Classes to be added to overlay for purpose of transform origins */
-  classList: any = {};
+  _classList: any = {};
 
   /** Reference to the element to build a focus trap around. */
   @ViewChild('focusTrapElement')
-  private focusTrapElement: ElementRef;
+  private _focusTrapElement: ElementRef;
 
   /** Reference to the element that was focused before opening. */
-  private previouslyFocusedElement: HTMLElement;
+  private _previouslyFocusedElement: HTMLElement;
 
   /** Reference to a focus trap around the overlay. */
-  private focusTrap: FocusTrap;
-
-  /** Private x position store overloaded by input setter/getter. */
-  private _xPosition: SatOverlayPositionX = 'center';
-
-  /** Private y position store overloaded by input setter/getter. */
-  private _yPosition: SatOverlayPositionY = 'center';
+  private _focusTrap: FocusTrap;
 
   constructor(
-    private focusTrapFactory: FocusTrapFactory,
-    @Optional() @Inject(DOCUMENT) private document: any
+    private _focusTrapFactory: FocusTrapFactory,
+    @Optional() @Inject(DOCUMENT) private _document: any
   ) { }
 
   ngAfterViewInit() {
@@ -97,11 +95,11 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
 
   /** Publicly emit a close event. */
   emitCloseEvent(): void {
-    this.close.emit();
+    this.closed.emit();
   }
 
   /** Respond to key events. */
-  handleKeydown(event: KeyboardEvent): void {
+  _handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ESCAPE) {
       event.stopPropagation();
       this.emitCloseEvent();
@@ -111,61 +109,60 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
   /** Callback for when overlay is finished animating in or out. */
   onAnimationDone(event: AnimationEvent) {
     if (event.toState === 'showing') {
-      this.trapFocus();
+      this._trapFocus();
     } else if (event.toState === 'void') {
-      this.restoreFocus();
+      this._restoreFocus();
     }
   }
 
   /** Apply positioning classes based on positioning inputs. */
   setPositionClasses(posX = this.xPosition, posY = this.yPosition) {
-    this.classList['sat-overlay-before'] = posX === 'before';
-    this.classList['sat-overlay-after']  = posX === 'after';
+    this._classList['sat-overlay-before'] = posX === 'before';
+    this._classList['sat-overlay-after']  = posX === 'after';
 
-    this.classList['sat-overlay-above'] = posY === 'above';
-    this.classList['sat-overlay-below'] = posY === 'below';
+    this._classList['sat-overlay-above'] = posY === 'above';
+    this._classList['sat-overlay-below'] = posY === 'below';
 
-    this.classList['sat-overlay-center'] = posX === 'center' || posY === 'center';
+    this._classList['sat-overlay-center'] = posX === 'center' || posY === 'center';
   }
 
   /** Move the focus inside the focus trap and remember where to return later. */
-  private trapFocus(): void {
-    this.savePreviouslyFocusedElement();
+  private _trapFocus(): void {
+    this._savePreviouslyFocusedElement();
 
     // There won't be a focus trap element if the close animation starts before open finishes
-    if (!this.focusTrapElement) {
+    if (!this._focusTrapElement) {
       return;
     }
 
-    if (!this.focusTrap && this.focusTrapElement) {
-      this.focusTrap = this.focusTrapFactory.create(this.focusTrapElement.nativeElement);
+    if (!this._focusTrap && this._focusTrapElement) {
+      this._focusTrap = this._focusTrapFactory.create(this._focusTrapElement.nativeElement);
     }
 
-    this.focusTrap.focusInitialElementWhenReady();
+    this._focusTrap.focusInitialElementWhenReady();
   }
 
   /** Restore focus to the element focused before overlay opened. Also destroy trap. */
-  private restoreFocus(): void {
-
-    const toFocus = this.previouslyFocusedElement;
+  private _restoreFocus(): void {
+    const toFocus = this._previouslyFocusedElement;
 
     // Must check active element is focusable for IE sake
     if (toFocus && 'focus' in toFocus) {
-      this.previouslyFocusedElement.focus();
+      this._previouslyFocusedElement.focus();
     }
 
-    this.previouslyFocusedElement = null;
+    this._previouslyFocusedElement = null;
 
-    if (this.focusTrap) {
-      this.focusTrap.destroy();
-      this.focusTrap = undefined;
+    if (this._focusTrap) {
+      this._focusTrap.destroy();
+      this._focusTrap = undefined;
     }
   }
 
   /** Save a reference to the element focused before the overlay was opened. */
-  private savePreviouslyFocusedElement(): void {
-    if (this.document) {
-      this.previouslyFocusedElement = this.document.activeElement as HTMLElement;
+  private _savePreviouslyFocusedElement(): void {
+    if (this._document) {
+      this._previouslyFocusedElement = this._document.activeElement as HTMLElement;
     }
   }
 }

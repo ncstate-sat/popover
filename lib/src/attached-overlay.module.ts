@@ -4,7 +4,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
 
 import { SatAttachedOverlayComponent } from './attached-overlay.component';
-import { SatAttachedOverlayTrigger } from './attached-overlay-trigger.directive';
+import { SatOverlayAnchor } from './attached-overlay-trigger.directive';
 
 @NgModule({
   imports: [
@@ -14,11 +14,11 @@ import { SatAttachedOverlayTrigger } from './attached-overlay-trigger.directive'
   ],
   declarations: [
     SatAttachedOverlayComponent,
-    SatAttachedOverlayTrigger,
+    SatOverlayAnchor,
   ],
   exports: [
     SatAttachedOverlayComponent,
-    SatAttachedOverlayTrigger,
+    SatOverlayAnchor,
   ]
 })
 export class SatAttachedOverlayModule { }
