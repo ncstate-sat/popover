@@ -16,7 +16,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { ESCAPE } from '@angular/cdk/keycodes';
 
-import { transformPopover } from './attached-overlay.animations';
+import { transformPopover } from './popover.animations';
 
 export type SatPopoverPositionX = 'before' | 'center' | 'after';
 export type SatPopoverPositionY = 'above'  | 'center' | 'below';
@@ -25,7 +25,7 @@ export type SatPopoverPositionY = 'above'  | 'center' | 'below';
   selector: 'sat-popover',
   encapsulation: ViewEncapsulation.None,
   animations: [transformPopover],
-  styleUrls: ['./attached-overlay.component.scss'],
+  styleUrls: ['./popover.component.scss'],
   template: `
     <ng-template>
       <div class="sat-popover-container"

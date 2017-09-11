@@ -25,8 +25,8 @@ import {
   SatPopover,
   SatPopoverPositionX,
   SatPopoverPositionY
-} from './attached-overlay.component';
-import { getInvalidPopoverError } from './attached-overlay.errors';
+} from './popover.component';
+import { getInvalidPopoverError } from './popover.errors';
 
 @Directive({
   selector: '[satPopoverAnchorFor]',

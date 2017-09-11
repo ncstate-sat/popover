@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('sat-attached-overlay App', () => {
+describe('sat-popover App', () => {
   let page: AppPage;
 
   beforeEach(() => {

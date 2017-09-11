@@ -1,3 +1,3 @@
-export * from './attached-overlay.module';
-export * from './attached-overlay.component';
-export * from './attached-overlay-anchor.directive';
+export * from './popover.module';
+export * from './popover.component';
+export * from './popover-anchor.directive';

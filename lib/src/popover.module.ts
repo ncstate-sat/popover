@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
 
-import { SatPopover } from './attached-overlay.component';
-import { SatPopoverAnchor } from './attached-overlay-anchor.directive';
+import { SatPopover } from './popover.component';
+import { SatPopoverAnchor } from './popover-anchor.directive';
 
 @NgModule({
   imports: [
