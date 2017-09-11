@@ -16,62 +16,62 @@ import { DOCUMENT } from '@angular/platform-browser';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { ESCAPE } from '@angular/cdk/keycodes';
 
-import { transformOverlay } from './attached-overlay.animations';
+import { transformPopover } from './attached-overlay.animations';
 
-export type SatOverlayPositionX = 'before' | 'center' | 'after';
-export type SatOverlayPositionY = 'above'  | 'center' | 'below';
+export type SatPopoverPositionX = 'before' | 'center' | 'after';
+export type SatPopoverPositionY = 'above'  | 'center' | 'below';
 
 @Component({
   selector: 'sat-attached-overlay',
   encapsulation: ViewEncapsulation.None,
-  animations: [transformOverlay],
+  animations: [transformPopover],
   styleUrls: ['./attached-overlay.component.scss'],
   template: `
     <ng-template>
-      <div class="sat-attached-overlay-container"
+      <div class="sat-popover-container"
           #focusTrapElement
           [ngClass]="_classList"
           (keydown)="_handleKeydown($event)"
-          [@transformOverlay]="'showing'"
-          (@transformOverlay.done)="onAnimationDone($event)">
+          [@transformPopover]="'showing'"
+          (@transformPopover.done)="_onAnimationDone($event)">
         <ng-content></ng-content>
       </div>
     </ng-template>
   `
 })
-export class SatAttachedOverlayComponent implements AfterViewInit {
+export class SatPopover implements AfterViewInit {
 
-  /** Position of the overlay on the x axis. */
+  /** Position of the popover on the x axis. */
   @Input()
   get xPosition() { return this._xPosition; }
-  set xPosition(val: SatOverlayPositionX) {
+  set xPosition(val: SatPopoverPositionX) {
     this._xPosition = val;
-    this.setPositionClasses();
+    this._setPositionClasses();
   }
-  private _xPosition: SatOverlayPositionX = 'center';
+  private _xPosition: SatPopoverPositionX = 'center';
 
-  /** Position of the overlay on the y axis. */
+  /** Position of the popover on the y axis. */
   @Input()
   get yPosition() { return this._yPosition; }
-  set yPosition(val: SatOverlayPositionY) {
+  set yPosition(val: SatPopoverPositionY) {
     this._yPosition = val;
-    this.setPositionClasses();
+    this._setPositionClasses();
   }
-  private _yPosition: SatOverlayPositionY = 'center';
+  private _yPosition: SatPopoverPositionY = 'center';
 
-  /** Whether the overlay should overlap its anchor. */
+  /** Whether the popover should overlap its anchor. */
   @Input() overlapAnchor = true;
 
-  /** Reference to template so it can be placed within a portal. */
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-
-  /** Emits when the overlay is opened. */
+  /** Emits when the popover is opened. */
   @Output() opened = new EventEmitter<void>();
 
-  /** Emits when the overlay is closed. */
+  /** Emits when the popover is closed. */
   @Output() closed = new EventEmitter<any>();
 
-  /** Classes to be added to overlay for purpose of transform origins */
+  /** Reference to template so it can be placed within a portal. */
+  @ViewChild(TemplateRef) _templateRef: TemplateRef<any>;
+
+  /** Classes to be added to the popover for setting the correct transform origin. */
   _classList: any = {};
 
   /** Reference to the element to build a focus trap around. */
@@ -81,7 +81,7 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
   /** Reference to the element that was focused before opening. */
   private _previouslyFocusedElement: HTMLElement;
 
-  /** Reference to a focus trap around the overlay. */
+  /** Reference to a focus trap around the popover. */
   private _focusTrap: FocusTrap;
 
   constructor(
@@ -90,7 +90,7 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this.setPositionClasses();
+    this._setPositionClasses();
   }
 
   /** Publicly emit a close event. */
@@ -106,8 +106,8 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
     }
   }
 
-  /** Callback for when overlay is finished animating in or out. */
-  onAnimationDone(event: AnimationEvent) {
+  /** Callback for when the popover is finished animating in or out. */
+  _onAnimationDone(event: AnimationEvent) {
     if (event.toState === 'showing') {
       this._trapFocus();
     } else if (event.toState === 'void') {
@@ -116,14 +116,14 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
   }
 
   /** Apply positioning classes based on positioning inputs. */
-  setPositionClasses(posX = this.xPosition, posY = this.yPosition) {
-    this._classList['sat-overlay-before'] = posX === 'before';
-    this._classList['sat-overlay-after']  = posX === 'after';
+  _setPositionClasses(posX = this.xPosition, posY = this.yPosition) {
+    this._classList['sat-popover-before'] = posX === 'before';
+    this._classList['sat-popover-after']  = posX === 'after';
 
-    this._classList['sat-overlay-above'] = posY === 'above';
-    this._classList['sat-overlay-below'] = posY === 'below';
+    this._classList['sat-popover-above'] = posY === 'above';
+    this._classList['sat-popover-below'] = posY === 'below';
 
-    this._classList['sat-overlay-center'] = posX === 'center' || posY === 'center';
+    this._classList['sat-popover-center'] = posX === 'center' || posY === 'center';
   }
 
   /** Move the focus inside the focus trap and remember where to return later. */
@@ -142,7 +142,7 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
     this._focusTrap.focusInitialElementWhenReady();
   }
 
-  /** Restore focus to the element focused before overlay opened. Also destroy trap. */
+  /** Restore focus to the element focused before the popover opened. Also destroy trap. */
   private _restoreFocus(): void {
     const toFocus = this._previouslyFocusedElement;
 
@@ -159,7 +159,7 @@ export class SatAttachedOverlayComponent implements AfterViewInit {
     }
   }
 
-  /** Save a reference to the element focused before the overlay was opened. */
+  /** Save a reference to the element focused before the popover was opened. */
   private _savePreviouslyFocusedElement(): void {
     if (this._document) {
       this._previouslyFocusedElement = this._document.activeElement as HTMLElement;

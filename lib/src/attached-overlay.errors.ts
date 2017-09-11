@@ -1,3 +1,3 @@
-export function getNoAttachedOverlayError(): Error {
-  return Error('SatOverlayAnchor must be provided an SatAttachedOverlayComponent');
+export function getInvalidPopoverError(): Error {
+  return Error('SatPopoverAnchor must be provided an SatPopover component instance.');
 }

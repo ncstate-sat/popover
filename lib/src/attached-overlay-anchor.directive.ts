@@ -22,48 +22,48 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
 import {
-  SatAttachedOverlayComponent,
-  SatOverlayPositionX,
-  SatOverlayPositionY
+  SatPopover,
+  SatPopoverPositionX,
+  SatPopoverPositionY
 } from './attached-overlay.component';
-import { getNoAttachedOverlayError } from './attached-overlay.errors';
+import { getInvalidPopoverError } from './attached-overlay.errors';
 
 @Directive({
-  selector: '[satOverlayAnchorFor]',
-  exportAs: 'satOverlayAnchor'
+  selector: '[satPopoverAnchorFor]',
+  exportAs: 'satPopoverAnchor'
 })
-export class SatOverlayAnchor implements OnInit, OnDestroy {
+export class SatPopoverAnchor implements OnInit, OnDestroy {
 
-  /** References the attached overlay instance. */
-  @Input('satOverlayAnchorFor')
-  get attachedOverlay() { return this._attachedOverlay; }
-  set attachedOverlay(value: SatAttachedOverlayComponent) {
-    this._validateAttachedOverlay(value);
-    this._attachedOverlay = value;
+  /** References the popover instance. */
+  @Input('satPopoverAnchorFor')
+  get attachedPopover() { return this._attachedPopover; }
+  set attachedPopover(value: SatPopover) {
+    this._validateAttachedPopover(value);
+    this._attachedPopover = value;
   }
-  private _attachedOverlay: SatAttachedOverlayComponent;
+  private _attachedPopover: SatPopover;
 
-  /** Whether clicking the target element will automatically toggle the element. */
+  /** Whether clicking the target element will automatically toggle the popover. */
   @Input('satDisableClick') disableClick = false;
 
-  /** Emits when the attached overlay is opened. */
-  @Output() overlayOpened = new EventEmitter<void>();
+  /** Emits when the popover is opened. */
+  @Output() popoverOpened = new EventEmitter<void>();
 
-  /** Emits when the attached overlay is closed. */
-  @Output() overlayClosed = new EventEmitter<any>();
+  /** Emits when the popover is closed. */
+  @Output() popoverClosed = new EventEmitter<any>();
 
-  /** Gets whether the overlay is presently open. */
-  overlayOpen(): boolean {
-    return this._overlayOpen;
+  /** Gets whether the popover is presently open. */
+  popoverOpen(): boolean {
+    return this._popoverOpen;
   }
 
-  /** Whether the attached overlay is presently open. */
-  private _overlayOpen = false;
+  /** Whether the popover is presently open. */
+  private _popoverOpen = false;
 
   /** Reference to a template portal where the overlay will be attached. */
   private _portal: TemplatePortal<any>;
 
-  /** Reference to the overlay containing the attached overlay component. */
+  /** Reference to the overlay containing the popover component. */
   private _overlayRef: OverlayRef;
 
   /** Emits when the directive is destroyed. */
@@ -76,85 +76,85 @@ export class SatOverlayAnchor implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this._validateAttachedOverlay(this.attachedOverlay);
-    this.attachedOverlay.closed
+    this._validateAttachedPopover(this.attachedPopover);
+    this.attachedPopover.closed
       .takeUntil(this._onDestroy)
-      .subscribe(() => this.closeOverlay());
+      .subscribe(() => this.closePopover());
   }
 
   ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
-    this.destroyOverlay();
+    this.destroyPopover();
   }
 
-  /** Toggles the attached overlay between the open and closed states. */
-  toggleOverlay(): void {
-    return this._overlayOpen ? this.closeOverlay() : this.openOverlay();
+  /** Toggles the popover between the open and closed states. */
+  togglePopover(): void {
+    return this._popoverOpen ? this.closePopover() : this.openPopover();
   }
 
-  /** Opens the attached overlay. */
-  openOverlay(): void {
-    if (!this._overlayOpen) {
+  /** Opens the popover. */
+  openPopover(): void {
+    if (!this._popoverOpen) {
       this._createOverlay();
       this._overlayRef.attach(this._portal);
       this._subscribeToBackdrop();
 
       // Save and emit
-      this._overlayOpen = true;
-      this.overlayOpened.emit();
+      this._popoverOpen = true;
+      this.popoverOpened.emit();
     }
   }
 
-  /** Closes the attached overlay. */
-  closeOverlay(value?: any): void {
+  /** Closes the popover. */
+  closePopover(value?: any): void {
     if (this._overlayRef) {
       this._overlayRef.detach();
 
       // Save and emit
-      this._overlayOpen = false;
+      this._popoverOpen = false;
       value === undefined
-        ? this.overlayClosed.emit()
-        : this.overlayClosed.emit(value);
+        ? this.popoverClosed.emit()
+        : this.popoverClosed.emit(value);
     }
   }
 
-  /** Removes the attached overlay from the DOM. */
-  destroyOverlay(): void {
+  /** Removes the popover from the DOM. */
+  destroyPopover(): void {
     if (this._overlayRef) {
       this._overlayRef.dispose();
       this._overlayRef = null;
     }
   }
 
-  /** Toggle the attached overlay when host element is clicked. */
+  /** Toggle the popover when host element is clicked. */
   @HostListener('click')
   private _anchorClicked(): void {
     if (!this.disableClick) {
-      this.toggleOverlay();
+      this.togglePopover();
     }
   }
 
-  /** Throws an error if the attached overlay instance is not provided. */
-  private _validateAttachedOverlay(overlay: SatAttachedOverlayComponent): void {
-    if (!overlay || !(overlay instanceof SatAttachedOverlayComponent)) {
-      throw getNoAttachedOverlayError();
+  /** Throws an error if the popover instance is not provided. */
+  private _validateAttachedPopover(popover: SatPopover): void {
+    if (!popover || !(popover instanceof SatPopover)) {
+      throw getInvalidPopoverError();
     }
   }
 
-  /** Emit close event when backdrop is clicked for as long as  the overlay is open. */
+  /** Emit close event when backdrop is clicked for as long as the overlay is open. */
   private _subscribeToBackdrop(): void {
     this._overlayRef
       .backdropClick()
-      .takeUntil(this.overlayClosed)
+      .takeUntil(this.popoverClosed)
       .takeUntil(this._onDestroy)
-      .subscribe(() => this.attachedOverlay.emitCloseEvent());
+      .subscribe(() => this.attachedPopover.emitCloseEvent());
   }
 
   /** Create an overlay to be attached to the portal. */
   private _createOverlay(): void {
     if (!this._overlayRef) {
-      this._portal = new TemplatePortal(this.attachedOverlay.templateRef, this._viewContainerRef);
+      this._portal = new TemplatePortal(this.attachedPopover._templateRef, this._viewContainerRef);
       const config = this._getOverlayConfig();
       this._subscribeToPositionChanges(config.positionStrategy as ConnectedPositionStrategy);
       this._overlayRef = this._overlay.create(config);
@@ -182,17 +182,17 @@ export class SatOverlayAnchor implements OnInit, OnDestroy {
       .subscribe(change => {
         const posX = convertFromHorizontalPos(change.connectionPair.overlayX, true);
         const posY = convertFromVerticalPos(change.connectionPair.overlayY, true);
-        this.attachedOverlay.setPositionClasses(posX, posY);
+        this.attachedPopover._setPositionClasses(posX, posY);
       });
   }
 
   /** Create and return a position strategy based on config provided to the component instance. */
   private _getPosition(): ConnectedPositionStrategy {
-    // Get config values from the attached overlay
-    const overlap = this.attachedOverlay.overlapAnchor;
+    // Get config values from the popover
+    const overlap = this.attachedPopover.overlapAnchor;
 
-    const xPos = this.attachedOverlay.xPosition;
-    const yPos = this.attachedOverlay.yPosition;
+    const xPos = this.attachedPopover.xPosition;
+    const yPos = this.attachedPopover.yPosition;
 
     // Convert position to value usable by strategy. Invert for the overlay so that 'above' means
     // the overlay is attached at the 'bottom'
@@ -259,7 +259,7 @@ export class SatOverlayAnchor implements OnInit, OnDestroy {
 }
 
 /** Helper to convert to correct horizontal position */
-function convertToHorizontalPos(val: SatOverlayPositionX, invert?: boolean):
+function convertToHorizontalPos(val: SatPopoverPositionX, invert?: boolean):
     HorizontalConnectionPos {
   switch (val) {
     case 'before':
@@ -273,7 +273,7 @@ function convertToHorizontalPos(val: SatOverlayPositionX, invert?: boolean):
 
 /** Helper to convert from a horizontal position back to an overlay position  */
 function convertFromHorizontalPos(val: HorizontalConnectionPos, invert?: boolean):
-    SatOverlayPositionX {
+    SatPopoverPositionX {
   switch (val) {
     case 'start':
       return invert ? 'after' : 'before';
@@ -285,7 +285,7 @@ function convertFromHorizontalPos(val: HorizontalConnectionPos, invert?: boolean
 }
 
 /** Helper to convert to correct vertical position */
-function convertToVerticalPos(val: SatOverlayPositionY, invert?: boolean): VerticalConnectionPos {
+function convertToVerticalPos(val: SatPopoverPositionY, invert?: boolean): VerticalConnectionPos {
   switch (val) {
     case 'above':
       return invert ? 'bottom' : 'top';
@@ -297,7 +297,7 @@ function convertToVerticalPos(val: SatOverlayPositionY, invert?: boolean): Verti
 }
 
 /** Helper to convert from a vertical position back to an overlay position */
-function convertFromVerticalPos(val: VerticalConnectionPos, invert?: boolean): SatOverlayPositionY {
+function convertFromVerticalPos(val: VerticalConnectionPos, invert?: boolean): SatPopoverPositionY {
   switch (val) {
     case 'top':
       return invert ? 'below' : 'above';

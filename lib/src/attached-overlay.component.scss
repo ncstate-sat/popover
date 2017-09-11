@@ -1,34 +1,34 @@
-.sat-attached-overlay-container {
+.sat-popover-container {
 
-  &.sat-overlay-before.sat-overlay-above {
+  &.sat-popover-before.sat-popover-above {
     transform-origin: right bottom;
   }
 
-  &.sat-overlay-before.sat-overlay-center {
+  &.sat-popover-before.sat-popover-center {
     transform-origin: right center;
   }
 
-  &.sat-overlay-before.sat-overlay-below {
+  &.sat-popover-before.sat-popover-below {
     transform-origin: right top;
   }
 
-  &.sat-overlay-center.sat-overlay-above {
+  &.sat-popover-center.sat-popover-above {
     transform-origin: center bottom;
   }
 
-  &.sat-overlay-center.sat-overlay-below {
+  &.sat-popover-center.sat-popover-below {
     transform-origin: center top;
   }
 
-  &.sat-overlay-after.sat-overlay-above {
+  &.sat-popover-after.sat-popover-above {
     transform-origin: left bottom;
   }
 
-  &.sat-overlay-after.sat-overlay-center {
+  &.sat-popover-after.sat-popover-center {
     transform-origin: left center;
   }
 
-  &.sat-overlay-after.sat-overlay-below {
+  &.sat-popover-after.sat-popover-below {
     transform-origin: left top;
   }
 

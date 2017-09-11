@@ -1,39 +1,39 @@
-# SatAttachedOverlay
+# SAT Popover Component for Angular
 
 ## Usage
 
 ### Quickstart
 
-Wrap any component you want to display in an overlay with `sat-attached-overlay`.
+Wrap any component you want to display in an popover with `sat-popover`.
 
 ```html
-<sat-attached-overlay>
+<sat-popover>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
-</sat-attached-overlay>
+</sat-popover>
 ```
 
-Next, hook the overlay to an anchor element.
+Next, hook the popover to an anchor element.
 
 ```html
-<button [satOverlayAnchorFor]="contactOverlay">
+<button [satPopoverAnchorFor]="contactPopover">
   See Details
 </button>
 
-<sat-attached-overlay #contactOverlay>
+<sat-popover #contactPopover>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
-</sat-attached-overlay>
+</sat-popover>
 ```
 
-Now, whenever the button is clicked, the `<app-contact-overview>` overlay will appear over the
-button. If you instead want the overlay to appear below the anchor:
+Now, whenever the button is clicked, the `<app-contact-overview>` popover will appear over the
+button. If you instead want the popover to appear below the anchor:
 
 ```html
-<sat-attached-overlay #contactOverlay yPosition="below">
+<sat-popover #contactPopover yPosition="below">
   <!-- ... -->
-</sat-attached-overlay>
+</sat-popover>
 ```
 
-You can use the following to position the overlay around the anchor:
+You can use the following to position the popover around the anchor:
 
 | Input         | Type                            | Default  |
 |---------------|---------------------------------|----------|
@@ -48,16 +48,16 @@ If you want to respond to events other than anchor clicks, you can disable the c
 and implement your own:
 
 ```html
-<button [satOverlayAnchorFor]="contactOverlay" satDisableClick>
+<button [satPopoverAnchorFor]="contactPopover" satDisableClick>
   See Details
 </button>
 ```
 
 ```ts
-@ViewChild(SatOverlayAnchor) anchor: SatOverlayAnchor;
+@ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
 
-openContactOverlay(): void {
-  this.anchor.openOverlay();
+openContactPopover(): void {
+  this.anchor.openPopover();
 }
 ```
 
@@ -101,5 +101,5 @@ Built with  [Angular CLI](https://github.com/angular/angular-cli) and
 - Make it easy to switch scroll strategies
 - Review API consistency with Angular Material
 - Stop patching globally Rx
-- Support other methods of building overlays
+- Support other methods of building popovers
 - Allow more configurability to the focus trap

@@ -1,7 +1,7 @@
 {
-  "name": "@sat/attached-overlay",
+  "name": "@sat/popover",
   "version": "1.0.0-alpha.0",
-  "repository": "https://github.com/ncsu-sat/sat-attached-overlay.git",
+  "repository": "https://github.com/ncsu-sat/popover.git",
   "author": "Will Howell <will.s.howell@gmail.com>",
   "license": "MIT",
   "private": true,

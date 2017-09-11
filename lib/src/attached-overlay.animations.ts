@@ -7,7 +7,7 @@ import {
   AnimationTriggerMetadata
 } from '@angular/animations';
 
-export const transformOverlay: AnimationTriggerMetadata = trigger('transformOverlay', [
+export const transformPopover: AnimationTriggerMetadata = trigger('transformPopover', [
   state('showing', style({
     opacity: 1,
     transform: 'scale(1)'
