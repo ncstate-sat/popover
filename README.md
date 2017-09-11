@@ -1,10 +1,10 @@
-# SAT Popover Component for Angular
+# Popover Component for Angular
 
 ## Usage
 
 ### Quickstart
 
-Wrap any component you want to display in an popover with `sat-popover`.
+Wrap any component you want to display in a popover with `sat-popover`.
 
 ```html
 <sat-popover>
