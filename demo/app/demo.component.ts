@@ -28,7 +28,7 @@ import { SatPopoverAnchor } from '@sat/popover';
           <md-select
               #fancyAnchor="satPopoverAnchor"
               [satPopoverAnchorFor]="fancyPopover"
-              [satDisableClick]="true"
+              satDisablePopoverToggle
               (change)="changeSelectValue($event)">
             <md-option value="boring">Boring</md-option>
             <md-option value="standard">Standard</md-option>
