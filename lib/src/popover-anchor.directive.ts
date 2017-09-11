@@ -18,6 +18,7 @@ import {
   VerticalConnectionPos
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
@@ -44,7 +45,12 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   private _attachedPopover: SatPopover;
 
   /** Whether clicking the target element will automatically toggle the popover. */
-  @Input('satDisableClick') disableClick = false;
+  @Input('satDisablePopoverToggle')
+  get disablePopoverToggle() { return this._disablePopoverToggle; }
+  set disablePopoverToggle(value: boolean) {
+    this._disablePopoverToggle = coerceBooleanProperty(value);
+  }
+  private _disablePopoverToggle = false;
 
   /** Emits when the popover is opened. */
   @Output() popoverOpened = new EventEmitter<void>();
@@ -130,7 +136,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   /** Toggle the popover when host element is clicked. */
   @HostListener('click')
   private _anchorClicked(): void {
-    if (!this.disableClick) {
+    if (!this._disablePopoverToggle) {
       this.togglePopover();
     }
   }
