@@ -1,7 +1,7 @@
 #!/bin/bash
 
 packagePath="./dist/lib/*"
-destPath="./node_modules/@sat/attached-overlay"
+destPath="./node_modules/@sat/popover"
 
 # create directory and copy build artifacts
 rm -rf $destPath

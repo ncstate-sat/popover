@@ -1,0 +1,35 @@
+.sat-popover-container {
+
+  &.sat-popover-before.sat-popover-above {
+    transform-origin: right bottom;
+  }
+
+  &.sat-popover-before.sat-popover-center {
+    transform-origin: right center;
+  }
+
+  &.sat-popover-before.sat-popover-below {
+    transform-origin: right top;
+  }
+
+  &.sat-popover-center.sat-popover-above {
+    transform-origin: center bottom;
+  }
+
+  &.sat-popover-center.sat-popover-below {
+    transform-origin: center top;
+  }
+
+  &.sat-popover-after.sat-popover-above {
+    transform-origin: left bottom;
+  }
+
+  &.sat-popover-after.sat-popover-center {
+    transform-origin: left center;
+  }
+
+  &.sat-popover-after.sat-popover-below {
+    transform-origin: left top;
+  }
+
+}
