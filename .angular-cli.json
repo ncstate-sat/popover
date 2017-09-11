@@ -43,6 +43,10 @@
     },
     {
       "project": "e2e/tsconfig.e2e.json"
+    },
+    {
+      "project": "./tsconfig.json",
+      "files": [ "./lib/**/*.ts" ]
     }
   ],
   "test": {

@@ -21,10 +21,12 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
-import { SatAttachedOverlayComponent, SatOverlayPositionX, SatOverlayPositionY } from './attached-overlay.component';
+import {
+  SatAttachedOverlayComponent,
+  SatOverlayPositionX,
+  SatOverlayPositionY
+} from './attached-overlay.component';
 
-// Override lint because this is a non-standard directive
-/* tslint:disable:directive-class-suffix no-input-rename */
 
 @Directive({
   selector: '[satAttachedOverlayTriggerFor]',
@@ -248,7 +250,8 @@ export class SatAttachedOverlayTrigger implements AfterViewInit, OnDestroy {
 }
 
 /** Helper to convert to correct horizontal position */
-function convertToHorizontalPos(val: SatOverlayPositionX, invert?: boolean): HorizontalConnectionPos {
+function convertToHorizontalPos(val: SatOverlayPositionX, invert?: boolean):
+    HorizontalConnectionPos {
   switch (val) {
     case 'before':
       return invert ? 'end' : 'start';
@@ -260,7 +263,8 @@ function convertToHorizontalPos(val: SatOverlayPositionX, invert?: boolean): Hor
 }
 
 /** Helper to convert from a horizontal position back to an overlay position  */
-function convertFromHorizontalPos(val: HorizontalConnectionPos, invert?: boolean): SatOverlayPositionX {
+function convertFromHorizontalPos(val: HorizontalConnectionPos, invert?: boolean):
+    SatOverlayPositionX {
   switch (val) {
     case 'start':
       return invert ? 'after' : 'before';
