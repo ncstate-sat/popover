@@ -43,7 +43,7 @@ import { SatPopoverAnchor } from '@sat/popover';
         xPosition="after"
         yPosition="below"
         [overlapAnchor]="false">
-      <div style="background: white; padding: 48px">
+      <div style="background: lightgray; padding: 48px">
         Oh, cool
       </div>
     </sat-popover>
@@ -52,7 +52,7 @@ import { SatPopoverAnchor } from '@sat/popover';
         xPosition="before"
         yPosition="center"
         [overlapAnchor]="false">
-      <div style="background: white; padding: 48px">
+      <div style="background: lightgray; padding: 48px" class="mat-elevation-z12">
         Oh, neat
       </div>
     </sat-popover>
@@ -61,13 +61,13 @@ import { SatPopoverAnchor } from '@sat/popover';
         xPosition="center"
         yPosition="center"
         [overlapAnchor]="false">
-      <md-toolbar color="accent">Oh, nifty</md-toolbar>
+      <md-toolbar color="accent" class="mat-elevation-z2">Oh, nifty</md-toolbar>
     </sat-popover>
 
     <sat-popover #fancyPopover
         xPosition="center"
         yPosition="below">
-      <div style="background: pink; color: white; padding: 32px">Quite fancy indeed 🎩</div>
+      <div style="background: pink; padding: 32px; border-radius: 8px">Quite fancy indeed 🎩</div>
     </sat-popover>
   `
 })
