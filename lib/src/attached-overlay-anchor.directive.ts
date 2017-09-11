@@ -90,12 +90,12 @@ export class SatOverlayAnchor implements OnInit, OnDestroy {
 
   /** Toggles the attached overlay between the open and closed states. */
   toggleOverlay(): void {
-    return this.overlayOpen ? this.closeOverlay() : this.openOverlay();
+    return this._overlayOpen ? this.closeOverlay() : this.openOverlay();
   }
 
   /** Opens the attached overlay. */
   openOverlay(): void {
-    if (!this.overlayOpen) {
+    if (!this._overlayOpen) {
       this._createOverlay();
       this._overlayRef.attach(this._portal);
       this._subscribeToBackdrop();

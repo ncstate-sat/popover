@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MdSelect, MdSelectChange } from '@angular/material';
-import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
+import { SatOverlayAnchor } from '@sat/attached-overlay';
 
 @Component({
   selector: 'sat-demo',
@@ -16,9 +16,9 @@ import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
       <md-card>
         <md-card-title>Click the buttons</md-card-title>
         <md-card-content>
-          <button md-raised-button [satAttachOverlay]="overlay1">Woo! ↘</button>
-          <button md-raised-button [satAttachOverlay]="overlay2">Woo! ←</button>
-          <button md-raised-button [satAttachOverlay]="overlay3">Woo! ·</button>
+          <button md-raised-button [satOverlayAnchorFor]="overlay1">Woo! ↘</button>
+          <button md-raised-button [satOverlayAnchorFor]="overlay2">Woo! ←</button>
+          <button md-raised-button [satOverlayAnchorFor]="overlay3">Woo! ·</button>
         </md-card-content>
       </md-card>
 
@@ -26,8 +26,8 @@ import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
         <md-card-title>Select "Fancy"</md-card-title>
         <md-card-content>
           <md-select
-            #fancyTrigger="satTrigger"
-            [satAttachOverlay]="overlayFancy"
+            #fancyTrigger="satOverlayAnchor"
+            [satOverlayAnchorFor]="overlayFancy"
             [satDisableClick]="true"
             (change)="changeSelectValue($event)">
             <md-option value="boring">Boring</md-option>
@@ -42,7 +42,7 @@ import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
     <sat-attached-overlay #overlay1
       xPosition="after"
       yPosition="below"
-      [overlapTrigger]="false">
+      [overlapAnchor]="false">
       <div style="background: white; padding: 48px">
         Oh, cool
       </div>
@@ -51,7 +51,7 @@ import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
     <sat-attached-overlay #overlay2
       xPosition="before"
       yPosition="center"
-      [overlapTrigger]="false">
+      [overlapAnchor]="false">
       <div style="background: white; padding: 48px">
         Oh, neat
       </div>
@@ -60,7 +60,7 @@ import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
     <sat-attached-overlay #overlay3
       xPosition="center"
       yPosition="center"
-      [overlapTrigger]="false">
+      [overlapAnchor]="false">
       <md-toolbar color="accent">Oh, nifty</md-toolbar>
     </sat-attached-overlay>
 
@@ -73,11 +73,11 @@ import { SatAttachedOverlayTrigger } from '@sat/attached-overlay';
 })
 export class DemoComponent {
 
-  @ViewChild('fancyTrigger') fancyTrigger: SatAttachedOverlayTrigger;
+  @ViewChild('fancyTrigger') fancyTrigger: SatOverlayAnchor;
 
   changeSelectValue(event: MdSelectChange) {
     if (event.value === 'fancy') {
-      this.fancyTrigger.openAttachedOverlay();
+      this.fancyTrigger.openOverlay();
     }
   }
 
