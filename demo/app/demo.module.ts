@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SatAttachedOverlayModule } from '@sat/attached-overlay';
+import { SatPopoverModule } from '@sat/popover';
 import {
   MdToolbarModule,
   MdCardModule,
@@ -29,7 +29,7 @@ export class DemoMaterialModule { }
     BrowserModule,
     BrowserAnimationsModule,
     DemoMaterialModule,
-    SatAttachedOverlayModule,
+    SatPopoverModule,
   ],
   providers: [],
   bootstrap: [DemoComponent]

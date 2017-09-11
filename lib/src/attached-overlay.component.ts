@@ -22,7 +22,7 @@ export type SatPopoverPositionX = 'before' | 'center' | 'after';
 export type SatPopoverPositionY = 'above'  | 'center' | 'below';
 
 @Component({
-  selector: 'sat-attached-overlay',
+  selector: 'sat-popover',
   encapsulation: ViewEncapsulation.None,
   animations: [transformPopover],
   styleUrls: ['./attached-overlay.component.scss'],
