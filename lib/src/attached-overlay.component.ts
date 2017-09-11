@@ -29,11 +29,11 @@ export type SatOverlayPositionY = 'above'  | 'center' | 'below';
   template: `
     <ng-template>
       <div class="sat-attached-overlay-container"
-        #focusTrapElement
-        [ngClass]="_classList"
-        (keydown)="_handleKeydown($event)"
-        [@transformOverlay]="'showing'"
-        (@transformOverlay.done)="onAnimationDone($event)">
+          #focusTrapElement
+          [ngClass]="_classList"
+          (keydown)="_handleKeydown($event)"
+          [@transformOverlay]="'showing'"
+          (@transformOverlay.done)="onAnimationDone($event)">
         <ng-content></ng-content>
       </div>
     </ng-template>

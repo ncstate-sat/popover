@@ -41,7 +41,10 @@ You can use the following to position the overlay around the anchor:
 | yPosition     | 'above' \| 'center' \| 'below'  | 'center' |
 | overlapAnchor | boolean                         | true     |
 
-If you want to respond the events other than anchor clicks, you can disable the click handler
+> Note: When the `xPosition` and `yPosition` are both `'center'`, `overlapAnchor` will have no
+effect.
+
+If you want to respond to events other than anchor clicks, you can disable the click handler
 and implement your own:
 
 ```html
