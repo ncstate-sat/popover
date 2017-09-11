@@ -4,6 +4,7 @@
 $ncsu-primary: mat-palette($mat-red, 700);
 $ncsu-accent:  mat-palette($mat-blue-grey);
 $ncsu-warn:    mat-palette($mat-deep-orange);
+
 $ncsu-theme: mat-light-theme($ncsu-primary, $ncsu-accent, $ncsu-warn);
 
 @include mat-core();
