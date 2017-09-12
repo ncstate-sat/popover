@@ -1,13 +1,15 @@
 {
   "name": "@sat/popover",
-  "version": "1.0.0-alpha.0",
-  "repository": "https://github.com/ncsu-sat/popover.git",
-  "author": "Will Howell <will.s.howell@gmail.com>",
+  "version": "POPOVER_VERSION",
+  "author": "Will Howell",
   "license": "MIT",
-  "private": true,
+  "module": "index.js",
+  "es2015": "es2015/index.js",
+  "main": "./bundles/index.umd.js",
   "peerDependencies": {
-    "@angular/core": "^4.1.2",
-    "@angular/common": "^4.1.2",
-    "@angular/cdk": "2.0.0-beta.10"
-  }
+    "@angular/core": "ANGULAR_VERSION",
+    "@angular/common": "ANGULAR_VERSION",
+    "@angular/cdk": "CDK_VERSION"
+  },
+  "typings": "index.d.ts"
 }

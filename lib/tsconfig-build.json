@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": "",
+    "outDir": "../.ng_build/es2015",
+    "rootDir": ".",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "module": "es2015",
+    "target": "es2015",
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "lib": ["es2015", "dom"],
+    "types": []
+  },
+  "files": [
+    "./index.ts"
+  ],
+  "angularCompilerOptions": {
+    "strictMetadaataEmit": true,
+    "skipTemplateCodegen": true,
+    "flatModuleOutFile": "popover.js",
+    "flatModuleId": "@sat/popover",
+    "annotateForClosureCompiler": true
+  }
+}

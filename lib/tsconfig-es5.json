@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig-build.json",
+  "compilerOptions": {
+    "target": "es5",
+    "outDir": "../.ng_build/es5/"
+  },
+  "files": [
+    "./index.ts"
+  ],
+  "angularCompilerOptions": {
+    "strictMetadaataEmit": true,
+    "skipTemplateCodegen": true,
+    "flatModuleOutFile": "popover.js",
+    "flatModuleId": "@sat/popover",
+    "annotateForClosureCompiler": true
+  }
+}
