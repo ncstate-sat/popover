@@ -17,4 +17,4 @@ const GLOBALS = {
   'rxjs/add/operator/takeUntil': 'Rx.Observable.prototype',
 };
 
-module.exports.default = GLOBALS;
+module.exports = GLOBALS;
