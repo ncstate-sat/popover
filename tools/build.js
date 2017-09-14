@@ -5,16 +5,18 @@ const { rollup } = require('rollup');
 const { spawn } = require('child_process');
 const { Observable } = require('rxjs');
 const { copy, readFileSync, writeFile } = require('fs-extra');
-const GLOBALS = require('./rollup-globals');
+const { join } = require('path');
 const resolve = require('rollup-plugin-node-resolve');
-const pkg = require(`${process.cwd()}/package.json`);
 
+const pkg = require(join(process.cwd(), 'package.json'));
+const GLOBALS = require('./rollup-globals');
+const copyFiles = require('./copy-files');
 
 // Directory constants
 const BASE_DIR = process.cwd();
-const LIB_DIR = `${BASE_DIR}/lib`;
-const DEST_DIR = `${BASE_DIR}/dist/lib`;
-const BUILD_DIR = `${BASE_DIR}/.ng_build`;
+const LIB_DIR = join(BASE_DIR, 'lib');
+const DIST_DIR = join(BASE_DIR, 'dist/lib');
+const BUILD_DIR = join(BASE_DIR, '.ng_build');
 
 // Map versions across packages
 const VERSIONS = {
@@ -24,10 +26,8 @@ const VERSIONS = {
 };
 
 // Constants for running typescript commands
-const TSC = 'node_modules/.bin/tsc';
 const NGC = 'node_modules/.bin/ngc';
-const TSC_ARGS = (config = 'build') => [`-p`, `${LIB_DIR}/tsconfig-${config}.json`];
-const TSC_TEST_ARGS = [`-p`, `${LIB_DIR}/tsconfig-test.json`];
+const NGC_ARGS = (config = 'build') => [`-p`, join(LIB_DIR, `tsconfig-${config}.json`)];
 
 
 /** Create an Observable from a spawned child process. */
@@ -41,12 +41,11 @@ function spawn$(command, args) {
   });
 }
 
-/** Replaces the version placeholders in the package and writes to destination. */
-function replaceVersions$(versions) {
+/** Replaces the version placeholders in the specified package. */
+function replacePackageVersions$(packagePath, versions) {
   return Observable.create((observer) => {
     // Read package
-    const packageName = `${LIB_DIR}/package.json`;
-    let package = readFileSync(packageName, 'utf8');
+    let package = readFileSync(packagePath, 'utf8');
 
     // Replace
     const regexs = Object
@@ -54,9 +53,8 @@ function replaceVersions$(versions) {
       .map(key => ({ expression: new RegExp(key, 'g'), key, val: versions[key] }));
     regexs.forEach(r => package = package.replace(r.expression, r.val));
 
-    // Write to destination directory
-    const destPath = `${DEST_DIR}/package.json`;
-    writeFile(destPath, package, err => {
+    // Write back
+    writeFile(packagePath, package, err => {
       if (err) {
         observer.error(err);
       } else {
@@ -67,7 +65,7 @@ function replaceVersions$(versions) {
   });
 }
 
-function rollupModule(input) {
+function rollup$(input, output, format) {
   const inputOptions = {
     input: input,
     external: Object.keys(GLOBALS),
@@ -75,40 +73,47 @@ function rollupModule(input) {
   };
 
   const outputOptions = {
-    file: `${DEST_DIR}/index.js`,
-    format: 'es',
+    file: output,
+    format: format,
     name: 'popover',
     globals: GLOBALS,
   };
 
-  return rollup(inputOptions)
-    .then(bundle => bundle.write(outputOptions));
+  return Observable.from(
+    rollup(inputOptions)
+      .then(bundle => bundle.write(outputOptions))
+  );
 }
 
-/** Copy the readme from the source project to the dist package. */
-function copyReadme() {
-  return copy(`${BASE_DIR}/README.md`, `${DEST_DIR}/README.md`);
-}
 
-/** Build the popover module. */
-function buildModule$(globals, versions) {
-  const es2015$ = spawn$(NGC, TSC_ARGS('build'));
-  const es5$ = spawn$(NGC, TSC_ARGS('es5'));
-  // const test$ = spawn$(NGC, TSC_ARGS('test'));
-
-  return Observable
-    .forkJoin(es2015$)
-    .switchMap(() => Observable.from(rollupModule(`${BUILD_DIR}/es2015/index.js`)))
-    // .switchMap(() => Observable.from(createUmd(name, globals)))
-    // .switchMap(() => replaceVersions$(versions));
-}
-
-/** Build the modules and copy over ancillary files. */
+/** Build the library and copy over files. */
 function buildLibrary$(globals, versions) {
-  return buildModule$(globals, versions)
-    // .switchMap(() => Observable.from(copyReadme()));
+  return Observable
+    // Compile to build folder for es2015 and es5
+    .forkJoin(
+      spawn$(NGC, NGC_ARGS('build')),
+      spawn$(NGC, NGC_ARGS('es5'))
+    )
+    // Rollup
+    .switchMap(() => Observable.forkJoin(
+      rollup$(join(BUILD_DIR, 'es2015/index.js'), join(DIST_DIR, '@sat/popover.js'), 'es'),
+      rollup$(join(BUILD_DIR, 'es5/index.js'), join(DIST_DIR, '@sat/popover.es5.js'), 'es')
+    ))
+    // TODO umd bundles
+    // .switchMap(() => Observable.from(createUmd(name, globals)))
+    //
+    // TODO sourcemaps. May need 'sorcery' for that.
+    //
+    // Copy typings/metadata/package/readme to dist folder
+    .switchMap(() => {
+      copyFiles(join(BUILD_DIR, 'es2015'), '**/*.+(d.ts|metadata.json)', DIST_DIR);
+      copyFiles(BASE_DIR, 'README.md', DIST_DIR);
+      copyFiles(LIB_DIR, 'package.json', DIST_DIR);
+      return replacePackageVersions$(join(DIST_DIR, 'package.json'), versions);
+    })
 }
 
+// Kick it off
 buildLibrary$(GLOBALS, VERSIONS).subscribe(
   undefined,
   err => console.error('err', err),

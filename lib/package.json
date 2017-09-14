@@ -1,11 +1,12 @@
 {
   "name": "@sat/popover",
   "version": "POPOVER_VERSION",
+  "description": "Popover component for Angular",
   "author": "Will Howell",
   "license": "MIT",
-  "module": "index.js",
-  "es2015": "es2015/index.js",
-  "main": "./bundles/index.umd.js",
+  "main": "./bundles/popover.umd.js",
+  "module": "./@sat/popover.es5.js",
+  "es2015": "./@sat/popover.js",
   "peerDependencies": {
     "@angular/core": "ANGULAR_VERSION",
     "@angular/common": "ANGULAR_VERSION",
