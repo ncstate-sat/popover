@@ -7,6 +7,7 @@ const { Observable } = require('rxjs');
 const { copy, readFileSync, writeFile } = require('fs-extra');
 const { join } = require('path');
 const resolve = require('rollup-plugin-node-resolve');
+const sourcemaps = require('rollup-plugin-sourcemaps');
 
 const pkg = require(join(process.cwd(), 'package.json'));
 const GLOBALS = require('./rollup-globals');
@@ -70,7 +71,7 @@ function rollup$(input, output, format) {
   const inputOptions = {
     input: input,
     external: Object.keys(GLOBALS),
-    plugins: [resolve()],
+    plugins: [resolve(), sourcemaps()],
   };
 
   const outputOptions = {
@@ -78,6 +79,7 @@ function rollup$(input, output, format) {
     format: format,
     name: 'popover',
     globals: GLOBALS,
+    sourcemap: true,
   };
 
   return Observable.from(
@@ -101,9 +103,6 @@ function buildLibrary$(globals, versions) {
       rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, '@sat/popover.es5.js'), 'es'),
       rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, 'bundles/popover.umd.js'), 'umd')
     ))
-    //
-    // TODO sourcemaps. May need 'sorcery' for that.
-    //
     .switchMap(() => {
       // Minify umd bundle
       minifySources(
