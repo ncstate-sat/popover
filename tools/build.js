@@ -11,6 +11,7 @@ const resolve = require('rollup-plugin-node-resolve');
 const pkg = require(join(process.cwd(), 'package.json'));
 const GLOBALS = require('./rollup-globals');
 const copyFiles = require('./copy-files');
+const minifySources = require('./minify-sources');
 
 // Directory constants
 const BASE_DIR = process.cwd();
@@ -98,18 +99,26 @@ function buildLibrary$(globals, versions) {
     .switchMap(() => Observable.forkJoin(
       rollup$(join(BUILD_DIR, 'es2015/popover.js'), join(DIST_DIR, '@sat/popover.js'), 'es'),
       rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, '@sat/popover.es5.js'), 'es'),
-      rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, 'bundles/popover.js'), 'umd')
+      rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, 'bundles/popover.umd.js'), 'umd')
     ))
     //
     // TODO sourcemaps. May need 'sorcery' for that.
     //
-    // Copy typings/metadata/package/readme to dist folder
     .switchMap(() => {
+      // Minify umd bundle
+      minifySources(
+        join(DIST_DIR, 'bundles/popover.umd.js'),
+        join(DIST_DIR, 'bundles/popover.umd.min.js')
+      );
+
+      // Copy typings/metadatareadme to dist directory
       copyFiles(join(BUILD_DIR, 'es2015'), '**/*.+(d.ts|metadata.json)', DIST_DIR);
       copyFiles(BASE_DIR, 'README.md', DIST_DIR);
       copyFiles(LIB_DIR, 'package.json', DIST_DIR);
+
+      // Replace package versions and copy to dist directory
       return replacePackageVersions$(join(DIST_DIR, 'package.json'), versions);
-    })
+    });
 }
 
 // Kick it off
