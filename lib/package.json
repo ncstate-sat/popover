@@ -12,5 +12,5 @@
     "@angular/common": "ANGULAR_VERSION",
     "@angular/cdk": "CDK_VERSION"
   },
-  "typings": "index.d.ts"
+  "typings": "popover.d.ts"
 }

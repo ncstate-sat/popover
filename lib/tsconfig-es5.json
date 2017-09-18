@@ -5,7 +5,7 @@
     "outDir": "../.ng_build/es5/"
   },
   "files": [
-    "./index.ts"
+    "./public_api.ts"
   ],
   "angularCompilerOptions": {
     "strictMetadaataEmit": true,

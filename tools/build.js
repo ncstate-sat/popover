@@ -96,11 +96,10 @@ function buildLibrary$(globals, versions) {
     )
     // Rollup
     .switchMap(() => Observable.forkJoin(
-      rollup$(join(BUILD_DIR, 'es2015/index.js'), join(DIST_DIR, '@sat/popover.js'), 'es'),
-      rollup$(join(BUILD_DIR, 'es5/index.js'), join(DIST_DIR, '@sat/popover.es5.js'), 'es')
+      rollup$(join(BUILD_DIR, 'es2015/popover.js'), join(DIST_DIR, '@sat/popover.js'), 'es'),
+      rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, '@sat/popover.es5.js'), 'es'),
+      rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, 'bundles/popover.js'), 'umd')
     ))
-    // TODO umd bundles
-    // .switchMap(() => Observable.from(createUmd(name, globals)))
     //
     // TODO sourcemaps. May need 'sorcery' for that.
     //
