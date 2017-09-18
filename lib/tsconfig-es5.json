@@ -8,7 +8,7 @@
     "./public_api.ts"
   ],
   "angularCompilerOptions": {
-    "strictMetadaataEmit": true,
+    "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
     "flatModuleOutFile": "popover.js",
     "flatModuleId": "@sat/popover",
