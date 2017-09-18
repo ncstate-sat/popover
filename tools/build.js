@@ -13,6 +13,7 @@ const pkg = require(join(process.cwd(), 'package.json'));
 const GLOBALS = require('./rollup-globals');
 const copyFiles = require('./copy-files');
 const minifySources = require('./minify-sources');
+const inlineResources = require('./inline-resources');
 
 // Directory constants
 const BASE_DIR = process.cwd();
@@ -97,6 +98,14 @@ function buildLibrary$(globals, versions) {
       spawn$(NGC, NGC_ARGS('build')),
       spawn$(NGC, NGC_ARGS('es5'))
     )
+    .do(() => {
+      // Copy styles
+      copyFiles(LIB_DIR, '**/*.+(scss|css)', join(BUILD_DIR, 'es2015'))
+      copyFiles(LIB_DIR, '**/*.+(scss|css)', join(BUILD_DIR, 'es5'));
+
+      // Inline resources
+      inlineResources(BUILD_DIR, LIB_DIR);
+    })
     // Rollup
     .switchMap(() => Observable.forkJoin(
       rollup$(join(BUILD_DIR, 'es2015/popover.js'), join(DIST_DIR, '@sat/popover.js'), 'es'),
