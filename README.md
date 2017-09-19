@@ -69,8 +69,8 @@ Next, hook the popover to an anchor element.
 </sat-popover>
 ```
 
-By default, whenever the button is clicked, the `<app-contact-overview>` popover will appear over
-the button. If you instead want the popover to appear below the anchor:
+By default, whenever the button is clicked, the `<app-contact-overview>` popover will appear
+centered over the button. If you instead want the popover to appear below the anchor:
 
 ```html
 <sat-popover #contactPopover yPosition="below" [overlapAnchor]="false">
@@ -108,9 +108,9 @@ openContactPopover(): void {
 
 ## Styles
 
-The `<sat-popover>` component only provides styles to affect its transform origin. It is
-the responsibility of the elements you project inside the popover styles themselves. This includes
-background color, box shadows, margin offsets, etc.
+The `<sat-popover>` component only provides styles to affect its own transform origin. It is
+the responsibility of the elements you project inside the popover to styles themselves. This
+includes background color, box shadows, margin offsets, etc.
 
 
 ## Contributing
