@@ -1,10 +1,55 @@
 # Popover Component for Angular
 
+## Installation
+
+SAT Popover has a peer dependency on the Angular CDK to leverage its overlay API.
+
+```
+npm install --save @sat/popover @angular/cdk
+```
+
+If you want the popover animations to work, you must include `BrowserAnimationsModule` in your app.
+
+```ts
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+@NgModule({
+  ...
+  imports: [ BrowserAnimationsModule ],
+  ...
+})
+export class AppModule { }
+```
+
+If you prefer to not have animations, you can include `NoopAnimationsModule`.
+
+```ts
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+@NgModule({
+  ...
+  imports: [ NoopAnimationsModule ],
+  ...
+})
+export class AppModule { }
+```
+
+Finally, import the `SatPopoverModule` to provide the necessary components and directives.
+
+```ts
+import { SatPopoverModule } from '@angular/material';
+
+@NgModule({
+  ...
+  imports: [ SatPopoverModule ],
+  ...
+})
+export class AppModule { }
+```
+
 ## Usage
 
-### Quickstart
-
-Wrap any component you want to display in a popover with `sat-popover`.
+Wrap any component you want to display in a popover with an `<sat-popover>` component.
 
 ```html
 <sat-popover>
@@ -16,7 +61,7 @@ Next, hook the popover to an anchor element.
 
 ```html
 <button [satPopoverAnchorFor]="contactPopover">
-  See Details
+  See Contact Details
 </button>
 
 <sat-popover #contactPopover>
@@ -24,11 +69,11 @@ Next, hook the popover to an anchor element.
 </sat-popover>
 ```
 
-Now, whenever the button is clicked, the `<app-contact-overview>` popover will appear over the
-button. If you instead want the popover to appear below the anchor:
+By default, whenever the button is clicked, the `<app-contact-overview>` popover will appear over
+the button. If you instead want the popover to appear below the anchor:
 
 ```html
-<sat-popover #contactPopover yPosition="below">
+<sat-popover #contactPopover yPosition="below" [overlapAnchor]="false">
   <!-- ... -->
 </sat-popover>
 ```
@@ -61,23 +106,22 @@ openContactPopover(): void {
 }
 ```
 
-### Styling
+## Styles
 
-TODO
+The `<sat-popover>` component only provides styles to affect its transform origin. It is
+the responsibility of the elements you project inside the popover styles themselves. This includes
+background color, box shadows, margin offsets, etc.
 
 
-## Development
+## Contributing
 
-### Building
+### Build
+
+Build the library into `dist/lib` and copy the library into `node_modules` for the demo app
+to use.
 
 ```
-npm build
-```
-
-### Watching
-
-```
-npm watch
+npm run build && npm run copylib
 ```
 
 ### Demo server
@@ -85,21 +129,3 @@ npm watch
 ```
 npm start
 ```
-
-## Other
-
-Built with  [Angular CLI](https://github.com/angular/angular-cli) and
-[ng-packagr](https://github.com/dherges/ng-packagr).
-
-
-## TODO
-
-- Tests 😏
-- Directionality support
-- Animation callbacks
-- Disable escape/backdrop behavior and provide stream of events
-- Make it easy to switch scroll strategies
-- Review API consistency with Angular Material
-- Stop patching globally Rx
-- Support other methods of building popovers
-- Allow more configurability to the focus trap
