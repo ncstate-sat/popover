@@ -7,10 +7,10 @@
     "start": "ng serve",
     "lib": "npm run build && npm run watch",
     "build": "rm -rf dist .ng_build && node tools/build.js",
-    "watch": "chokidar 'lib' -c 'npm run build'",
+    "watch": "chokidar 'lib' -c 'npm run build && npm run copylib'",
     "copylib": "bash ./scripts/copy_lib_dist.sh",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "ng lint --type-check",
     "e2e": "ng e2e"
   },
   "private": true,
