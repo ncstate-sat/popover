@@ -115,6 +115,12 @@ background color, box shadows, margin offsets, etc.
 
 ## Contributing
 
+### Demo server
+
+```
+npm run start
+```
+
 ### Build
 
 Build the library into `dist/lib` and copy the library into `node_modules` for the demo app
@@ -124,8 +130,13 @@ to use.
 npm run build && npm run copylib
 ```
 
-### Demo server
+### Watch
+
+Rebuild the libary on any source changes and copy to `node_modules`.
 
 ```
-npm start
+npm run watch
 ```
+
+
+
