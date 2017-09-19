@@ -4,7 +4,7 @@
 const { rollup } = require('rollup');
 const { spawn } = require('child_process');
 const { Observable } = require('rxjs');
-const { copy, readFileSync, writeFile } = require('fs-extra');
+const { copy, readFileSync, writeFileSync } = require('fs-extra');
 const { join } = require('path');
 const resolve = require('rollup-plugin-node-resolve');
 const sourcemaps = require('rollup-plugin-sourcemaps');
@@ -30,7 +30,7 @@ const VERSIONS = {
 
 // Constants for running typescript commands
 const NGC = 'node_modules/.bin/ngc';
-const NGC_ARGS = (config = 'build') => [`-p`, join(LIB_DIR, `tsconfig-${config}.json`)];
+const NGC_ARGS = (config) => [`-p`, join(LIB_DIR, `tsconfig-${config}.json`)];
 
 
 /** Create an Observable from a spawned child process. */
@@ -45,27 +45,18 @@ function spawn$(command, args) {
 }
 
 /** Replaces the version placeholders in the specified package. */
-function replacePackageVersions$(packagePath, versions) {
-  return Observable.create((observer) => {
-    // Read package
-    let package = readFileSync(packagePath, 'utf8');
+function replacePackageVersions(packagePath, versions) {
+  // Read package
+  let package = readFileSync(packagePath, 'utf8');
 
-    // Replace
-    const regexs = Object
-      .keys(versions)
-      .map(key => ({ expression: new RegExp(key, 'g'), key, val: versions[key] }));
-    regexs.forEach(r => package = package.replace(r.expression, r.val));
+  // Replace
+  const regexs = Object
+    .keys(versions)
+    .map(key => ({ expression: new RegExp(key, 'g'), key, val: versions[key] }));
+  regexs.forEach(r => package = package.replace(r.expression, r.val));
 
-    // Write back
-    writeFile(packagePath, package, err => {
-      if (err) {
-        observer.error(err);
-      } else {
-        observer.next(package);
-        observer.complete();
-      }
-    });
-  });
+  // Write back
+  writeFileSync(packagePath, package);
 }
 
 function rollup$(input, output, format) {
@@ -112,7 +103,7 @@ function buildLibrary$(globals, versions) {
       rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, '@sat/popover.es5.js'), 'es'),
       rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, 'bundles/popover.umd.js'), 'umd')
     ))
-    .switchMap(() => {
+    .do(() => {
       // Minify umd bundle
       minifySources(
         join(DIST_DIR, 'bundles/popover.umd.js'),
@@ -125,7 +116,7 @@ function buildLibrary$(globals, versions) {
       copyFiles(LIB_DIR, 'package.json', DIST_DIR);
 
       // Replace package versions and copy to dist directory
-      return replacePackageVersions$(join(DIST_DIR, 'package.json'), versions);
+      replacePackageVersions(join(DIST_DIR, 'package.json'), versions);
     });
 }
 
