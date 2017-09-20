@@ -90,9 +90,9 @@ function buildLibrary$(globals, versions) {
       spawn$(NGC, NGC_ARGS('es5'))
     )
     .do(() => {
-      // Copy styles
-      copyFiles(LIB_DIR, '**/*.+(scss|css)', join(BUILD_DIR, 'es2015'))
-      copyFiles(LIB_DIR, '**/*.+(scss|css)', join(BUILD_DIR, 'es5'));
+      // Copy styles and markup
+      copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, 'es2015'))
+      copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, 'es5'));
 
       // Inline resources
       inlineResources(BUILD_DIR, LIB_DIR);
@@ -110,7 +110,7 @@ function buildLibrary$(globals, versions) {
         join(DIST_DIR, 'bundles/popover.umd.min.js')
       );
 
-      // Copy typings/metadatareadme to dist directory
+      // Copy typings/metadata/readme to dist directory
       copyFiles(join(BUILD_DIR, 'es2015'), '**/*.+(d.ts|metadata.json)', DIST_DIR);
       copyFiles(BASE_DIR, 'README.md', DIST_DIR);
       copyFiles(LIB_DIR, 'package.json', DIST_DIR);

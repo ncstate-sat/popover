@@ -1,0 +1,10 @@
+<ng-template>
+  <div class="sat-popover-container"
+      #focusTrapElement
+      [ngClass]="_classList"
+      (keydown)="_handleKeydown($event)"
+      [@transformPopover]="'showing'"
+      (@transformPopover.done)="_onAnimationDone($event)">
+    <ng-content></ng-content>
+  </div>
+</ng-template>
