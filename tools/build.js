@@ -59,6 +59,11 @@ function replacePackageVersions(packagePath, versions) {
   writeFileSync(packagePath, package);
 }
 
+/** Replaces any old property of the package. */
+function replacePackagePropertys(packagePath, properties) {
+ // TODO
+}
+
 function rollup$(input, output, format) {
   const inputOptions = {
     input: input,
@@ -117,6 +122,8 @@ function buildLibrary$(globals, versions) {
 
       // Replace package versions and copy to dist directory
       replacePackageVersions(join(DIST_DIR, 'package.json'), versions);
+      replacePackagePropertys(join(DIST_DIR, 'package.json'),
+          ['keywords', 'repository', 'bugs', 'homepage']);
     });
 }
 
