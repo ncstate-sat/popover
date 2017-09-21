@@ -137,6 +137,3 @@ Rebuild the libary on any source changes and copy to `node_modules`.
 ```
 npm run watch
 ```
-
-
-

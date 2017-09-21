@@ -1,3 +1,11 @@
+# 1.0.0-alpha.2
+
+### Fixes
+
+* Inlines resources in the metadata files to enable AOT builds
+* Adds more properties to the dist package.json for better display on npm
+
+
 # 1.0.0-alpha.1
 
 ### Fixes
