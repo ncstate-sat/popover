@@ -9,10 +9,10 @@ function uglifyFile(inputPath, outputPath) {
   const outputFilename = basename(outputPath);
 
   const result = uglify.minify(
-    readFileSync(inputPath, 'utf8'),
+    readFileSync(inputPath, 'utf-8'),
     {
       sourceMap: {
-        content: readFileSync(sourcemapIn, 'utf8'),
+        content: readFileSync(sourcemapIn, 'utf-8'),
         filename: outputFilename,
         url: `${outputFilename}.map`,
       }
