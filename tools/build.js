@@ -23,8 +23,8 @@ const BUILD_DIR = join(BASE_DIR, '.ng_build');
 
 // Map versions across packages
 const VERSIONS = {
-  ANGULAR_VERSION: pkg.dependencies['@angular/core'],
-  CDK_VERSION: pkg.dependencies['@angular/cdk'],
+  ANGULAR_VERSION: pkg.devDependencies['@angular/core'],
+  CDK_VERSION: pkg.devDependencies['@angular/cdk'],
   POPOVER_VERSION: pkg.version,
 };
 
