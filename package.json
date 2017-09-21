@@ -16,14 +16,14 @@
   "private": true,
   "keywords": [
     "angular",
-    "angular-component",
+    "component",
     "popover",
     "popup",
     "overlay"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ncsu-sat/popover.git"
+    "url": "git+https://github.com/ncsu-sat/popover.git"
   },
   "bugs": {
     "url": "https://github.com/ncsu-sat/popover/issues"
