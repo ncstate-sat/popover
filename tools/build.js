@@ -1,6 +1,8 @@
 /**
- * Largely based on the build script from https://github.com/angular/angularfire2
+ * Largely based on the build scripts from https://github.com/angular/angularfire2
+ * and https://github.com/angular/material2
  */
+const { sync } = require('glob');
 const { rollup } = require('rollup');
 const { spawn } = require('child_process');
 const { Observable } = require('rxjs');
@@ -8,6 +10,7 @@ const { copy, readFileSync, writeFileSync } = require('fs-extra');
 const { join } = require('path');
 const resolve = require('rollup-plugin-node-resolve');
 const sourcemaps = require('rollup-plugin-sourcemaps');
+const sass = require('node-sass');
 
 const pkg = require(join(process.cwd(), 'package.json'));
 const GLOBALS = require('./rollup-globals');
@@ -102,9 +105,16 @@ function buildLibrary$(globals, versions) {
       spawn$(NGC, NGC_ARGS('es5'))
     )
     .do(() => {
-      // Copy styles
-      copyFiles(LIB_DIR, '**/*.+(scss|css)', join(BUILD_DIR, 'es2015'))
-      copyFiles(LIB_DIR, '**/*.+(scss|css)', join(BUILD_DIR, 'es5'));
+      // Copy styles and markup
+      copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, 'es2015'))
+      copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, 'es5'));
+
+      // Compile sass in build directory
+      sync(join(BUILD_DIR, '**/*.scss')).forEach(path => {
+        const sassString = sass.renderSync({ file: path }).css.toString();
+        const newPath = path.slice(0, -4) + 'css';
+        writeFileSync(newPath, sassString, 'utf-8');
+      });
 
       // Inline resources
       inlineResources(BUILD_DIR, LIB_DIR);
@@ -122,7 +132,7 @@ function buildLibrary$(globals, versions) {
         join(DIST_DIR, 'bundles/popover.umd.min.js')
       );
 
-      // Copy typings/metadatareadme to dist directory
+      // Copy typings/metadata/readme to dist directory
       copyFiles(join(BUILD_DIR, 'es2015'), '**/*.+(d.ts|metadata.json)', DIST_DIR);
       copyFiles(BASE_DIR, 'README.md', DIST_DIR);
       copyFiles(LIB_DIR, 'package.json', DIST_DIR);

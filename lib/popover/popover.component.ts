@@ -26,18 +26,7 @@ export type SatPopoverPositionY = 'above'  | 'center' | 'below';
   encapsulation: ViewEncapsulation.None,
   animations: [transformPopover],
   styleUrls: ['./popover.component.scss'],
-  template: `
-    <ng-template>
-      <div class="sat-popover-container"
-          #focusTrapElement
-          [ngClass]="_classList"
-          (keydown)="_handleKeydown($event)"
-          [@transformPopover]="'showing'"
-          (@transformPopover.done)="_onAnimationDone($event)">
-        <ng-content></ng-content>
-      </div>
-    </ng-template>
-  `
+  templateUrl: './popover.component.html',
 })
 export class SatPopover implements AfterViewInit {
 

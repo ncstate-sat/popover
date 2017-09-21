@@ -1,12 +1,28 @@
 const { sync } = require('glob');
-const { join, dirname } = require('path');
+const { join, dirname, basename } = require('path');
 const { readFileSync, writeFileSync } = require('fs-extra');
-const sass = require('node-sass');
 
-/** Inline resources for each js file in the directory. */
+/** Inline resources for each js file in the directory. Do the same for metadata resources. */
 function inlineResourcesForDirectory(directory, resourcePath) {
+  // Inline for js files
   sync(join(directory, '**/*.js'))
-    .forEach(file => inlineResources(file, resourcePath));
+    .forEach(path => inlineResources(path, resourcePath));
+
+  // Inline for metadata files by building a mapping of resources to paths
+  // recursively replacing them throughout the metadata files. This assumes
+  // that all resource basenames are unique, which is fine for such a small
+  // library. A better approach would be to look at the `origins` map and join
+  // those with the relative urls.
+  const resources = new Map();
+
+  sync(join(directory, '**/*.+(html|css)'))
+    .forEach(path => resources.set(basename(path), path));
+
+  sync(join(directory, '**/**.metadata.json')).forEach(path => {
+    let metadata = JSON.parse(readFileSync(path, 'utf-8'));
+    inlineResourceForMetadata(metadata, resources);
+    writeFileSync(path, JSON.stringify(metadata), 'utf-8');
+  });
 }
 
 /** Inline external template and style resources. */
@@ -37,17 +53,17 @@ function inlineStyles(fileContent, filePath, resourcePath) {
 
     const styleContents = styleUrls
       .map(url => join(dirname(filePath), url))
-      .map(path => compileSassFile(path))
+      .map(path => {
+        if (path.endsWith('scss')) {
+          path = path.slice(0, -4) + 'css';
+        }
+
+        return readFileSync(path, 'utf-8');
+      })
       .map(css => escapeFileContents(css));
 
     return `styles: ["${styleContents.join(' ')}"]`;
   });
-}
-
-/** Compile a sass file and return the compiled css. */
-function compileSassFile(filePath) {
-  const result = sass.renderSync({ file: filePath });
-  return result.css.toString();
 }
 
 /** Escape file contents and convert to a single line. */
@@ -55,6 +71,38 @@ function escapeFileContents(contents) {
   return contents
     .replace(/([\n\r]\s*)+/gm, ' ')
     .replace(/"/g, '\\"');
+}
+
+/** Inline any templateUrl or styleUrls in the current object.  */
+function inlineResourceForMetadata(metadata, resources) {
+  // templates
+  if (metadata.templateUrl) {
+    const fullPath = resources.get(basename(metadata.templateUrl));
+    metadata.template = readFileSync(fullPath, 'utf-8');
+    delete metadata.templateUrl;
+  }
+
+  // styles
+  if (metadata.styleUrls && metadata.styleUrls.length) {
+    metadata.styles = [];
+    for (let styleUrl of metadata.styleUrls) {
+      if (styleUrl.endsWith('scss')) {
+        styleUrl = styleUrl.slice(0, -4) + 'css';
+      }
+      const fullPath = resources.get(basename(styleUrl));
+      metadata.styles.push(readFileSync(fullPath, 'utf-8'));
+    }
+    delete metadata.styleUrls;
+  }
+
+  // recurse! recurse!
+  if (!metadata.template && !metadata.styles) {
+    for (const property in metadata) {
+      if (typeof metadata[property] == 'object' && metadata[property]) {
+        inlineResourceForMetadata(metadata[property], resources);
+      }
+    }
+  }
 }
 
 module.exports = inlineResourcesForDirectory;
