@@ -1,5 +1,6 @@
 /**
- * Largely based on the build script from https://github.com/angular/angularfire2
+ * Largely based on the build scripts from https://github.com/angular/angularfire2
+ * and https://github.com/angular/material2
  */
 const { sync } = require('glob');
 const { rollup } = require('rollup');

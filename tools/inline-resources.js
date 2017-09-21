@@ -11,12 +11,12 @@ function inlineResourcesForDirectory(directory, resourcePath) {
   // Inline for metadata files by building a mapping of resources to paths
   // recursively replacing them throughout the metadata files. This assumes
   // that all resource basenames are unique, which is fine for such a small
-  // library.
+  // library. A better approach would be to look at the `origins` map and join
+  // those with the relative urls.
   const resources = new Map();
 
-  sync(join(directory, '**/*.+(html|css)')).forEach(path => {
-    resources.set(basename(path), path);
-  });
+  sync(join(directory, '**/*.+(html|css)'))
+    .forEach(path => resources.set(basename(path), path));
 
   sync(join(directory, '**/**.metadata.json')).forEach(path => {
     let metadata = JSON.parse(readFileSync(path, 'utf-8'));
@@ -70,7 +70,7 @@ function inlineStyles(fileContent, filePath, resourcePath) {
 function escapeFileContents(contents) {
   return contents
     .replace(/([\n\r]\s*)+/gm, ' ')
-    .replace(/"/g, `\\"`);
+    .replace(/"/g, '\\"');
 }
 
 /** Inline any templateUrl or styleUrls in the current object.  */
