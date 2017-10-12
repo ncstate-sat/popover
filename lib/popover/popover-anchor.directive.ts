@@ -14,7 +14,7 @@ import {
   HorizontalConnectionPos,
   Overlay,
   OverlayRef,
-  OverlayState,
+  OverlayConfig,
   VerticalConnectionPos
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -168,14 +168,14 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   }
 
   /** Create and return a config for creating the overlay. */
-  private _getOverlayConfig(): OverlayState {
-    const overlayState = new OverlayState();
-    overlayState.positionStrategy = this._getPosition();
-    overlayState.hasBackdrop = true;
-    overlayState.backdropClass = 'cdk-overlay-transparent-backdrop';
-    overlayState.scrollStrategy = this._overlay.scrollStrategies.reposition();
+  private _getOverlayConfig(): OverlayConfig {
+    const config = new OverlayConfig();
+    config.positionStrategy = this._getPosition();
+    config.hasBackdrop = true;
+    config.backdropClass = 'cdk-overlay-transparent-backdrop';
+    config.scrollStrategy = this._overlay.scrollStrategies.reposition();
 
-    return overlayState;
+    return config;
   }
 
   /**
