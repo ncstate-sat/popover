@@ -68,7 +68,8 @@ import { SatPopoverAnchor } from '@sat/popover';
 
         <sat-popover #fancyPopover
             xPosition="center"
-            yPosition="below">
+            yPosition="below"
+            backdropClass="demo-background-green">
           <div style="background: pink; padding: 32px; border-radius: 8px"
               class="mat-elevation-z4">
             Quite fancy indeed 🎩

@@ -198,7 +198,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     const config = new OverlayConfig();
     config.positionStrategy = this._getPosition();
     config.hasBackdrop = !this.attachedPopover.disableBackdrop;
-    config.backdropClass = 'cdk-overlay-transparent-backdrop';
+    config.backdropClass = this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop';
     config.scrollStrategy = this._overlay.scrollStrategies.reposition();
 
     return config;
