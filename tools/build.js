@@ -20,7 +20,7 @@ const inlineResources = require('./inline-resources');
 
 // Directory constants
 const BASE_DIR = process.cwd();
-const LIB_DIR = join(BASE_DIR, 'lib');
+const LIB_DIR = join(BASE_DIR, 'src/lib');
 const DIST_DIR = join(BASE_DIR, 'dist/lib');
 const BUILD_DIR = join(BASE_DIR, '.ng_build');
 

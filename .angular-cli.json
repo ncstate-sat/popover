@@ -5,7 +5,7 @@
   },
   "apps": [
     {
-      "root": "demo",
+      "root": "src/demo",
       "outDir": "dist/app",
       "assets": [
         "assets",

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "",
-    "outDir": "../.ng_build/es2015",
+    "outDir": "../../.ng_build/es2015",
     "rootDir": ".",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
