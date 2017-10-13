@@ -13,10 +13,10 @@ const sourcemaps = require('rollup-plugin-sourcemaps');
 const sass = require('node-sass');
 
 const pkg = require(join(process.cwd(), 'package.json'));
-const GLOBALS = require('./rollup-globals');
-const copyFiles = require('./copy-files');
-const minifySources = require('./minify-sources');
-const inlineResources = require('./inline-resources');
+const GLOBALS = require('./utils/rollup-globals');
+const copyFiles = require('./utils/copy-files');
+const minifySources = require('./utils/minify-sources');
+const inlineResources = require('./utils/inline-resources');
 
 // Directory constants
 const BASE_DIR = process.cwd();

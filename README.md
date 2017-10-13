@@ -118,7 +118,7 @@ includes background color, box shadows, margin offsets, etc.
 ### Demo server
 
 ```
-npm run start
+npm run demo-app
 ```
 
 ### Build
@@ -128,12 +128,4 @@ to use.
 
 ```
 npm run build && npm run copylib
-```
-
-### Watch
-
-Rebuild the libary on any source changes and copy to `node_modules`.
-
-```
-npm run watch
 ```

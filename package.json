@@ -3,15 +3,11 @@
   "version": "1.0.0-alpha.3",
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
+    "demo-app": "ng serve",
     "lib": "npm run build && npm run watch",
     "build": "rm -rf dist .ng_build && node tools/build.js",
-    "watch": "chokidar 'lib' -c 'npm run build && npm run copylib'",
     "copylib": "bash ./scripts/copy_lib_dist.sh",
-    "test": "ng test",
-    "lint": "ng lint --type-check",
-    "e2e": "ng e2e"
+    "lint": "ng lint --type-check"
   },
   "private": true,
   "keywords": [
@@ -47,7 +43,6 @@
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
-    "chokidar-cli": "^1.2.0",
     "codelyzer": "~3.1.1",
     "core-js": "^2.4.1",
     "fs-extra": "^4.0.1",
