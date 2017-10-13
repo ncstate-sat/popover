@@ -14,6 +14,7 @@ import {
 import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/platform-browser';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { Subject } from 'rxjs/Subject';
 
@@ -48,6 +49,13 @@ export class SatPopover implements AfterViewInit {
     this._setPositionClasses();
   }
   private _yPosition: SatPopoverPositionY = 'center';
+
+  @Input()
+  get disableBackdrop() { return this._disableBackdrop; }
+  set disableBackdrop(val: boolean) {
+    this._disableBackdrop = coerceBooleanProperty(val);
+  }
+  private _disableBackdrop = false;
 
   /** Whether the popover should overlap its anchor. */
   @Input() overlapAnchor = true;

@@ -84,7 +84,7 @@ import { SatPopoverAnchor } from '@sat/popover';
               [satPopoverAnchorFor]="bluePopover">
           </div>
         </mat-card-content>
-        <sat-popover #bluePopover>
+        <sat-popover #bluePopover disableBackdrop>
           <div style="background: lightblue; padding: 16px">BLUE!</div>
         </sat-popover>
         <mat-card-actions>
