@@ -68,7 +68,8 @@ import { SatPopoverAnchor } from '@sat/popover';
 
         <sat-popover #fancyPopover
             xPosition="center"
-            yPosition="below">
+            yPosition="below"
+            backdropClass="demo-background-rainbow">
           <div style="background: pink; padding: 32px; border-radius: 8px"
               class="mat-elevation-z4">
             Quite fancy indeed 🎩
@@ -84,7 +85,7 @@ import { SatPopoverAnchor } from '@sat/popover';
               [satPopoverAnchorFor]="bluePopover">
           </div>
         </mat-card-content>
-        <sat-popover #bluePopover>
+        <sat-popover #bluePopover disableBackdrop>
           <div style="background: lightblue; padding: 16px">BLUE!</div>
         </sat-popover>
         <mat-card-actions>
