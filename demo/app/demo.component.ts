@@ -85,11 +85,12 @@ import { SatPopoverAnchor } from '@sat/popover';
           </div>
         </mat-card-content>
         <sat-popover #bluePopover>
-          <div style="background: blue; padding: 16px">BLUE!</div>
+          <div style="background: lightblue; padding: 16px">BLUE!</div>
         </sat-popover>
         <mat-card-actions>
           <button mat-button (click)="bluePopover.open()">Open</button>
           <button mat-button (click)="bluePopover.close()">Close</button>
+          <button mat-button (click)="bluePopover.toggle()">Toggle</button>
         </mat-card-actions>
       </mat-card>
     </div>

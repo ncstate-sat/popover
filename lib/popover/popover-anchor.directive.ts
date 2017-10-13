@@ -22,7 +22,6 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 
 import {
@@ -85,28 +84,15 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     private _overlay: Overlay,
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef
-  ) { }
+  ) {
+    this._subscribeToPopoverInstanceChanges();
+  }
 
   ngOnInit() {
     this._validateAttachedPopover(this.attachedPopover);
     this.attachedPopover.closed
       .takeUntil(this._onDestroy)
       .subscribe(() => this.closePopover());
-
-    // Subscribe to open/close/toggle emissions from the popover
-    this._attachedPopoverChange
-      .startWith(this.attachedPopover)
-      .switchMap(popover => popover._takeAction)
-      .takeUntil(this._onDestroy)
-      .subscribe(action => {
-        if (action === 'open') {
-          this.openPopover();
-        } else if (action === 'close') {
-          this.closePopover();
-        } else if (action === 'toggle') {
-          this.togglePopover();
-        }
-      });
   }
 
   ngOnDestroy() {
@@ -167,6 +153,25 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     if (!popover || !(popover instanceof SatPopover)) {
       throw getInvalidPopoverError();
     }
+  }
+
+  /**
+   * Whenever a new popover is attached to this anchor, observe
+   * its action subject to dispatch the appropriate action.
+   */
+  private _subscribeToPopoverInstanceChanges(): void {
+    this._attachedPopoverChange
+      .switchMap(popover => popover._takeAction)
+      .takeUntil(this._onDestroy)
+      .subscribe(action => {
+        if (action === 'open') {
+          this.openPopover();
+        } else if (action === 'close') {
+          this.closePopover();
+        } else if (action === 'toggle') {
+          this.togglePopover();
+        }
+      });
   }
 
   /** Emit close event when backdrop is clicked for as long as the overlay is open. */
