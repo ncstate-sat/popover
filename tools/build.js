@@ -33,7 +33,9 @@ const VERSIONS = {
 
 // Constants for running typescript commands
 const NGC = 'node_modules/.bin/ngc';
+const TSC = 'node_modules/.bin/tsc';
 const NGC_ARGS = (config) => [`-p`, join(LIB_DIR, `tsconfig.${config}.json`)];
+const TSC_ARGS = NGC_ARGS;
 
 
 /** Create an Observable from a spawned child process. */
@@ -102,12 +104,13 @@ function buildLibrary$(globals, versions) {
     // Compile to build folder for es2015 and es5
     .forkJoin(
       spawn$(NGC, NGC_ARGS('lib')),
-      spawn$(NGC, NGC_ARGS('es5'))
+      spawn$(NGC, NGC_ARGS('es5')),
+      spawn$(TSC, TSC_ARGS('spec')),
     )
     .do(() => {
       // Copy styles and markup
-      copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, 'es2015'))
-      copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, 'es5'));
+      ['es2015', 'es5', 'spec']
+        .forEach(dir => copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, dir)));
 
       // Compile sass in build directory
       sync(join(BUILD_DIR, '**/*.scss')).forEach(path => {
