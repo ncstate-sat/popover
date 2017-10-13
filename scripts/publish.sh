@@ -1,3 +1,9 @@
+# To publish:
+# 1. Check out a branch and edit package version and add changelog entry
+# 2. Run `npm install` again to update package-lock.json
+# 3. Open PR and merge into `master`
+# 4. Run this script `bash scripts/publish.sh`
+
 NC='\033[0m' # No Color
 GREEN='\033[0;32m'
 
