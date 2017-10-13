@@ -15,6 +15,7 @@ import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/platform-browser';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { ESCAPE } from '@angular/cdk/keycodes';
+import { Subject } from 'rxjs/Subject';
 
 import { transformPopover } from './popover.animations';
 
@@ -63,6 +64,9 @@ export class SatPopover implements AfterViewInit {
   /** Classes to be added to the popover for setting the correct transform origin. */
   _classList: any = {};
 
+  /** Emits whenever the popover should take some action. */
+  _takeAction = new Subject<'open' | 'close' | 'toggle'>();
+
   /** Reference to the element to build a focus trap around. */
   @ViewChild('focusTrapElement')
   private _focusTrapElement: ElementRef;
@@ -82,8 +86,23 @@ export class SatPopover implements AfterViewInit {
     this._setPositionClasses();
   }
 
+  /** Open this popover. */
+  open(): void {
+    this._takeAction.next('open');
+  }
+
+  /** Close this popover. */
+  close(): void {
+    this._takeAction.next('close');
+  }
+
+  /** Toggle this popover open or closed. */
+  toggle(): void {
+    this._takeAction.next('toggle');
+  }
+
   /** Publicly emit a close event. */
-  emitCloseEvent(): void {
+  _emitCloseEvent(): void {
     this.closed.emit();
   }
 
@@ -91,7 +110,7 @@ export class SatPopover implements AfterViewInit {
   _handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ESCAPE) {
       event.stopPropagation();
-      this.emitCloseEvent();
+      this._emitCloseEvent();
     }
   }
 

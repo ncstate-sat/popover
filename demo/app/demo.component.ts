@@ -13,6 +13,7 @@ import { SatPopoverAnchor } from '@sat/popover';
 
     <div class="page-content">
 
+      <!-- BUTTONS -->
       <mat-card>
         <mat-card-title>Click the buttons</mat-card-title>
         <mat-card-content>
@@ -20,8 +21,35 @@ import { SatPopoverAnchor } from '@sat/popover';
           <button mat-raised-button [satPopoverAnchorFor]="popover2">Woo! ←</button>
           <button mat-raised-button [satPopoverAnchorFor]="popover3">Woo! ·</button>
         </mat-card-content>
+
+        <sat-popover #popover1
+            xPosition="after"
+            yPosition="below"
+            [overlapAnchor]="false">
+          <div style="background: lightgray; padding: 48px">
+            Oh, cool
+          </div>
+        </sat-popover>
+
+        <sat-popover #popover2
+            xPosition="before"
+            yPosition="center"
+            [overlapAnchor]="false">
+          <div style="background: lightgray; padding: 48px" class="mat-elevation-z12">
+            Oh, neat
+          </div>
+        </sat-popover>
+
+        <sat-popover #popover3
+            xPosition="center"
+            yPosition="center"
+            [overlapAnchor]="false">
+          <mat-toolbar color="accent" class="mat-elevation-z2">Oh, nifty</mat-toolbar>
+        </sat-popover>
+
       </mat-card>
 
+      <!-- SELECT OPTION -->
       <mat-card>
         <mat-card-title>Select "Fancy"</mat-card-title>
         <mat-card-content>
@@ -37,43 +65,35 @@ import { SatPopoverAnchor } from '@sat/popover';
             </mat-select>
           </mat-form-field>
         </mat-card-content>
+
+        <sat-popover #fancyPopover
+            xPosition="center"
+            yPosition="below">
+          <div style="background: pink; padding: 32px; border-radius: 8px"
+              class="mat-elevation-z4">
+            Quite fancy indeed 🎩
+          </div>
+        </sat-popover>
       </mat-card>
 
+      <!-- PROGRAMMATIC OPEN/CLOSE -->
+      <mat-card>
+        <mat-card-title>Open Programmatically</mat-card-title>
+        <mat-card-content>
+          <div style="margin: 48px; height: 16px; width: 16px; background: black"
+              [satPopoverAnchorFor]="bluePopover">
+          </div>
+        </mat-card-content>
+        <sat-popover #bluePopover>
+          <div style="background: lightblue; padding: 16px">BLUE!</div>
+        </sat-popover>
+        <mat-card-actions>
+          <button mat-button (click)="bluePopover.open()">Open</button>
+          <button mat-button (click)="bluePopover.close()">Close</button>
+          <button mat-button (click)="bluePopover.toggle()">Toggle</button>
+        </mat-card-actions>
+      </mat-card>
     </div>
-
-    <sat-popover #popover1
-        xPosition="after"
-        yPosition="below"
-        [overlapAnchor]="false">
-      <div style="background: lightgray; padding: 48px">
-        Oh, cool
-      </div>
-    </sat-popover>
-
-    <sat-popover #popover2
-        xPosition="before"
-        yPosition="center"
-        [overlapAnchor]="false">
-      <div style="background: lightgray; padding: 48px" class="mat-elevation-z12">
-        Oh, neat
-      </div>
-    </sat-popover>
-
-    <sat-popover #popover3
-        xPosition="center"
-        yPosition="center"
-        [overlapAnchor]="false">
-      <mat-toolbar color="accent" class="mat-elevation-z2">Oh, nifty</mat-toolbar>
-    </sat-popover>
-
-    <sat-popover #fancyPopover
-        xPosition="center"
-        yPosition="below">
-      <div style="background: pink; padding: 32px; border-radius: 8px"
-          class="mat-elevation-z4">
-        Quite fancy indeed 🎩
-      </div>
-    </sat-popover>
   `
 })
 export class DemoComponent {

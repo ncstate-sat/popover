@@ -20,7 +20,9 @@ import {
 import { TemplatePortal } from '@angular/cdk/portal';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/switchMap';
 
 import {
   SatPopover,
@@ -41,6 +43,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   set attachedPopover(value: SatPopover) {
     this._validateAttachedPopover(value);
     this._attachedPopover = value;
+    this._attachedPopoverChange.next(this._attachedPopover);
   }
   private _attachedPopover: SatPopover;
 
@@ -72,6 +75,8 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   /** Reference to the overlay containing the popover component. */
   private _overlayRef: OverlayRef;
 
+  private _attachedPopoverChange = new Subject<SatPopover>();
+
   /** Emits when the directive is destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -79,7 +84,9 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     private _overlay: Overlay,
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef
-  ) { }
+  ) {
+    this._subscribeToPopoverInstanceChanges();
+  }
 
   ngOnInit() {
     this._validateAttachedPopover(this.attachedPopover);
@@ -148,13 +155,32 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Whenever a new popover is attached to this anchor, observe
+   * its action subject to dispatch the appropriate action.
+   */
+  private _subscribeToPopoverInstanceChanges(): void {
+    this._attachedPopoverChange
+      .switchMap(popover => popover._takeAction)
+      .takeUntil(this._onDestroy)
+      .subscribe(action => {
+        if (action === 'open') {
+          this.openPopover();
+        } else if (action === 'close') {
+          this.closePopover();
+        } else if (action === 'toggle') {
+          this.togglePopover();
+        }
+      });
+  }
+
   /** Emit close event when backdrop is clicked for as long as the overlay is open. */
   private _subscribeToBackdrop(): void {
     this._overlayRef
       .backdropClick()
       .takeUntil(this.popoverClosed)
       .takeUntil(this._onDestroy)
-      .subscribe(() => this.attachedPopover.emitCloseEvent());
+      .subscribe(() => this.attachedPopover._emitCloseEvent());
   }
 
   /** Create an overlay to be attached to the portal. */
