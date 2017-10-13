@@ -33,7 +33,7 @@ const VERSIONS = {
 
 // Constants for running typescript commands
 const NGC = 'node_modules/.bin/ngc';
-const NGC_ARGS = (config) => [`-p`, join(LIB_DIR, `tsconfig-${config}.json`)];
+const NGC_ARGS = (config) => [`-p`, join(LIB_DIR, `tsconfig.${config}.json`)];
 
 
 /** Create an Observable from a spawned child process. */
@@ -101,7 +101,7 @@ function buildLibrary$(globals, versions) {
   return Observable
     // Compile to build folder for es2015 and es5
     .forkJoin(
-      spawn$(NGC, NGC_ARGS('build')),
+      spawn$(NGC, NGC_ARGS('lib')),
       spawn$(NGC, NGC_ARGS('es5'))
     )
     .do(() => {
