@@ -3,20 +3,20 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SatPopoverModule } from '@sat/popover';
 import {
-  MdToolbarModule,
-  MdCardModule,
-  MdButtonModule,
-  MdSelectModule,
+  MatToolbarModule,
+  MatCardModule,
+  MatButtonModule,
+  MatSelectModule,
 } from '@angular/material';
 
 import { DemoComponent } from './demo.component';
 
 @NgModule({
   exports: [
-    MdToolbarModule,
-    MdCardModule,
-    MdButtonModule,
-    MdSelectModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatButtonModule,
+    MatSelectModule,
   ]
 })
 export class DemoMaterialModule { }
