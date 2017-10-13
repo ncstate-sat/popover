@@ -7,7 +7,8 @@
     "lib": "npm run build && npm run watch",
     "build": "rm -rf dist .ng_build && node tools/build.js",
     "copylib": "bash ./scripts/copy_lib_dist.sh",
-    "lint": "ng lint --type-check"
+    "lint": "ng lint --type-check",
+    "test": "node tools/test.js"
   },
   "private": true,
   "keywords": [
