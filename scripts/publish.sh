@@ -1,0 +1,27 @@
+NC='\033[0m' # No Color
+GREEN='\033[0;32m'
+
+printf "${GREEN}Pulling latest from origin:master${NC}\n"
+
+git checkout master
+git pull origin master
+
+PACKAGE_VERSION=$(cat package.json \
+  | grep version \
+  | head -1 \
+  | awk -F: '{ print $2 }' \
+  | sed 's/[",]//g' \
+  | tr -d '[[:space:]]')
+
+printf "\n${GREEN}Tagging with ${PACKAGE_VERSION}\n${NC}"
+
+git tag v${PACKAGE_VERSION}
+git push --tags
+
+printf "\n${GREEN}Building\n${NC}"
+
+npm run build && cd dist/lib
+
+printf "\n${GREEN}Publishing\n${NC}"
+
+npm publish
