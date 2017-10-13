@@ -20,7 +20,10 @@ import {
 import { TemplatePortal } from '@angular/cdk/portal';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/switchMap';
 
 import {
   SatPopover,
@@ -41,6 +44,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   set attachedPopover(value: SatPopover) {
     this._validateAttachedPopover(value);
     this._attachedPopover = value;
+    this._attachedPopoverChange.next(this._attachedPopover);
   }
   private _attachedPopover: SatPopover;
 
@@ -72,6 +76,8 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   /** Reference to the overlay containing the popover component. */
   private _overlayRef: OverlayRef;
 
+  private _attachedPopoverChange = new Subject<SatPopover>();
+
   /** Emits when the directive is destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -86,6 +92,21 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     this.attachedPopover.closed
       .takeUntil(this._onDestroy)
       .subscribe(() => this.closePopover());
+
+    // Subscribe to open/close/toggle emissions from the popover
+    this._attachedPopoverChange
+      .startWith(this.attachedPopover)
+      .switchMap(popover => popover._takeAction)
+      .takeUntil(this._onDestroy)
+      .subscribe(action => {
+        if (action === 'open') {
+          this.openPopover();
+        } else if (action === 'close') {
+          this.closePopover();
+        } else if (action === 'toggle') {
+          this.togglePopover();
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -154,7 +175,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       .backdropClick()
       .takeUntil(this.popoverClosed)
       .takeUntil(this._onDestroy)
-      .subscribe(() => this.attachedPopover.emitCloseEvent());
+      .subscribe(() => this.attachedPopover._emitCloseEvent());
   }
 
   /** Create an overlay to be attached to the portal. */

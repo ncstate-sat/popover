@@ -14,7 +14,10 @@ const GLOBALS = {
 
   // rxjs globals
   'rxjs/Subject': 'Rx',
+  'rxjs/Observable': 'Rx',
   'rxjs/add/operator/takeUntil': 'Rx.Observable.prototype',
+  'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
+  'rxjs/add/operator/switchMap': 'Rx.Observable.prototype',
 };
 
 module.exports = GLOBALS;
