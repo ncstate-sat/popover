@@ -2,15 +2,12 @@
 # 1. Check out a branch and edit package version and add changelog entry
 # 2. Run `npm install` again to update package-lock.json
 # 3. Open PR and merge into `master`
-# 4. Run this script `bash scripts/publish.sh`
+# 4. `git checkout master && git pull origin master``
+# 5. Make sure everything is 👌
+# 6. Run this script `bash scripts/publish.sh`
 
 NC='\033[0m' # No Color
 GREEN='\033[0;32m'
-
-printf "${GREEN}Pulling latest from origin:master${NC}\n"
-
-git checkout master
-git pull origin master
 
 PACKAGE_VERSION=$(cat package.json \
   | grep version \
