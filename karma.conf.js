@@ -1,8 +1,8 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-module.exports = function (config) {
-  var libBase = '.ng_build/spec/';       // transpiled app JS and map files
+module.exports = config => {
+  const libBase = '.ng_build/spec/'; // transpiled app JS and map files
 
   config.set({
     basePath: '',
@@ -41,8 +41,6 @@ module.exports = function (config) {
       // Angular itself
       { pattern: 'node_modules/@angular/**/*.js', included: false, watched: false },
       { pattern: 'node_modules/@angular/**/*.js.map', included: false, watched: false },
-
-      { pattern: 'src/demo/systemjs-angular-loader.js', included: false, watched: false },
 
       'karma-test-shim.js', // optionally extend SystemJS mapping e.g., with barrels
 

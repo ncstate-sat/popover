@@ -6,9 +6,11 @@ Error.stackTraceLimit = 0; // "No stacktrace"" is us11 best for testing.
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
 
+const libBase = '.ng_build/spec/'; // transpiled app JS and map files
+
 // builtPaths: root paths for output ("built") files
-// get from karma.config.js, then prefix with '/base/' (default is 'src/')
-const builtPaths = (__karma__.config.builtPaths || ['src/']).map(p => '/base/' + p);
+// get from karma.config.js, then prefix with '/base/'
+const builtPaths = (__karma__.config.builtPaths || [libBase]).map(p => '/base/' + p);
 
 __karma__.loaded = () => { };
 
@@ -43,20 +45,10 @@ System.config({
   packages: {
     rxjs: { defaultExtension: 'js' },
     '': { defaultExtension: 'js' },
-    src: {
-      defaultExtension: 'js',
-      meta: {
-        './*.js': {
-          loader: 'system-loader'
-        }
-      }
-    }
   },
   // Map the angular umd bundles
   map: {
-    'system-loader': 'demo/systemjs-angular-loader.js',
     'rxjs': 'npm:rxjs',
-    'src': 'src',
     ...getAngularAndTestMappings(),
     ...getCdkMappings()
   }
