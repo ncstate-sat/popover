@@ -84,13 +84,13 @@ function getAngularAndTestMappings() {
     'http',
     'forms',
     'platform-browser',
-    'platform-browser-dynamic'
+    'platform-browser-dynamic',
   ];
 
   const withoutTests = [
     'animations',
     'animations/browser',
-    'platform-browser/animations'
+    'platform-browser/animations',
   ];
 
   const mappingWithTests = withTests.reduce((mapping, pkg) => {
@@ -104,7 +104,7 @@ function getAngularAndTestMappings() {
     return mapping;
   }, {});
 
-  return Object.assign({}, mappingWithTests, mappingWithoutTests);
+  return {...mappingWithTests, ...mappingWithoutTests}
 }
 
 /** Create a mapping of all the CDK packages. */
@@ -124,7 +124,7 @@ function getCdkMappings() {
     'scrolling',
     'stepper',
     'table',
-    'testing'
+    'testing',
   ];
 
   return packages.reduce((mapping, pkg) => {

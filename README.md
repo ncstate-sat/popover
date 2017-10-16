@@ -129,3 +129,11 @@ to use.
 ```
 npm run build && npm run copylib
 ```
+
+### Testing
+
+Run karma test in single-run mode
+
+```
+npm run test
+```
