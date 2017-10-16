@@ -66,10 +66,12 @@ Next, hook the popover to an anchor element.
   See Contact Details
 </button>
 
-<sat-popover #contactPopover>
+<sat-popover #contactPopover showBackdrop>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
 </sat-popover>
 ```
+
+> Note: `showBackdrop` is explained below
 
 ### Positioning
 
@@ -90,7 +92,7 @@ You can use the following to position the popover around the anchor:
 | yPosition     | 'above' \| 'center' \| 'below'  | 'center' |
 | overlapAnchor | boolean                         | true     |
 
-> Note: When the `xPosition` and `yPosition` are both `'center'`, `overlapAnchor` will have no
+> Note: When `xPosition` and `yPosition` are both `'center'`, `overlapAnchor` will have no
 effect.
 
 ### Opening and closing
@@ -98,13 +100,13 @@ effect.
 You are in full control of when the popover opens and closes. You can hook into any event or
 trigger that fits your application's needs.
 
-The `SatPopover` has the following methods,
+`SatPopover` has the following methods,
 
 * `open`
 * `close`
 * `toggle`
 
-The `SatPopoverAnchor` has similar methods,
+`SatPopoverAnchor` has similar methods,
 
 * `openPopover`
 * `closePopover`
