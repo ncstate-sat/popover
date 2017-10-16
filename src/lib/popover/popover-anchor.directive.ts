@@ -47,14 +47,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   }
   private _attachedPopover: SatPopover;
 
-  /** Whether clicking the target element will automatically toggle the popover. */
-  @Input('satDisablePopoverToggle')
-  get disablePopoverToggle() { return this._disablePopoverToggle; }
-  set disablePopoverToggle(value: boolean) {
-    this._disablePopoverToggle = coerceBooleanProperty(value);
-  }
-  private _disablePopoverToggle = false;
-
   /** Emits when the popover is opened. */
   @Output() popoverOpened = new EventEmitter<void>();
 
@@ -137,14 +129,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     if (this._overlayRef) {
       this._overlayRef.dispose();
       this._overlayRef = null;
-    }
-  }
-
-  /** Toggle the popover when host element is clicked. */
-  @HostListener('click')
-  private _anchorClicked(): void {
-    if (!this._disablePopoverToggle) {
-      this.togglePopover();
     }
   }
 
