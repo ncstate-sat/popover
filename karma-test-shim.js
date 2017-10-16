@@ -1,22 +1,23 @@
 // /*global jasmine, __karma__, window*/
-Error.stackTraceLimit = 0; // "No stacktrace"" is usually best for testing.
+Error.stackTraceLimit = 0; // "No stacktrace"" is us11 best for testing.
 
-// Uncomment to get full stacktrace output. Sometimes helpful, usually not.
+// Uncomment to get full stacktrace output. Sometimes helpful, us11 not.
 // Error.stackTraceLimit = Infinity; //
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
 
 // builtPaths: root paths for output ("built") files
 // get from karma.config.js, then prefix with '/base/' (default is 'src/')
-var builtPaths = (__karma__.config.builtPaths || ['src/'])
-                 .map(function(p) { return '/base/'+p;});
+const builtPaths = (__karma__.config.builtPaths || ['src/']).map(p => '/base/' + p);
 
-__karma__.loaded = function () { };
+__karma__.loaded = () => { };
 
+/** Whether the file is a javascript file. */
 function isJsFile(path) {
   return path.slice(-3) == '.js';
 }
 
+/** Whether the file is a test. */
 function isSpecFile(path) {
   return /\.spec\.(.*\.)?js$/.test(path);
 }
@@ -24,12 +25,10 @@ function isSpecFile(path) {
 // Is a "built" file if is JavaScript file in one of the "built" folders
 function isBuiltFile(path) {
   return isJsFile(path) &&
-         builtPaths.reduce(function(keep, bp) {
-           return keep || (path.substr(0, bp.length) === bp);
-         }, false);
+      builtPaths.reduce((keep, bp) => keep || (path.substr(0, bp.length) === bp), false);
 }
 
-var allSpecFiles = Object.keys(window.__karma__.files)
+const allSpecFiles = Object.keys(window.__karma__.files)
   .filter(isSpecFile)
   .filter(isBuiltFile);
 
@@ -45,63 +44,99 @@ System.config({
     rxjs: { defaultExtension: 'js' },
     '': { defaultExtension: 'js' },
     src: {
-        defaultExtension: 'js',
-        meta: {
-          './*.js': {
-            loader: 'system-loader'
-          }
+      defaultExtension: 'js',
+      meta: {
+        './*.js': {
+          loader: 'system-loader'
         }
       }
+    }
   },
   // Map the angular umd bundles
   map: {
     'system-loader': 'demo/systemjs-angular-loader.js',
-    '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
-    '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
-    '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',
-    '@angular/platform-browser': 'npm:@angular/platform-browser/bundles/platform-browser.umd.js',
-    '@angular/platform-browser-dynamic': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
-    '@angular/http': 'npm:@angular/http/bundles/http.umd.js',
-    '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
-    '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
-    // Testing bundles
-    '@angular/core/testing': 'npm:@angular/core/bundles/core-testing.umd.js',
-    '@angular/common/testing': 'npm:@angular/common/bundles/common-testing.umd.js',
-    '@angular/compiler/testing': 'npm:@angular/compiler/bundles/compiler-testing.umd.js',
-    '@angular/platform-browser/testing': 'npm:@angular/platform-browser/bundles/platform-browser-testing.umd.js',
-    '@angular/platform-browser-dynamic/testing': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic-testing.umd.js',
-    '@angular/http/testing': 'npm:@angular/http/bundles/http-testing.umd.js',
-    '@angular/router/testing': 'npm:@angular/router/bundles/router-testing.umd.js',
-    '@angular/forms/testing': 'npm:@angular/forms/bundles/forms-testing.umd.js',
     'rxjs': 'npm:rxjs',
-    'src': 'src'
+    'src': 'src',
+    ...getAngularAndTestMappings(),
+    ...getCdkMappings()
   }
 });
 
 initTestBed().then(initTesting);
 
+/** Initialize test environment. */
 function initTestBed(){
   return Promise.all([
     System.import('@angular/core/testing'),
     System.import('@angular/platform-browser-dynamic/testing')
   ])
-
-  .then(function (providers) {
-    var coreTesting    = providers[0];
-    var browserTesting = providers[1];
-
+  .then(([coreTesting, browserTesting]) => {
     coreTesting.TestBed.initTestEnvironment(
       browserTesting.BrowserDynamicTestingModule,
       browserTesting.platformBrowserDynamicTesting());
-  })
+  });
 }
 
-// Import all spec files and start karma
+/** Import all spec files and start karma. */
 function initTesting () {
-  return Promise.all(
-    allSpecFiles.map(function (moduleName) {
-      return System.import(moduleName);
-    })
-  )
-  .then(__karma__.start, __karma__.error);
+  return Promise.all(allSpecFiles.map(moduleName => System.import(moduleName)))
+    .then(__karma__.start, __karma__.error);
+}
+
+/** Create a mapping of all the angular packages. */
+function getAngularAndTestMappings() {
+  const withTests = [
+    'core',
+    'common',
+    'compiler',
+    'http',
+    'forms',
+    'platform-browser',
+    'platform-browser-dynamic'
+  ];
+
+  const withoutTests = [
+    'animations',
+    'animations/browser',
+    'platform-browser/animations'
+  ];
+
+  const mappingWithTests = withTests.reduce((mapping, pkg) => {
+    mapping[`@angular/${pkg}`] = `npm:@angular/${pkg}/bundles/${pkg}.umd.js`;
+    mapping[`@angular/${pkg}/testing`] = `npm:@angular/${pkg}/bundles/${pkg}-testing.umd.js`;
+    return mapping;
+  }, {});
+
+  const mappingWithoutTests = withoutTests.reduce((mapping, pkg) => {
+    mapping[`@angular/${pkg}`] = `npm:@angular/${pkg.split('/')[0]}/bundles/${pkg.replace('/', '-')}.umd.js`;
+    return mapping;
+  }, {});
+
+  return Object.assign({}, mappingWithTests, mappingWithoutTests);
+}
+
+/** Create a mapping of all the CDK packages. */
+function getCdkMappings() {
+  const packages = [
+    'a11y',
+    'bidi',
+    'coercion',
+    'collections',
+    'keycodes',
+    'layout',
+    'observers',
+    'overlay',
+    'platform',
+    'portal',
+    'rxjs',
+    'scrolling',
+    'stepper',
+    'table',
+    'testing'
+  ];
+
+  return packages.reduce((mapping, pkg) => {
+    mapping[`@angular/cdk/${pkg}`] = `npm:@angular/cdk/bundles/cdk-${pkg}.umd.js`;
+    return mapping;
+  }, {});
 }
