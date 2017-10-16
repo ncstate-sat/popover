@@ -66,12 +66,12 @@ Next, hook the popover to an anchor element.
   See Contact Details
 </button>
 
-<sat-popover #contactPopover showBackdrop>
+<sat-popover #contactPopover hasBackdrop>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
 </sat-popover>
 ```
 
-> Note: `showBackdrop` is explained below
+> Note: `hasBackdrop` is explained below
 
 ### Positioning
 
@@ -116,10 +116,10 @@ trigger that fits your application's needs.
 
 You can add a fullscreen backdrop that appears behind the popover when it is open. It prevents
 interaction with the rest of the application and will automatically close the popover when
-clicked. To add it to your popover, use `showBackdrop`.
+clicked. To add it to your popover, use `hasBackdrop`.
 
 ```html
-<sat-popover #myBlockingPopover showBackdrop>
+<sat-popover #myBlockingPopover hasBackdrop>
   <!-- ... -->
 </sat-popover>
 ```
@@ -128,7 +128,7 @@ If used, the default backdrop will be transparent. You can add any custom backdr
 `backdropClass`.
 
 ```html
-<sat-popover #myBlockingPopover showBackdrop backdropClass="app-fancy-backdrop">
+<sat-popover #myBlockingPopover hasBackdrop backdropClass="app-fancy-backdrop">
   <!-- ... -->
 </sat-popover>
 ```
