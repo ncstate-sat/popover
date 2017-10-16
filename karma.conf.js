@@ -53,7 +53,6 @@ module.exports = config => {
       { pattern: libBase + '**/*.css', included: false, watched: true },
 
       // Paths for debugging with source maps in dev tools
-      { pattern: libBase + '**/*.ts', included: false, watched: false },
       { pattern: libBase + '**/*.js.map', included: false, watched: false }
     ],
 
