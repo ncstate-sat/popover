@@ -1,12 +1,22 @@
 {
-  "extends": "./tsconfig.es5.json",
   "compilerOptions": {
-    "outDir": "../../.ng_build/spec/",
+    "target": "es5",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "inlineSources": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "skipLibCheck": true,
+    "stripInternal": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "baseUrl": "",
     "module": "commonjs",
-    "types": ["jasmine"]
-  },
-  "include": [
-    "**/*.spec.ts",
-    "index.ts"
-  ]
+    "declaration": false,
+    "emitDecoratorMetadata": true
+  }
 }
+
