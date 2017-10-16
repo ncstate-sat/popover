@@ -29,8 +29,7 @@ import { SatPopoverAnchor } from '@sat/popover';
           </button>
           <button mat-raised-button
               [satPopoverAnchorFor]="popover3"
-              (mouseenter)="popover3.open()"
-              >
+              (mouseenter)="popover3.open()">
             Woo! ·
           </button>
         </mat-card-content>
