@@ -2,7 +2,6 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnInit,
   OnDestroy,
@@ -18,7 +17,6 @@ import {
   VerticalConnectionPos
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
@@ -46,14 +44,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     this._attachedPopoverChange.next(this._attachedPopover);
   }
   private _attachedPopover: SatPopover;
-
-  /** Whether clicking the target element will automatically toggle the popover. */
-  @Input('satDisablePopoverToggle')
-  get disablePopoverToggle() { return this._disablePopoverToggle; }
-  set disablePopoverToggle(value: boolean) {
-    this._disablePopoverToggle = coerceBooleanProperty(value);
-  }
-  private _disablePopoverToggle = false;
 
   /** Emits when the popover is opened. */
   @Output() popoverOpened = new EventEmitter<void>();
@@ -140,14 +130,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     }
   }
 
-  /** Toggle the popover when host element is clicked. */
-  @HostListener('click')
-  private _anchorClicked(): void {
-    if (!this._disablePopoverToggle) {
-      this.togglePopover();
-    }
-  }
-
   /** Throws an error if the popover instance is not provided. */
   private _validateAttachedPopover(popover: SatPopover): void {
     if (!popover || !(popover instanceof SatPopover)) {
@@ -197,7 +179,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   private _getOverlayConfig(): OverlayConfig {
     const config = new OverlayConfig();
     config.positionStrategy = this._getPosition();
-    config.hasBackdrop = !this.attachedPopover.disableBackdrop;
+    config.hasBackdrop = this.attachedPopover.hasBackdrop;
     config.backdropClass = this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop';
     config.scrollStrategy = this._overlay.scrollStrategies.reposition();
 

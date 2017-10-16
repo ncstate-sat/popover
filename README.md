@@ -49,6 +49,8 @@ export class AppModule { }
 
 ## Usage
 
+### Getting started
+
 Wrap any component you want to display in a popover with an `<sat-popover>` component.
 
 ```html
@@ -60,17 +62,21 @@ Wrap any component you want to display in a popover with an `<sat-popover>` comp
 Next, hook the popover to an anchor element.
 
 ```html
-<button [satPopoverAnchorFor]="contactPopover">
+<button [satPopoverAnchorFor]="contactPopover" (click)="contactPopover.toggle()">
   See Contact Details
 </button>
 
-<sat-popover #contactPopover>
+<sat-popover #contactPopover hasBackdrop>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
 </sat-popover>
 ```
 
-By default, whenever the button is clicked, the `<app-contact-overview>` popover will appear
-centered over the button. If you instead want the popover to appear below the anchor:
+> Note: `hasBackdrop` is explained below
+
+### Positioning
+
+By default, the popover will appear centered over the button. If you instead want the popover
+to appear below the anchor:
 
 ```html
 <sat-popover #contactPopover yPosition="below" [overlapAnchor]="false">
@@ -86,31 +92,60 @@ You can use the following to position the popover around the anchor:
 | yPosition     | 'above' \| 'center' \| 'below'  | 'center' |
 | overlapAnchor | boolean                         | true     |
 
-> Note: When the `xPosition` and `yPosition` are both `'center'`, `overlapAnchor` will have no
+> Note: When `xPosition` and `yPosition` are both `'center'`, `overlapAnchor` will have no
 effect.
 
-If you want to respond to events other than anchor clicks, you can disable the click handler
-and implement your own:
+### Opening and closing
+
+You are in full control of when the popover opens and closes. You can hook into any event or
+trigger that fits your application's needs.
+
+`SatPopover` has the following methods,
+
+* `open`
+* `close`
+* `toggle`
+
+`SatPopoverAnchor` has similar methods,
+
+* `openPopover`
+* `closePopover`
+* `togglePopover`
+
+### Backdrop
+
+You can add a fullscreen backdrop that appears behind the popover when it is open. It prevents
+interaction with the rest of the application and will automatically close the popover when
+clicked. To add it to your popover, use `hasBackdrop`.
 
 ```html
-<button [satPopoverAnchorFor]="contactPopover" satDisableClick>
-  See Details
-</button>
+<sat-popover #myBlockingPopover hasBackdrop>
+  <!-- ... -->
+</sat-popover>
 ```
 
-```ts
-@ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
+If used, the default backdrop will be transparent. You can add any custom backdrop class with
+`backdropClass`.
 
-openContactPopover(): void {
-  this.anchor.openPopover();
-}
+```html
+<sat-popover #myBlockingPopover hasBackdrop backdropClass="app-fancy-backdrop">
+  <!-- ... -->
+</sat-popover>
 ```
+
+> Note: if you plan on using `mouseenter` and `mouseleave` events to open and close your popover,
+keep in mind that a backdrop will block pointer events once it is open, immediately triggering
+a `mouseleave` event.
 
 ## Styles
 
 The `<sat-popover>` component only provides styles to affect its own transform origin. It is
 the responsibility of the elements you project inside the popover to styles themselves. This
 includes background color, box shadows, margin offsets, etc.
+
+## Examples
+
+StackBlitz examples coming soon.
 
 
 ## Contributing

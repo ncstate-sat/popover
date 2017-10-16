@@ -17,14 +17,27 @@ import { SatPopoverAnchor } from '@sat/popover';
       <mat-card>
         <mat-card-title>Click the buttons</mat-card-title>
         <mat-card-content>
-          <button mat-raised-button [satPopoverAnchorFor]="popover1">Woo! ↘</button>
-          <button mat-raised-button [satPopoverAnchorFor]="popover2">Woo! ←</button>
-          <button mat-raised-button [satPopoverAnchorFor]="popover3">Woo! ·</button>
+          <button mat-raised-button
+              [satPopoverAnchorFor]="popover1"
+              (click)="popover1.toggle()">
+            Woo! ↘
+          </button>
+          <button mat-raised-button
+              [satPopoverAnchorFor]="popover2"
+              (click)="popover2.toggle()">
+            Woo! ←
+          </button>
+          <button mat-raised-button
+              [satPopoverAnchorFor]="popover3"
+              (mouseenter)="popover3.open()">
+            Woo! ·
+          </button>
         </mat-card-content>
 
         <sat-popover #popover1
             xPosition="after"
             yPosition="below"
+            hasBackdrop
             [overlapAnchor]="false">
           <div style="background: lightgray; padding: 48px">
             Oh, cool
@@ -34,6 +47,7 @@ import { SatPopoverAnchor } from '@sat/popover';
         <sat-popover #popover2
             xPosition="before"
             yPosition="center"
+            hasBackdrop
             [overlapAnchor]="false">
           <div style="background: lightgray; padding: 48px" class="mat-elevation-z12">
             Oh, neat
@@ -44,7 +58,11 @@ import { SatPopoverAnchor } from '@sat/popover';
             xPosition="center"
             yPosition="center"
             [overlapAnchor]="false">
-          <mat-toolbar color="accent" class="mat-elevation-z2">Oh, nifty</mat-toolbar>
+          <mat-toolbar color="accent"
+              class="mat-elevation-z2"
+              (mouseleave)="popover3.close()">
+            Oh, nifty
+          </mat-toolbar>
         </sat-popover>
 
       </mat-card>
@@ -69,6 +87,7 @@ import { SatPopoverAnchor } from '@sat/popover';
         <sat-popover #fancyPopover
             xPosition="center"
             yPosition="below"
+            hasBackdrop
             backdropClass="demo-background-rainbow">
           <div style="background: pink; padding: 32px; border-radius: 8px"
               class="mat-elevation-z4">
@@ -85,7 +104,7 @@ import { SatPopoverAnchor } from '@sat/popover';
               [satPopoverAnchorFor]="bluePopover">
           </div>
         </mat-card-content>
-        <sat-popover #bluePopover disableBackdrop>
+        <sat-popover #bluePopover>
           <div style="background: lightblue; padding: 16px">BLUE!</div>
         </sat-popover>
         <mat-card-actions>

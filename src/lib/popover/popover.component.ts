@@ -50,13 +50,13 @@ export class SatPopover implements AfterViewInit {
   }
   private _yPosition: SatPopoverPositionY = 'center';
 
-  /** Whether the backdrop should be disabled (includes closing on click). */
+  /** Whether the popover should have a backdrop (includes closing on click). */
   @Input()
-  get disableBackdrop() { return this._disableBackdrop; }
-  set disableBackdrop(val: boolean) {
-    this._disableBackdrop = coerceBooleanProperty(val);
+  get hasBackdrop() { return this._hasBackdrop; }
+  set hasBackdrop(val: boolean) {
+    this._hasBackdrop = coerceBooleanProperty(val);
   }
-  private _disableBackdrop = false;
+  private _hasBackdrop = false;
 
   /** Optional backdrop class. */
   @Input() backdropClass = '';
