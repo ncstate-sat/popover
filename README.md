@@ -118,7 +118,7 @@ includes background color, box shadows, margin offsets, etc.
 ### Demo server
 
 ```
-npm run start
+npm run demo-app
 ```
 
 ### Build
@@ -130,10 +130,10 @@ to use.
 npm run build && npm run copylib
 ```
 
-### Watch
+### Testing
 
-Rebuild the libary on any source changes and copy to `node_modules`.
+Run karma test in single-run mode
 
 ```
-npm run watch
+npm run test
 ```
