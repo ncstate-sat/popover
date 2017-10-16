@@ -39,7 +39,7 @@ System.config({
     'npm:': 'node_modules/'
   },
   // Base URL for System.js calls. 'base/' is where Karma serves files from.
-  baseURL: 'base/src/lib',
+  baseURL: 'base/.ng_build/spec',
   // Extend usual application package list with test folder
   packages: {
     rxjs: { defaultExtension: 'js' },

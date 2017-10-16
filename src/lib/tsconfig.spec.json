@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "../../.ng_build/spec",
     "target": "es5",
     "moduleResolution": "node",
     "sourceMap": true,

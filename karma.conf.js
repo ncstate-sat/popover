@@ -2,7 +2,7 @@
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
 module.exports = function (config) {
-  var libBase = 'src/lib/';       // transpiled app JS and map files
+  var libBase = '.ng_build/spec/';       // transpiled app JS and map files
 
   config.set({
     basePath: '',
@@ -62,8 +62,8 @@ module.exports = function (config) {
     // Proxied base paths for loading assets
     proxies: {
       // required for modules fetched by SystemJS
-      '/base/src/lib/node_modules/': '/base/node_modules/',
-      '/base/src/lib/demo/': '/base/src/demo/'
+      '/base/.ng_build/spec/node_modules/': '/base/node_modules/',
+      '/base/.ng_build/spec/demo/': '/base/src/demo/'
     },
 
     reporters: ['progress', 'kjhtml'],
