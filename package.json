@@ -3,12 +3,12 @@
   "version": "1.0.0-alpha.3",
   "license": "MIT",
   "scripts": {
+    "clean": "rm -rf dist .ng_build",
     "demo-app": "ng serve",
-    "lib": "npm run build && npm run watch",
-    "build": "rm -rf dist .ng_build && node tools/build.js",
+    "build": "node tools/build.js",
     "copylib": "bash ./scripts/copy_lib_dist.sh",
     "lint": "ng lint --type-check",
-    "test": "node tools/test.js"
+    "test": "karma start karma.conf.js --single-run"
   },
   "private": true,
   "keywords": [
