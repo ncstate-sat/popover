@@ -79,6 +79,9 @@ export class SatPopover implements AfterViewInit {
   /** Emits whenever the popover should take some action. */
   _takeAction = new Subject<PopoverActionEvent>();
 
+  /** Whether the popover is presently open. */
+  _open = false;
+
   /** Reference to the element to build a focus trap around. */
   @ViewChild('focusTrapElement')
   private _focusTrapElement: ElementRef;
@@ -111,6 +114,11 @@ export class SatPopover implements AfterViewInit {
   /** Toggle this popover open or closed. */
   toggle(): void {
     this._takeAction.next(new PopoverActionEvent('toggle'));
+  }
+
+  /** Gets whether the popover is presently open. */
+  isOpen(): boolean {
+    return this._open;
   }
 
   /** Publicly emit a close event. */

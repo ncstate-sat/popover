@@ -52,7 +52,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   @Output() popoverClosed = new EventEmitter<any>();
 
   /** Gets whether the popover is presently open. */
-  popoverOpen(): boolean {
+  isPopoverOpen(): boolean {
     return this._popoverOpen;
   }
 
@@ -102,6 +102,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
       // Save and emit
       this._popoverOpen = true;
+      this.attachedPopover._open = true;
       this.popoverOpened.emit();
       this.attachedPopover.opened.emit();
     }
@@ -114,6 +115,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
       // Save and emit
       this._popoverOpen = false;
+      this.attachedPopover._open = false;
 
       if (value === undefined) {
         this.popoverClosed.emit();

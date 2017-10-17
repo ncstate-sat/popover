@@ -198,10 +198,28 @@ describe('SatPopover', () => {
       expect(anchorClosedValue).toBe(secondTestVal);
     }));
 
+    it('should return whether the popover is presently open', fakeAsync(() => {
+      fixture.detectChanges();
+
+      expect(comp.anchor.isPopoverOpen()).toBe(false);
+      expect(comp.popover.isOpen()).toBe(false);
+
+      comp.popover.open();
+
+      expect(comp.anchor.isPopoverOpen()).toBe(true);
+      expect(comp.popover.isOpen()).toBe(true);
+
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+
+      expect(comp.anchor.isPopoverOpen()).toBe(false);
+      expect(comp.popover.isOpen()).toBe(false);
+    }));
+
   });
 
   describe('backdrop', () => {
-
     let fixture: ComponentFixture<BackdropPopoverTestComponent>;
     let comp:    BackdropPopoverTestComponent;
     let overlayContainerElement: HTMLElement;
