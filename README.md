@@ -146,29 +146,3 @@ includes background color, box shadows, margin offsets, etc.
 ## Examples
 
 StackBlitz examples coming soon.
-
-
-## Contributing
-
-### Demo server
-
-```
-npm run demo-app
-```
-
-### Build
-
-Build the library into `dist/lib` and copy the library into `node_modules` for the demo app
-to use.
-
-```
-npm run build && npm run copylib
-```
-
-### Testing
-
-Run karma test in single-run mode
-
-```
-npm run test
-```
