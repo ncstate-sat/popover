@@ -1,5 +1,7 @@
 # Popover Component for Angular
 
+[StackBlitz Demo](https://stackblitz.com/edit/sat-popover-examples)
+
 ## Installation
 
 SAT Popover has a peer dependency on the Angular CDK to leverage its overlay API.
@@ -142,7 +144,3 @@ a `mouseleave` event.
 The `<sat-popover>` component only provides styles to affect its own transform origin. It is
 the responsibility of the elements you project inside the popover to styles themselves. This
 includes background color, box shadows, margin offsets, etc.
-
-## Examples
-
-StackBlitz examples coming soon.
