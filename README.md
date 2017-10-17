@@ -1,7 +1,5 @@
 # Popover Component for Angular
 
-## Demo
-
 [StackBlitz Demo](https://stackblitz.com/edit/sat-popover-examples)
 
 ## Installation
