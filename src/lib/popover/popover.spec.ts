@@ -133,6 +133,142 @@ describe('SatPopover', () => {
       expect(overlayContainerElement.textContent).toBe('');
     }));
 
+    it('should emit when opened', () => {
+      fixture.detectChanges();
+      let popoverOpenedEvent = false;
+      let anchorOpenedEvent = false;
+
+      comp.popover.opened.subscribe(() => popoverOpenedEvent = true);
+      comp.anchor.popoverOpened.subscribe(() => anchorOpenedEvent = true);
+
+      comp.popover.open();
+
+      expect(popoverOpenedEvent).toBe(true);
+      expect(anchorOpenedEvent).toBe(true);
+    });
+
+    it('should emit when closed', fakeAsync(() => {
+      fixture.detectChanges();
+      comp.popover.open();
+
+      let popoverClosedEvent = false;
+      let anchorClosedEvent = false;
+
+      comp.popover.closed.subscribe(() => popoverClosedEvent = true);
+      comp.anchor.popoverClosed.subscribe(() => anchorClosedEvent = true);
+
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+
+      expect(popoverClosedEvent).toBe(true);
+      expect(anchorClosedEvent).toBe(true);
+    }));
+
+    it('should emit a value when closed with a value', fakeAsync(() => {
+      fixture.detectChanges();
+      comp.popover.open();
+
+      const firstTestVal = 'abc123';
+      const secondTestVal = 'xyz789';
+
+      let popoverClosedValue;
+      let anchorClosedValue;
+
+      comp.popover.closed.subscribe(val => popoverClosedValue = val);
+      comp.anchor.popoverClosed.subscribe(val => anchorClosedValue = val);
+
+      comp.anchor.closePopover(firstTestVal);
+      fixture.detectChanges();
+      tick();
+
+      // Working when closed via anchor api
+      expect(popoverClosedValue).toBe(firstTestVal);
+      expect(anchorClosedValue).toBe(firstTestVal);
+
+      comp.popover.open();
+      fixture.detectChanges();
+
+      comp.popover.close(secondTestVal);
+      fixture.detectChanges();
+      tick();
+
+      // Working when closed via popover api (does not yet work)
+      expect(popoverClosedValue).toBe(secondTestVal);
+      expect(anchorClosedValue).toBe(secondTestVal);
+    }));
+
+  });
+
+  describe('backdrop', () => {
+
+    let fixture: ComponentFixture<BackdropPopoverTestComponent>;
+    let comp:    BackdropPopoverTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SatPopoverModule,
+          NoopAnimationsModule,
+        ],
+        declarations: [BackdropPopoverTestComponent],
+        providers: [
+          {provide: OverlayContainer, useFactory: overlayContainerFactory}
+        ]
+      });
+
+      fixture = TestBed.createComponent(BackdropPopoverTestComponent);
+      comp = fixture.componentInstance;
+
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+        .getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    it('should have no backdrop by default', () => {
+      fixture.detectChanges();
+      comp.popover.open();
+
+      const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(backdrop).toBeFalsy();
+    });
+
+    it('should allow adding a transparent backdrop', () => {
+      comp.backdrop = true;
+      fixture.detectChanges();
+      comp.popover.open();
+
+      const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(backdrop).toBeTruthy();
+    });
+
+    it('should close when backdrop is clicked', fakeAsync(() => {
+      comp.backdrop = true;
+      fixture.detectChanges();
+      comp.popover.open();
+
+      const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      backdrop.click();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.textContent).toBe('');
+    }));
+
+    it('should allow a custom backdrop to be added', () => {
+      comp.backdrop = true;
+      comp.klass = 'test-custom-class';
+      fixture.detectChanges();
+      comp.popover.open();
+
+      const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(backdrop.classList.contains('test-custom-class')).toBe(true);
+    });
+
   });
 
 });
@@ -163,6 +299,24 @@ class InvalidPopoverTestComponent { }
 class SimplePopoverTestComponent {
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
   @ViewChild(SatPopover) popover: SatPopover;
+}
+
+/**
+ * This component is for testing the backdrop behavior of a simple
+ * popover attached to a simple anchor.
+ */
+@Component({
+  template: `
+    <div [satPopoverAnchorFor]="p">Anchor</div>
+    <sat-popover #p [hasBackdrop]="backdrop" [backdropClass]="klass">
+      Popover
+    </sat-popover>
+  `
+})
+class BackdropPopoverTestComponent {
+  @ViewChild(SatPopover) popover: SatPopover;
+  backdrop = false;
+  klass: string;
 }
 
 

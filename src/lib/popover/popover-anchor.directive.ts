@@ -80,9 +80,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._validateAttachedPopover(this.attachedPopover);
-    this.attachedPopover.closed
-      .takeUntil(this._onDestroy)
-      .subscribe(() => this.closePopover());
   }
 
   ngOnDestroy() {
@@ -106,6 +103,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       // Save and emit
       this._popoverOpen = true;
       this.popoverOpened.emit();
+      this.attachedPopover.opened.emit();
     }
   }
 
@@ -116,9 +114,14 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
       // Save and emit
       this._popoverOpen = false;
-      value === undefined
-        ? this.popoverClosed.emit()
-        : this.popoverClosed.emit(value);
+
+      if (value === undefined) {
+        this.popoverClosed.emit();
+        this.attachedPopover.closed.emit();
+      } else {
+        this.popoverClosed.emit(value);
+        this.attachedPopover.closed.emit(value);
+      }
     }
   }
 
@@ -145,12 +148,12 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     this._attachedPopoverChange
       .switchMap(popover => popover._takeAction)
       .takeUntil(this._onDestroy)
-      .subscribe(action => {
-        if (action === 'open') {
+      .subscribe(event => {
+        if (event.action === 'open') {
           this.openPopover();
-        } else if (action === 'close') {
-          this.closePopover();
-        } else if (action === 'toggle') {
+        } else if (event.action === 'close') {
+          this.closePopover(event.value);
+        } else if (event.action === 'toggle') {
           this.togglePopover();
         }
       });
@@ -162,7 +165,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       .backdropClick()
       .takeUntil(this.popoverClosed)
       .takeUntil(this._onDestroy)
-      .subscribe(() => this.attachedPopover._emitCloseEvent());
+      .subscribe(() => this.closePopover());
   }
 
   /** Create an overlay to be attached to the portal. */
