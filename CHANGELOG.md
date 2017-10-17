@@ -1,3 +1,29 @@
+# 1.0.0-beta.0 binaural-bongo
+
+### Breaking Changes
+
+* Anchors not longer default to toggling the popover on click. That means you are required to
+manually open and close the popover as needed. This is done to prevent prescription of behavior
+and to avoid potentially growing the number of "disable apis".
+* That means `satDisableClick` has been removed.
+* Backdrops are no longer included by default. For the same reason as click behavior, they are now
+opt-in. Use `hasBackdrop` on a popover to specify that a backdrop should appear behind it when open.
+* That means `disableBackdrop` has been removed.
+* `popoverOpen()` on the anchor has been renamed to `isPopoverOpen()`
+
+### Features
+
+* `SatPopover` now has an `isOpen()` method.
+
+### Fixes
+
+* `opened` output of `SatPopover` works now.
+
+### Other
+
+* Tests have been added for the api facing portions. For now, positioning and fallback behavior
+still relies on proper testing in the CDK.
+
 # 1.0.0-alpha.3
 
 ### Features
