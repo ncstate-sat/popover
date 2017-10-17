@@ -8,7 +8,9 @@
     "build": "node tools/build.js",
     "copylib": "bash ./scripts/copy_lib_dist.sh",
     "lint": "ng lint --type-check",
-    "test": "karma start karma.conf.js --single-run"
+    "test": "concurrently \"npm run watch\" \"karma start karma.conf.js\"",
+    "watch": "node tools/watch.js",
+    "test:once": "karma start karma.conf.js --single-run"
   },
   "private": true,
   "keywords": [
@@ -44,7 +46,9 @@
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
+    "chokidar": "^1.7.0",
     "codelyzer": "~3.1.1",
+    "concurrently": "^3.5.0",
     "core-js": "^2.4.1",
     "fs-extra": "^4.0.1",
     "glob": "^7.1.2",
