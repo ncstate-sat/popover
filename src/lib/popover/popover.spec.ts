@@ -193,7 +193,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       tick();
 
-      // Working when closed via popover api (does not yet work)
+      // Working when closed via popover api
       expect(popoverClosedValue).toBe(secondTestVal);
       expect(anchorClosedValue).toBe(secondTestVal);
     }));
