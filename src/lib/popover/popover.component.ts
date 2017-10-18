@@ -150,14 +150,14 @@ export class SatPopover implements AfterViewInit {
   /** Gets an animation config with customized (or default) transition values. */
   _getAnimation(): { value: any, params: any } {
     return {
-      value: 'showing',
+      value: 'visible',
       params: { openTransition: this.openTransition, closeTransition: this.closeTransition }
     };
   }
 
   /** Callback for when the popover is finished animating in or out. */
   _onAnimationDone(event: AnimationEvent) {
-    if (event.toState === 'showing') {
+    if (event.toState === 'visible') {
       this._trapFocus();
     } else if (event.toState === 'void') {
       this._restoreFocus();
