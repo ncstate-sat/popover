@@ -2,11 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { ESCAPE } from '@angular/cdk/keycodes';
 
 import { SatPopoverModule } from './popover.module';
 import { SatPopover } from './popover.component';
 import { SatPopoverAnchor } from './popover-anchor.directive';
-import { getInvalidPopoverError } from './popover.errors';
+import { getInvalidPopoverError, getUnanchoredPopoverError } from './popover.errors';
 
 
 describe('SatPopover', () => {
@@ -19,7 +20,8 @@ describe('SatPopover', () => {
         imports: [SatPopoverModule],
         declarations: [
           InvalidPopoverTestComponent,
-          SimplePopoverTestComponent
+          SimplePopoverTestComponent,
+          AnchorlessPopoverTestComponent,
         ]
       });
 
@@ -39,6 +41,15 @@ describe('SatPopover', () => {
       expect(() => {
         fixture.detectChanges();
       }).not.toThrowError();
+    });
+
+    it('should throw an error if a popover has no corresponding anchor', () => {
+      fixture = TestBed.createComponent(AnchorlessPopoverTestComponent);
+      fixture.detectChanges();
+
+      expect(() => {
+        fixture.componentInstance.popover.open();
+      }).toThrow(getUnanchoredPopoverError());
     });
 
   });
@@ -73,64 +84,64 @@ describe('SatPopover', () => {
 
     it('should open with open()', () => {
       fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('');
+      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
       comp.popover.open();
-      expect(overlayContainerElement.textContent).toContain('Popover');
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
     });
 
     it('should open with openPopover()', () => {
       fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('');
+      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
       comp.anchor.openPopover();
-      expect(overlayContainerElement.textContent).toContain('Popover');
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
     });
 
     it('should close with close()', fakeAsync(() => {
       fixture.detectChanges();
       comp.popover.open();
-      expect(overlayContainerElement.textContent).toContain('Popover');
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
 
       comp.popover.close();
       fixture.detectChanges();
       tick();
-      expect(overlayContainerElement.textContent).toBe('');
+      expect(overlayContainerElement.textContent).toBe('', 'Subsequently closed');
     }));
 
     it('should close with closePopover()', fakeAsync(() => {
       fixture.detectChanges();
       comp.anchor.openPopover();
-      expect(overlayContainerElement.textContent).toContain('Popover');
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
 
       comp.anchor.closePopover();
       fixture.detectChanges();
       tick();
-      expect(overlayContainerElement.textContent).toBe('');
+      expect(overlayContainerElement.textContent).toBe('', 'Subsequently closed');
     }));
 
     it('should toggle with toggle()', fakeAsync(() => {
       fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('');
+      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
 
       comp.popover.toggle();
-      expect(overlayContainerElement.textContent).toContain('Popover');
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
 
       comp.popover.toggle();
       fixture.detectChanges();
       tick();
-      expect(overlayContainerElement.textContent).toBe('');
+      expect(overlayContainerElement.textContent).toBe('', 'Closed after second toggle');
     }));
 
     it('should toggle with togglePopover()', fakeAsync(() => {
       fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('');
+      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
 
       comp.anchor.togglePopover();
-      expect(overlayContainerElement.textContent).toContain('Popover');
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
 
       comp.anchor.togglePopover();
       fixture.detectChanges();
       tick();
-      expect(overlayContainerElement.textContent).toBe('');
+      expect(overlayContainerElement.textContent).toBe('', 'Closed after second toggle');
     }));
 
     it('should emit when opened', () => {
@@ -143,8 +154,8 @@ describe('SatPopover', () => {
 
       comp.popover.open();
 
-      expect(popoverOpenedEvent).toBe(true);
-      expect(anchorOpenedEvent).toBe(true);
+      expect(popoverOpenedEvent).toBe(true, 'popoverOpened called');
+      expect(anchorOpenedEvent).toBe(true, 'anchorOpened called');
     });
 
     it('should emit when closed', fakeAsync(() => {
@@ -161,8 +172,8 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       tick();
 
-      expect(popoverClosedEvent).toBe(true);
-      expect(anchorClosedEvent).toBe(true);
+      expect(popoverClosedEvent).toBe(true, 'popoverClosed called');
+      expect(anchorClosedEvent).toBe(true, 'anchorClosed called');
     }));
 
     it('should emit a value when closed with a value', fakeAsync(() => {
@@ -183,8 +194,8 @@ describe('SatPopover', () => {
       tick();
 
       // Working when closed via anchor api
-      expect(popoverClosedValue).toBe(firstTestVal);
-      expect(anchorClosedValue).toBe(firstTestVal);
+      expect(popoverClosedValue).toBe(firstTestVal, 'popoverClosed with value - anchor api');
+      expect(anchorClosedValue).toBe(firstTestVal, 'anchorClosed with value - anchor api');
 
       comp.popover.open();
       fixture.detectChanges();
@@ -194,27 +205,27 @@ describe('SatPopover', () => {
       tick();
 
       // Working when closed via popover api
-      expect(popoverClosedValue).toBe(secondTestVal);
-      expect(anchorClosedValue).toBe(secondTestVal);
+      expect(popoverClosedValue).toBe(secondTestVal, 'popoverClosed with value - popover api');
+      expect(anchorClosedValue).toBe(secondTestVal, 'anchorClosed with value - popover api');
     }));
 
     it('should return whether the popover is presently open', fakeAsync(() => {
       fixture.detectChanges();
 
-      expect(comp.anchor.isPopoverOpen()).toBe(false);
-      expect(comp.popover.isOpen()).toBe(false);
+      expect(comp.anchor.isPopoverOpen()).toBe(false, 'Initially closed - anchor');
+      expect(comp.popover.isOpen()).toBe(false, 'Initially closed - popover');
 
       comp.popover.open();
 
-      expect(comp.anchor.isPopoverOpen()).toBe(true);
-      expect(comp.popover.isOpen()).toBe(true);
+      expect(comp.anchor.isPopoverOpen()).toBe(true, 'Subsequently opened - anchor');
+      expect(comp.popover.isOpen()).toBe(true, 'Subsequently opened - popover');
 
       comp.popover.close();
       fixture.detectChanges();
       tick();
 
-      expect(comp.anchor.isPopoverOpen()).toBe(false);
-      expect(comp.popover.isOpen()).toBe(false);
+      expect(comp.anchor.isPopoverOpen()).toBe(false, 'Finally closed - anchor');
+      expect(comp.popover.isOpen()).toBe(false, 'Finally closed - popover');
     }));
 
   });
@@ -289,6 +300,56 @@ describe('SatPopover', () => {
 
   });
 
+  describe('keyboard', () => {
+    let fixture: ComponentFixture<KeyboardPopoverTestComponent>;
+    let comp:    KeyboardPopoverTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SatPopoverModule,
+          NoopAnimationsModule,
+        ],
+        declarations: [KeyboardPopoverTestComponent],
+        providers: [
+          {provide: OverlayContainer, useFactory: overlayContainerFactory}
+        ]
+      });
+
+      fixture = TestBed.createComponent(KeyboardPopoverTestComponent);
+      comp = fixture.componentInstance;
+
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+        .getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    it('should close when escape key is pressed', fakeAsync(() => {
+      fixture.detectChanges();
+      comp.popover.open();
+
+      // Let focus move to the first focusable element
+      fixture.detectChanges();
+      tick();
+
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
+
+      // Emit ESCAPE keydown event
+      const currentlyFocusedElement = document.activeElement;
+      currentlyFocusedElement.dispatchEvent(createKeyboardEvent('keydown', ESCAPE));
+
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.textContent).toBe('', 'Closed after escape keydown');
+    }));
+
+  });
+
 });
 
 /**
@@ -302,6 +363,19 @@ describe('SatPopover', () => {
   `
 })
 class InvalidPopoverTestComponent { }
+
+/**
+ * This component is for testing that trying to open/close/toggle
+ * a popover with no anchor will throw an error.
+ */
+@Component({
+  template: `
+    <sat-popover>Anchorless</sat-popover>
+  `
+})
+class AnchorlessPopoverTestComponent {
+  @ViewChild(SatPopover) popover: SatPopover;
+}
 
 
 /**
@@ -337,11 +411,26 @@ class BackdropPopoverTestComponent {
   klass: string;
 }
 
-
 /**
- * This factory function provides an overlay container under test
- * control.
+ * This component is for testing behavior related to focus being
+ * inside the popover.
  */
+@Component({
+  template: `
+    <div [satPopoverAnchorFor]="p">Anchor</div>
+    <sat-popover #p>
+      Popover
+      <input type="text" class="first">
+      <input type="text" class="second">
+    </sat-popover>
+  `
+})
+export class KeyboardPopoverTestComponent {
+  @ViewChild(SatPopover) popover: SatPopover;
+}
+
+
+/** This factory function provides an overlay container under test control. */
 const overlayContainerFactory = () => {
   const element = document.createElement('div');
   element.classList.add('cdk-overlay-container');
@@ -353,3 +442,30 @@ const overlayContainerFactory = () => {
 
   return { getContainerElement: () => element };
 };
+
+
+/** Dispatches a keydown event from an element. From angular/material2 */
+export function createKeyboardEvent(type: string, keyCode: number, target?: Element, key?: string) {
+  const event = document.createEvent('KeyboardEvent') as any;
+  // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
+  const initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
+  const originalPreventDefault = event.preventDefault;
+
+  initEventFn(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
+
+  // Webkit Browsers don't set the keyCode when calling the init function.
+  // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
+  Object.defineProperties(event, {
+    keyCode: { get: () => keyCode },
+    key: { get: () => key },
+    target: { get: () => target }
+  });
+
+  // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
+  event.preventDefault = function() {
+    Object.defineProperty(event, 'defaultPrevented', { get: () => true });
+    return originalPreventDefault.apply(this, arguments);
+  };
+
+  return event;
+}
