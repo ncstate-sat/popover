@@ -7,6 +7,7 @@ import {
   MatCardModule,
   MatButtonModule,
   MatSelectModule,
+  MatIconModule,
 } from '@angular/material';
 
 import { DemoComponent } from './demo.component';
@@ -17,6 +18,7 @@ import { DemoComponent } from './demo.component';
     MatCardModule,
     MatButtonModule,
     MatSelectModule,
+    MatIconModule,
   ]
 })
 export class DemoMaterialModule { }
