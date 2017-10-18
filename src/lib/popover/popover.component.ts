@@ -19,6 +19,12 @@ import { ESCAPE } from '@angular/cdk/keycodes';
 import { Subject } from 'rxjs/Subject';
 
 import { transformPopover } from './popover.animations';
+import {
+  NotificationAction,
+  PopoverNotification,
+  PopoverNotificationService,
+} from './notification.service';
+import { getUnanchoredPopoverError } from './popover.errors';
 
 export type SatPopoverPositionX = 'before' | 'center' | 'after';
 export type SatPopoverPositionY = 'above'  | 'center' | 'below';
@@ -76,11 +82,11 @@ export class SatPopover implements AfterViewInit {
   /** Classes to be added to the popover for setting the correct transform origin. */
   _classList: any = {};
 
-  /** Emits whenever the popover should take some action. */
-  _takeAction = new Subject<PopoverActionEvent>();
-
   /** Whether the popover is presently open. */
   _open = false;
+
+  /** Instance of notification service. Will be undefined until attached to an anchor. */
+  _notifications: PopoverNotificationService;
 
   /** Reference to the element to build a focus trap around. */
   @ViewChild('focusTrapElement')
@@ -103,17 +109,20 @@ export class SatPopover implements AfterViewInit {
 
   /** Open this popover. */
   open(): void {
-    this._takeAction.next(new PopoverActionEvent('open'));
+    const notification = new PopoverNotification(NotificationAction.OPEN);
+    this._dispatchNotification(notification);
   }
 
   /** Close this popover. */
   close(value?: any): void {
-    this._takeAction.next(new PopoverActionEvent('close', value));
+    const notification = new PopoverNotification(NotificationAction.CLOSE, value);
+    this._dispatchNotification(notification);
   }
 
   /** Toggle this popover open or closed. */
   toggle(): void {
-    this._takeAction.next(new PopoverActionEvent('toggle'));
+    const notification = new PopoverNotification(NotificationAction.TOGGLE);
+    this._dispatchNotification(notification);
   }
 
   /** Gets whether the popover is presently open. */
@@ -121,16 +130,11 @@ export class SatPopover implements AfterViewInit {
     return this._open;
   }
 
-  /** Publicly emit a close event. */
-  _emitCloseEvent(): void {
-    this.closed.emit();
-  }
-
   /** Respond to key events. */
   _handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ESCAPE) {
       event.stopPropagation();
-      this._emitCloseEvent();
+      this.close();
     }
   }
 
@@ -193,12 +197,13 @@ export class SatPopover implements AfterViewInit {
       this._previouslyFocusedElement = this._document.activeElement as HTMLElement;
     }
   }
-}
 
-/** Event object for dispatching to anchor. */
-export class PopoverActionEvent {
-  constructor(
-    public action: 'open' | 'close' | 'toggle',
-    public value?: any
-  ) { }
+  /** Dispatch a notification to the notification service. */
+  private _dispatchNotification(notification: PopoverNotification) {
+    if (!this._notifications) {
+      throw getUnanchoredPopoverError();
+    }
+
+    this._notifications.dispatch(notification);
+  }
 }

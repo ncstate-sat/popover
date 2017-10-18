@@ -27,21 +27,23 @@ import {
   SatPopoverPositionX,
   SatPopoverPositionY
 } from './popover.component';
+import { NotificationAction, PopoverNotificationService } from './notification.service';
 import { getInvalidPopoverError } from './popover.errors';
 
 @Directive({
   selector: '[satPopoverAnchorFor]',
-  exportAs: 'satPopoverAnchor'
+  exportAs: 'satPopoverAnchor',
+  providers: [PopoverNotificationService],
 })
 export class SatPopoverAnchor implements OnInit, OnDestroy {
 
-  /** References the popover instance. */
+  /** Reference to the popover instance. */
   @Input('satPopoverAnchorFor')
   get attachedPopover() { return this._attachedPopover; }
   set attachedPopover(value: SatPopover) {
     this._validateAttachedPopover(value);
     this._attachedPopover = value;
-    this._attachedPopoverChange.next(this._attachedPopover);
+    this._attachedPopover._notifications = this._notifications;
   }
   private _attachedPopover: SatPopover;
 
@@ -65,20 +67,18 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   /** Reference to the overlay containing the popover component. */
   private _overlayRef: OverlayRef;
 
-  private _attachedPopoverChange = new Subject<SatPopover>();
-
   /** Emits when the directive is destroyed. */
   private _onDestroy = new Subject<void>();
 
   constructor(
     private _overlay: Overlay,
     private _elementRef: ElementRef,
-    private _viewContainerRef: ViewContainerRef
-  ) {
-    this._subscribeToPopoverInstanceChanges();
-  }
+    private _viewContainerRef: ViewContainerRef,
+    private _notifications: PopoverNotificationService,
+  ) { }
 
   ngOnInit() {
+    this._subscribeToNotifications();
     this._validateAttachedPopover(this.attachedPopover);
   }
 
@@ -99,12 +99,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       this._createOverlay();
       this._overlayRef.attach(this._portal);
       this._subscribeToBackdrop();
-
-      // Save and emit
-      this._popoverOpen = true;
-      this.attachedPopover._open = true;
-      this.popoverOpened.emit();
-      this.attachedPopover.opened.emit();
+      this._saveOpenedState();
     }
   }
 
@@ -112,18 +107,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   closePopover(value?: any): void {
     if (this._overlayRef) {
       this._overlayRef.detach();
-
-      // Save and emit
-      this._popoverOpen = false;
-      this.attachedPopover._open = false;
-
-      if (value === undefined) {
-        this.popoverClosed.emit();
-        this.attachedPopover.closed.emit();
-      } else {
-        this.popoverClosed.emit(value);
-        this.attachedPopover.closed.emit(value);
-      }
+      this._saveClosedState(value);
     }
   }
 
@@ -146,28 +130,43 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
    * Whenever a new popover is attached to this anchor, observe
    * its action subject to dispatch the appropriate action.
    */
-  private _subscribeToPopoverInstanceChanges(): void {
-    this._attachedPopoverChange
-      .switchMap(popover => popover._takeAction)
+  private _subscribeToNotifications(): void {
+    this._notifications.events()
       .takeUntil(this._onDestroy)
       .subscribe(event => {
-        if (event.action === 'open') {
+        if (event.action === NotificationAction.OPEN) {
           this.openPopover();
-        } else if (event.action === 'close') {
+        } else if (event.action === NotificationAction.CLOSE) {
           this.closePopover(event.value);
-        } else if (event.action === 'toggle') {
+        } else if (event.action === NotificationAction.TOGGLE) {
           this.togglePopover();
         }
       });
   }
 
-  /** Emit close event when backdrop is clicked for as long as the overlay is open. */
+  /** Close popover when backdrop is clicked. */
   private _subscribeToBackdrop(): void {
     this._overlayRef
       .backdropClick()
       .takeUntil(this.popoverClosed)
       .takeUntil(this._onDestroy)
       .subscribe(() => this.closePopover());
+  }
+
+  /** Save the opened state of the popover and emit. */
+  private _saveOpenedState(): void {
+    this.attachedPopover._open = this._popoverOpen = true;
+
+    this.popoverOpened.emit();
+    this.attachedPopover.opened.emit();
+  }
+
+  /** Save the closed state of the popover and emit. */
+  private _saveClosedState(value): void {
+    this.attachedPopover._open = this._popoverOpen = false;
+
+    this.popoverClosed.emit(value);
+    this.attachedPopover.closed.emit(value);
   }
 
   /** Create an overlay to be attached to the portal. */
