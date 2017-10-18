@@ -41,7 +41,10 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   @Input('satPopoverAnchorFor')
   get attachedPopover() { return this._attachedPopover; }
   set attachedPopover(value: SatPopover) {
+    // ensure that value is a popover
     this._validateAttachedPopover(value);
+    // store value and provide notification service as a communication
+    // channel between popover and anchor
     this._attachedPopover = value;
     this._attachedPopover._notifications = this._notifications;
   }
@@ -127,19 +130,23 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   }
 
   /**
-   * Whenever a new popover is attached to this anchor, observe
-   * its action subject to dispatch the appropriate action.
+   * Call appropriate anchor method when an event is dispatched through
+   * the notification service.
    */
   private _subscribeToNotifications(): void {
     this._notifications.events()
       .takeUntil(this._onDestroy)
       .subscribe(event => {
-        if (event.action === NotificationAction.OPEN) {
-          this.openPopover();
-        } else if (event.action === NotificationAction.CLOSE) {
-          this.closePopover(event.value);
-        } else if (event.action === NotificationAction.TOGGLE) {
-          this.togglePopover();
+        switch (event.action) {
+          case NotificationAction.OPEN:
+            this.openPopover();
+            break;
+          case NotificationAction.CLOSE:
+            this.closePopover(event.value);
+            break;
+          case NotificationAction.TOGGLE:
+            this.togglePopover();
+            break;
         }
       });
   }
@@ -162,7 +169,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   }
 
   /** Save the closed state of the popover and emit. */
-  private _saveClosedState(value): void {
+  private _saveClosedState(value?: any): void {
     this.attachedPopover._open = this._popoverOpen = false;
 
     this.popoverClosed.emit(value);

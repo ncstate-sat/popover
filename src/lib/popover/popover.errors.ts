@@ -3,5 +3,5 @@ export function getInvalidPopoverError(): Error {
 }
 
 export function getUnanchoredPopoverError(): Error {
-  return Error('SatPopover is not anchored to any SatPopoverAnchor');
+  return Error('SatPopover is not anchored to any SatPopoverAnchor.');
 }
