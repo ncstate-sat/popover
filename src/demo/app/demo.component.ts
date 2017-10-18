@@ -139,6 +139,7 @@ import { SatPopoverAnchor } from '@sat/popover';
           </div>
         </mat-card-content>
         <sat-popover #green
+            hasBackdrop
             xPosition="after"
             openTransition="1000ms linear"
             closeTransition="2000ms linear">
