@@ -132,7 +132,6 @@ export class SatPopover implements AfterViewInit {
 
   /** Respond to key events. */
   _handleKeydown(event: KeyboardEvent): void {
-    console.log('!', event);
     if (event.keyCode === ESCAPE) {
       event.stopPropagation();
       this.close();
