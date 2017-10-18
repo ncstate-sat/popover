@@ -3,7 +3,7 @@
       #focusTrapElement
       [ngClass]="_classList"
       (keydown)="_handleKeydown($event)"
-      [@transformPopover]="'showing'"
+      [@transformPopover]="_getAnimation()"
       (@transformPopover.done)="_onAnimationDone($event)">
     <ng-content></ng-content>
   </div>

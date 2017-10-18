@@ -29,6 +29,10 @@ import { getUnanchoredPopoverError } from './popover.errors';
 export type SatPopoverPositionX = 'before' | 'center' | 'after';
 export type SatPopoverPositionY = 'above'  | 'center' | 'below';
 
+// See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
+const OPEN_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+const CLOSE_TRANSITION = OPEN_TRANSITION;
+
 @Component({
   selector: 'sat-popover',
   encapsulation: ViewEncapsulation.None,
@@ -63,6 +67,12 @@ export class SatPopover implements AfterViewInit {
     this._hasBackdrop = coerceBooleanProperty(val);
   }
   private _hasBackdrop = false;
+
+  /** Custom transition to use while opening. */
+  @Input() openTransition = OPEN_TRANSITION;
+
+  /** Custom transition to use while closing. */
+  @Input() closeTransition = CLOSE_TRANSITION;
 
   /** Optional backdrop class. */
   @Input() backdropClass = '';
@@ -138,9 +148,17 @@ export class SatPopover implements AfterViewInit {
     }
   }
 
+  /** Gets an animation config with customized (or default) transition values. */
+  _getAnimation(): { value: any, params: any } {
+    return {
+      value: 'visible',
+      params: { openTransition: this.openTransition, closeTransition: this.closeTransition }
+    };
+  }
+
   /** Callback for when the popover is finished animating in or out. */
   _onAnimationDone(event: AnimationEvent) {
-    if (event.toState === 'showing') {
+    if (event.toState === 'visible') {
       this._trapFocus();
     } else if (event.toState === 'void') {
       this._restoreFocus();

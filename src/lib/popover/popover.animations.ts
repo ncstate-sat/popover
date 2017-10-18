@@ -8,19 +8,13 @@ import {
 } from '@angular/animations';
 
 export const transformPopover: AnimationTriggerMetadata = trigger('transformPopover', [
-  state('showing', style({
-    opacity: 1,
-    transform: 'scale(1)'
-  })),
-  transition('void => *', [
-    style({
-      opacity: 0,
-      transform: 'scale(0.3)'
-    }),
-    animate('200ms cubic-bezier(0.25, 0.8, 0.25, 1)')
+  transition(':enter', [
+    style({opacity: 0, transform: 'scale(0.3)'}),
+    animate('{{openTransition}}',
+      style({opacity: 1, transform: 'scale(1)'}))
   ]),
-  transition('* => void', [
-    animate('200ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+  transition(':leave', [
+    animate('{{closeTransition}}',
       style({opacity: 0, transform: 'scale(0.5)'}))
   ])
 ]);
