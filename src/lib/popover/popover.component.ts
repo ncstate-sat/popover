@@ -46,6 +46,7 @@ export class SatPopover implements AfterViewInit {
   @Input()
   get xPosition() { return this._xPosition; }
   set xPosition(val: SatPopoverPositionX) {
+    console.log('new xpos', val);
     this._xPosition = val;
     this._setPositionClasses();
   }
@@ -55,6 +56,7 @@ export class SatPopover implements AfterViewInit {
   @Input()
   get yPosition() { return this._yPosition; }
   set yPosition(val: SatPopoverPositionY) {
+    console.log('new ypos', val);
     this._yPosition = val;
     this._setPositionClasses();
   }
@@ -167,6 +169,7 @@ export class SatPopover implements AfterViewInit {
 
   /** Apply positioning classes based on positioning inputs. */
   _setPositionClasses(posX = this.xPosition, posY = this.yPosition) {
+    console.log('updating classes');
     this._classList['sat-popover-before'] = posX === 'before';
     this._classList['sat-popover-after']  = posX === 'after';
 
@@ -174,6 +177,8 @@ export class SatPopover implements AfterViewInit {
     this._classList['sat-popover-below'] = posY === 'below';
 
     this._classList['sat-popover-center'] = posX === 'center' || posY === 'center';
+
+    console.log(this._classList);
   }
 
   /** Move the focus inside the focus trap and remember where to return later. */

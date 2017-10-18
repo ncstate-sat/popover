@@ -219,6 +219,8 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     const xPos = this.attachedPopover.xPosition;
     const yPos = this.attachedPopover.yPosition;
 
+    console.log('_getPositiong', xPos, yPos);
+
     // Convert position to value usable by strategy. Invert for the overlay so that 'above' means
     // the overlay is attached at the 'bottom'
     const overlayX = convertToHorizontalPos(xPos, true);
