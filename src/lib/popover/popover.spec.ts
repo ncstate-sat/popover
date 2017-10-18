@@ -2,11 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { ESCAPE } from '@angular/cdk/keycodes';
 
 import { SatPopoverModule } from './popover.module';
 import { SatPopover } from './popover.component';
 import { SatPopoverAnchor } from './popover-anchor.directive';
-import { getInvalidPopoverError } from './popover.errors';
+import { getInvalidPopoverError, getUnanchoredPopoverError } from './popover.errors';
 
 
 describe('SatPopover', () => {
@@ -19,7 +20,8 @@ describe('SatPopover', () => {
         imports: [SatPopoverModule],
         declarations: [
           InvalidPopoverTestComponent,
-          SimplePopoverTestComponent
+          SimplePopoverTestComponent,
+          AnchorlessPopoverTestComponent,
         ]
       });
 
@@ -39,6 +41,15 @@ describe('SatPopover', () => {
       expect(() => {
         fixture.detectChanges();
       }).not.toThrowError();
+    });
+
+    it('should throw an error if a popover has no corresponding anchor', () => {
+      fixture = TestBed.createComponent(AnchorlessPopoverTestComponent);
+      fixture.detectChanges();
+
+      expect(() => {
+        fixture.componentInstance.popover.open();
+      }).toThrow(getUnanchoredPopoverError());
     });
 
   });
@@ -289,6 +300,61 @@ describe('SatPopover', () => {
 
   });
 
+  describe('keyboard', () => {
+    let fixture: ComponentFixture<KeyboardPopoverTestComponent>;
+    let comp:    KeyboardPopoverTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SatPopoverModule,
+          NoopAnimationsModule,
+        ],
+        declarations: [KeyboardPopoverTestComponent],
+        providers: [
+          {provide: OverlayContainer, useFactory: overlayContainerFactory}
+        ]
+      });
+
+      fixture = TestBed.createComponent(KeyboardPopoverTestComponent);
+      comp = fixture.componentInstance;
+
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+        .getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    it('should close when escape key is pressed', fakeAsync(() => {
+      fixture.detectChanges();
+      comp.popover.open();
+
+      expect(overlayContainerElement.textContent).toContain('Popover');
+
+      // TODO dispatch escape event on the popover
+      // const event = new KeyboardEvent('keydown', { 'code': 'ESCAPE' });
+
+      const container = overlayContainerElement.querySelector('.sat-popover-container');
+      console.log(container);
+
+      const currentlyFocusedElement = document.activeElement;
+      currentlyFocusedElement.dispatchEvent(createKeyboardEvent('keydown', ESCAPE));
+
+      // comp.popover._handleKeydown(e);
+
+      // fixture.nativeElement.dispatchEvent(event);
+
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.textContent).toBe('');
+    }));
+
+  });
+
 });
 
 /**
@@ -302,6 +368,19 @@ describe('SatPopover', () => {
   `
 })
 class InvalidPopoverTestComponent { }
+
+/**
+ * This component is for testing that trying to open/close/toggle
+ * a popover with no anchor will throw an error.
+ */
+@Component({
+  template: `
+    <sat-popover>Anchorless</sat-popover>
+  `
+})
+class AnchorlessPopoverTestComponent {
+  @ViewChild(SatPopover) popover: SatPopover;
+}
 
 
 /**
@@ -337,6 +416,24 @@ class BackdropPopoverTestComponent {
   klass: string;
 }
 
+/**
+ * This component is for testing behavior related to focus being
+ * inside the popover.
+ */
+@Component({
+  template: `
+    <div [satPopoverAnchorFor]="p">Anchor</div>
+    <sat-popover #p>
+      Popover
+      <input type="text" class="first">
+      <input type="text" class="second">
+    </sat-popover>
+  `
+})
+export class KeyboardPopoverTestComponent {
+  @ViewChild(SatPopover) popover: SatPopover;
+}
+
 
 /**
  * This factory function provides an overlay container under test
@@ -353,3 +450,31 @@ const overlayContainerFactory = () => {
 
   return { getContainerElement: () => element };
 };
+
+
+
+/** Dispatches a keydown event from an element. */
+export function createKeyboardEvent(type: string, keyCode: number, target?: Element, key?: string) {
+  const event = document.createEvent('KeyboardEvent') as any;
+  // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
+  const initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
+  const originalPreventDefault = event.preventDefault;
+
+  initEventFn(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
+
+  // Webkit Browsers don't set the keyCode when calling the init function.
+  // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
+  Object.defineProperties(event, {
+    keyCode: { get: () => keyCode },
+    key: { get: () => key },
+    target: { get: () => target }
+  });
+
+  // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
+  event.preventDefault = function() {
+    Object.defineProperty(event, 'defaultPrevented', { get: () => true });
+    return originalPreventDefault.apply(this, arguments);
+  };
+
+  return event;
+}
