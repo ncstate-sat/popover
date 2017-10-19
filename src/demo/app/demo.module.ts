@@ -15,6 +15,7 @@ import {
 
 import { DemoComponent } from './demo.component';
 import { PositioningDemo } from './positioning/positioning.component';
+import { ActionAPIDemo } from './action-api/action-api.component';
 
 @NgModule({
   exports: [
@@ -33,6 +34,7 @@ export class DemoMaterialModule { }
   declarations: [
     DemoComponent,
     PositioningDemo,
+    ActionAPIDemo,
   ],
   imports: [
     BrowserModule,

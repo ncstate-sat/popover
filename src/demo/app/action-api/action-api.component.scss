@@ -1,0 +1,40 @@
+@import '~@angular/material/theming';
+
+$info-panel-bg: rgb(83, 83, 83);
+
+:host {
+  display: block;
+}
+
+.avatar {
+  @include mat-elevation(1);
+  background: rgba(77, 204, 255, 0.8);
+  color: white;
+  display: inline-block;
+  height: 48px;
+  width: 48px;
+  line-height: 48px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.info {
+  @include mat-elevation(4);
+  background: $info-panel-bg;
+  color: white;
+  border-radius: 4px;
+  position: relative;
+  margin-left: 6px;
+  padding: 12px;
+}
+
+.caret {
+  height: 8px;
+  width: 8px;
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  background: $info-panel-bg;
+}

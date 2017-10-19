@@ -14,6 +14,7 @@ import { SatPopoverAnchor } from '@sat/popover';
     <div class="page-content">
 
       <demo-positioning></demo-positioning>
+      <demo-action-api></demo-action-api>
 
       <!-- SELECT OPTION -->
       <mat-card>
@@ -42,24 +43,6 @@ import { SatPopoverAnchor } from '@sat/popover';
             Quite fancy indeed 🎩
           </div>
         </sat-popover>
-      </mat-card>
-
-      <!-- PROGRAMMATIC OPEN/CLOSE -->
-      <mat-card>
-        <mat-card-title>Open Programmatically</mat-card-title>
-        <mat-card-content>
-          <div style="margin: 48px; height: 16px; width: 16px; background: black"
-              [satPopoverAnchorFor]="bluePopover">
-          </div>
-        </mat-card-content>
-        <sat-popover #bluePopover>
-          <div style="background: lightblue; padding: 16px">BLUE!</div>
-        </sat-popover>
-        <mat-card-actions>
-          <button mat-button (click)="bluePopover.open()">Open</button>
-          <button mat-button (click)="bluePopover.close()">Close</button>
-          <button mat-button (click)="bluePopover.toggle()">Toggle</button>
-        </mat-card-actions>
       </mat-card>
 
       <!-- FOCUS -->
