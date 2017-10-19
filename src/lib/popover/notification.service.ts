@@ -4,9 +4,14 @@ import { Subject } from 'rxjs/Subject';
 
 /** Enumerated actions for a popover to perform. */
 export enum NotificationAction {
+  /** Popover should open. */
   OPEN,
+  /** Popover should close. */
   CLOSE,
+  /** Popover should toggle open or closed. */
   TOGGLE,
+  /** Popover has new target positions. */
+  REPOSITION,
 }
 
 /** Event object for dispatching to anchor. */

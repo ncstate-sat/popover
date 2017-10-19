@@ -5,8 +5,9 @@
 
 .page-content {
   padding: 48px;
-}
 
-.mat-card {
-  margin-bottom: 32px;
+  & > * {
+    // separate each example
+    margin-bottom: 32px;
+  }
 }

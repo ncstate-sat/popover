@@ -13,59 +13,7 @@ import { SatPopoverAnchor } from '@sat/popover';
 
     <div class="page-content">
 
-      <!-- BUTTONS -->
-      <mat-card>
-        <mat-card-title>Click the buttons</mat-card-title>
-        <mat-card-content>
-          <button mat-raised-button
-              [satPopoverAnchorFor]="popover1"
-              (click)="popover1.toggle()">
-            Woo! ↘
-          </button>
-          <button mat-raised-button
-              [satPopoverAnchorFor]="popover2"
-              (click)="popover2.toggle()">
-            Woo! ←
-          </button>
-          <button mat-raised-button
-              [satPopoverAnchorFor]="popover3"
-              (mouseenter)="popover3.open()">
-            Woo! ·
-          </button>
-        </mat-card-content>
-
-        <sat-popover #popover1
-            xPosition="after"
-            yPosition="below"
-            hasBackdrop
-            [overlapAnchor]="false">
-          <div style="background: lightgray; padding: 48px">
-            Oh, cool
-          </div>
-        </sat-popover>
-
-        <sat-popover #popover2
-            xPosition="before"
-            yPosition="center"
-            hasBackdrop
-            [overlapAnchor]="false">
-          <div style="background: lightgray; padding: 48px" class="mat-elevation-z12">
-            Oh, neat
-          </div>
-        </sat-popover>
-
-        <sat-popover #popover3
-            xPosition="center"
-            yPosition="center"
-            [overlapAnchor]="false">
-          <mat-toolbar color="accent"
-              class="mat-elevation-z2"
-              (mouseleave)="popover3.close()">
-            Oh, nifty
-          </mat-toolbar>
-        </sat-popover>
-
-      </mat-card>
+      <demo-positioning></demo-positioning>
 
       <!-- SELECT OPTION -->
       <mat-card>
