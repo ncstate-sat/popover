@@ -141,11 +141,11 @@ a `mouseleave` event.
 
 ### Animations
 
-By default, the opening and closing animations of the popover are quick with a simple easing curve.
+By default, the opening and closing animations of a popover are quick with a simple easing curve.
 You can modify these animation curves using `openTransition` and `closeTransition`.
 
 ```html
-<!-- open popover slowly and close quickly -->
+<!-- open slowly but close quickly -->
 <sat-popover #mySlowPopover
     openTransition="1000ms ease-out"
     closeTransition="100ms ease-in">
