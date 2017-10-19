@@ -1,3 +1,5 @@
+import { VALID_POSX, VALID_POSY } from './popover.component';
+
 export function getInvalidPopoverError(): Error {
   return Error('SatPopoverAnchor must be provided an SatPopover component instance.');
 }
@@ -7,11 +9,13 @@ export function getUnanchoredPopoverError(): Error {
 }
 
 export function getInvalidXPositionError(pos): Error {
-  return Error('Invalid xPosition: ' + pos +
-      '. Valid options are \'before\', \'center\', \'after\'');
+  const errorString = `Invalid xPosition: '${pos}'. Valid options are ` +
+    `${VALID_POSX.map(x => `'${x}'`).join(', ')}.`;
+  return Error(errorString);
 }
 
 export function getInvalidYPositionError(pos): Error {
-  return Error('Invalid yPosition: ' + pos +
-      '. Valid options are \'above\', \'center\', \'below\'');
+  const errorString = `Invalid yPosition: '${pos}'. Valid options are ` +
+  `${VALID_POSY.map(x => `'${x}'`).join(', ')}.`;
+  return Error(errorString);
 }

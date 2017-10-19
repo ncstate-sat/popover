@@ -14,6 +14,7 @@ import { Component } from '@angular/core';
               <mat-option value="before">Before</mat-option>
               <mat-option value="center">Center</mat-option>
               <mat-option value="after">After</mat-option>
+              <mat-option value="octopus">Octopus</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -22,6 +23,7 @@ import { Component } from '@angular/core';
               <mat-option value="above">Above</mat-option>
               <mat-option value="center">Center</mat-option>
               <mat-option value="below">Below</mat-option>
+              <mat-option value="aardvark">Aardvark</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -53,7 +55,6 @@ import { Component } from '@angular/core';
           Nifty
         </div>
       </sat-popover>
-
 
     </mat-card>
   `

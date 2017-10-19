@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 export enum NotificationAction {
   /** Popover should open. */
   OPEN,
-  /** Popover should closed. */
+  /** Popover should close. */
   CLOSE,
   /** Popover should toggle open or closed. */
   TOGGLE,

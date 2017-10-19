@@ -33,8 +33,8 @@ import {
 export type SatPopoverPositionX = 'before' | 'center' | 'after';
 export type SatPopoverPositionY = 'above'  | 'center' | 'below';
 
-const VALID_POSX: SatPopoverPositionX[] = ['before', 'center', 'after'];
-const VALID_POSY: SatPopoverPositionY[] = ['above', 'center', 'below'];
+export const VALID_POSX: SatPopoverPositionX[] = ['before', 'center', 'after'];
+export const VALID_POSY: SatPopoverPositionY[] = ['above', 'center', 'below'];
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
 const OPEN_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';

@@ -383,6 +383,27 @@ describe('SatPopover', () => {
       document.body.removeChild(overlayContainerElement);
     });
 
+    it('should keep the same overlay when positions are static', fakeAsync(() => {
+      fixture.detectChanges();
+
+      // open the overlay and store the overlayRef
+      comp.popover.open();
+      const overlayAfterFirstOpen = comp.anchor._overlayRef;
+
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+
+      // change the position to the same thing and reopen, saving the new overlayRef
+      comp.xPos = 'center';
+      fixture.detectChanges();
+
+      comp.popover.open();
+      const overlayAfterSecondOpen = comp.anchor._overlayRef;
+
+      expect(overlayAfterFirstOpen === overlayAfterSecondOpen).toBe(true);
+    }));
+
     it('should reconstruct the overlay when positions are updated', fakeAsync(() => {
       fixture.detectChanges();
 
