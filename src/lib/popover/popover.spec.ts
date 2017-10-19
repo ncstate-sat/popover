@@ -7,7 +7,12 @@ import { ESCAPE } from '@angular/cdk/keycodes';
 import { SatPopoverModule } from './popover.module';
 import { SatPopover } from './popover.component';
 import { SatPopoverAnchor } from './popover-anchor.directive';
-import { getInvalidPopoverError, getUnanchoredPopoverError } from './popover.errors';
+import {
+  getInvalidPopoverError,
+  getUnanchoredPopoverError,
+  getInvalidXPositionError,
+  getInvalidYPositionError
+} from './popover.errors';
 
 
 describe('SatPopover', () => {
@@ -398,6 +403,28 @@ describe('SatPopover', () => {
 
       expect(overlayAfterFirstOpen === overlayAfterSecondOpen).toBe(false);
     }));
+
+    it('should throw an error when an invalid xPosition is provided', () => {
+      fixture.detectChanges();
+
+      // set invalid xPosition
+      comp.xPos = 'kiwi';
+
+      expect(() => {
+        fixture.detectChanges();
+      }).toThrow(getInvalidXPositionError('kiwi'));
+    });
+
+    it('should throw an error when an invalid yPosition is provided', () => {
+      fixture.detectChanges();
+
+      // set invalid yPosition
+      comp.yPos = 'banana';
+
+      expect(() => {
+        fixture.detectChanges();
+      }).toThrow(getInvalidYPositionError('banana'));
+    });
 
   });
 

@@ -24,10 +24,17 @@ import {
   PopoverNotification,
   PopoverNotificationService,
 } from './notification.service';
-import { getUnanchoredPopoverError } from './popover.errors';
+import {
+  getUnanchoredPopoverError,
+  getInvalidXPositionError,
+  getInvalidYPositionError
+} from './popover.errors';
 
 export type SatPopoverPositionX = 'before' | 'center' | 'after';
 export type SatPopoverPositionY = 'above'  | 'center' | 'below';
+
+const VALID_POSX: SatPopoverPositionX[] = ['before', 'center', 'after'];
+const VALID_POSY: SatPopoverPositionY[] = ['above', 'center', 'below'];
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
 const OPEN_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
@@ -46,6 +53,7 @@ export class SatPopover implements AfterViewInit {
   @Input()
   get xPosition() { return this._xPosition; }
   set xPosition(val: SatPopoverPositionX) {
+    this._validateXPosition(val);
     if (this._xPosition !== val) {
       this._xPosition = val;
       this._setPositionClasses();
@@ -58,6 +66,7 @@ export class SatPopover implements AfterViewInit {
   @Input()
   get yPosition() { return this._yPosition; }
   set yPosition(val: SatPopoverPositionY) {
+    this._validateYPosition(val);
     if (this._yPosition !== val) {
       this._yPosition = val;
       this._setPositionClasses();
@@ -238,5 +247,19 @@ export class SatPopover implements AfterViewInit {
     }
 
     this._notifications.dispatch(notification);
+  }
+
+  /** Throws an error if the position is not a valid xPosition. */
+  private _validateXPosition(pos: SatPopoverPositionX): void {
+    if (VALID_POSX.indexOf(pos) === -1) {
+      throw getInvalidXPositionError(pos);
+    }
+  }
+
+  /** Throws an error if the position is not a valid yPosition. */
+  private _validateYPosition(pos: SatPopoverPositionY): void {
+    if (VALID_POSY.indexOf(pos) === -1) {
+      throw getInvalidYPositionError(pos);
+    }
   }
 }
