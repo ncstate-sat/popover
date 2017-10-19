@@ -16,22 +16,7 @@ import { SatPopoverAnchor } from '@sat/popover';
       <demo-positioning></demo-positioning>
       <demo-action-api></demo-action-api>
       <demo-select-trigger></demo-select-trigger>
-
-      <!-- FOCUS -->
-      <mat-card>
-        <mat-card-title>Focus Behavior</mat-card-title>
-        <mat-card-content>
-          <button mat-mini-fab [satPopoverAnchorFor]="editPopover" (click)="editPopover.open()">
-            <mat-icon>create</mat-icon>
-          </button>
-        </mat-card-content>
-        <sat-popover #editPopover hasBackdrop>
-          <div style="background: white; padding: 16px; border: solid 1px black">
-            <input type="text" placeholder="Input 1"> <br>
-            <input type="text" placeholder="Input 2">
-          </div>
-        </sat-popover>
-      </mat-card>
+      <demo-focus></demo-focus>
 
       <!-- CUSTOM TRANSITION -->
       <mat-card>
