@@ -51,7 +51,7 @@ import { Component } from '@angular/core';
           [yPosition]="yPos"
           hasBackdrop
           [overlapAnchor]="overlap">
-        <div class="popover">
+        <div class="popover mat-body-2">
           Nifty
         </div>
       </sat-popover>
