@@ -139,6 +139,20 @@ If used, the default backdrop will be transparent. You can add any custom backdr
 keep in mind that a backdrop will block pointer events once it is open, immediately triggering
 a `mouseleave` event.
 
+### Animations
+
+By default, the opening and closing animations of a popover are quick with a simple easing curve.
+You can modify these animation curves using `openTransition` and `closeTransition`.
+
+```html
+<!-- open slowly but close quickly -->
+<sat-popover #mySlowPopover
+    openTransition="1000ms ease-out"
+    closeTransition="100ms ease-in">
+  <!-- ... -->
+</sat-popover>
+```
+
 ## Styles
 
 The `<sat-popover>` component only provides styles to affect its own transform origin. It is
