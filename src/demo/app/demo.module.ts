@@ -20,6 +20,7 @@ import { PositioningDemo } from './positioning/positioning.component';
 import { ActionAPIDemo } from './action-api/action-api.component';
 import { SelectTriggerDemo } from './select-trigger/select-trigger.component';
 import { FocusDemo } from './focus/focus.component';
+import { TransitionsDemo } from './transitions/transitions.component';
 
 @NgModule({
   exports: [
@@ -43,6 +44,7 @@ export class DemoMaterialModule { }
     ActionAPIDemo,
     SelectTriggerDemo,
     FocusDemo,
+    TransitionsDemo,
   ],
   imports: [
     BrowserModule,
