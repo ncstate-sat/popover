@@ -15,35 +15,7 @@ import { SatPopoverAnchor } from '@sat/popover';
 
       <demo-positioning></demo-positioning>
       <demo-action-api></demo-action-api>
-
-      <!-- SELECT OPTION -->
-      <mat-card>
-        <mat-card-title>Select "Fancy"</mat-card-title>
-        <mat-card-content>
-          <mat-form-field>
-            <mat-select
-                #fancyAnchor="satPopoverAnchor"
-                [satPopoverAnchorFor]="fancyPopover"
-                satDisablePopoverToggle
-                (change)="changeSelectValue($event)">
-              <mat-option value="boring">Boring</mat-option>
-              <mat-option value="standard">Standard</mat-option>
-              <mat-option value="fancy">Fancy</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </mat-card-content>
-
-        <sat-popover #fancyPopover
-            xPosition="center"
-            yPosition="below"
-            hasBackdrop
-            backdropClass="demo-background-rainbow">
-          <div style="background: pink; padding: 32px; border-radius: 8px"
-              class="mat-elevation-z4">
-            Quite fancy indeed 🎩
-          </div>
-        </sat-popover>
-      </mat-card>
+      <demo-select-trigger></demo-select-trigger>
 
       <!-- FOCUS -->
       <mat-card>
@@ -86,12 +58,5 @@ import { SatPopoverAnchor } from '@sat/popover';
 })
 export class DemoComponent {
 
-  @ViewChild('fancyAnchor') fancyAnchor: SatPopoverAnchor;
-
-  changeSelectValue(event: MatSelectChange) {
-    if (event.value === 'fancy') {
-      this.fancyAnchor.openPopover();
-    }
-  }
 
 }
