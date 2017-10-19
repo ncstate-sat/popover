@@ -350,6 +350,57 @@ describe('SatPopover', () => {
 
   });
 
+  describe('positioning', () => {
+    let fixture: ComponentFixture<PositioningTestComponent>;
+    let comp:    PositioningTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SatPopoverModule,
+          NoopAnimationsModule,
+        ],
+        declarations: [PositioningTestComponent],
+        providers: [
+          {provide: OverlayContainer, useFactory: overlayContainerFactory}
+        ]
+      });
+
+      fixture = TestBed.createComponent(PositioningTestComponent);
+      comp = fixture.componentInstance;
+
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+        .getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    it('should reconstruct the overlay when positions are updated', fakeAsync(() => {
+      fixture.detectChanges();
+
+      // open the overlay and store the overlayRef
+      comp.popover.open();
+      const overlayAfterFirstOpen = comp.anchor._overlayRef;
+
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+
+      // change the position and reopen, saving the new overlayRef
+      comp.xPos = 'after';
+      fixture.detectChanges();
+
+      comp.popover.open();
+      const overlayAfterSecondOpen = comp.anchor._overlayRef;
+
+      expect(overlayAfterFirstOpen === overlayAfterSecondOpen).toBe(false);
+    }));
+
+  });
+
 });
 
 /**
@@ -429,6 +480,23 @@ export class KeyboardPopoverTestComponent {
   @ViewChild(SatPopover) popover: SatPopover;
 }
 
+/** This component is for testing dynamic positioning behavior. */
+@Component({
+  template: `
+    <div id="anchor" [satPopoverAnchorFor]="p">Anchor</div>
+
+    <sat-popover #p [xPosition]="xPos" [yPosition]="yPos" [overlapAnchor]="overlap">
+      <div id="content">Popover</div>
+    </sat-popover>
+  `
+})
+export class PositioningTestComponent {
+  @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
+  @ViewChild(SatPopover) popover: SatPopover;
+  xPos = 'center';
+  yPos = 'center';
+  overlap = true;
+}
 
 /** This factory function provides an overlay container under test control. */
 const overlayContainerFactory = () => {

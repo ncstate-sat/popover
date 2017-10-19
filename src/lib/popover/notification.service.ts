@@ -7,6 +7,7 @@ export enum NotificationAction {
   OPEN,
   CLOSE,
   TOGGLE,
+  REPOSITION,
 }
 
 /** Event object for dispatching to anchor. */

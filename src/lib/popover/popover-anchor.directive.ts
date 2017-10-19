@@ -61,14 +61,14 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     return this._popoverOpen;
   }
 
+  /** Reference to the overlay containing the popover component. */
+  _overlayRef: OverlayRef;
+
   /** Whether the popover is presently open. */
   private _popoverOpen = false;
 
   /** Reference to a template portal where the overlay will be attached. */
   private _portal: TemplatePortal<any>;
-
-  /** Reference to the overlay containing the popover component. */
-  private _overlayRef: OverlayRef;
 
   /** Emits when the directive is destroyed. */
   private _onDestroy = new Subject<void>();
@@ -147,6 +147,10 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
           case NotificationAction.TOGGLE:
             this.togglePopover();
             break;
+          case NotificationAction.REPOSITION:
+            // TODO: When the overlay's position can be dynamically changed, do not destroy
+            this.destroyPopover();
+            break;
         }
       });
   }
@@ -218,8 +222,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
     const xPos = this.attachedPopover.xPosition;
     const yPos = this.attachedPopover.yPosition;
-
-    console.log('_getPositiong', xPos, yPos);
 
     // Convert position to value usable by strategy. Invert for the overlay so that 'above' means
     // the overlay is attached at the 'bottom'
