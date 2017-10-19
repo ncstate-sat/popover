@@ -25,10 +25,20 @@ import { Component } from '@angular/core';
             </mat-select>
           </mat-form-field>
 
+          <mat-form-field>
+            <input matInput type="number"
+              [(ngModel)]="margin"
+              placeholder="anchor's margin-left (px)">
+          </mat-form-field>
+
           <mat-checkbox [(ngModel)]="overlap">Overlap Trigger</mat-checkbox>
         </div>
 
-        <button mat-raised-button [satPopoverAnchorFor]="p" (click)="p.toggle()">
+        <button mat-raised-button
+            color="accent"
+            [style.marginLeft]="margin + 'px'"
+            [satPopoverAnchorFor]="p"
+            (click)="p.toggle()">
           CLICK TO TOGGLE
         </button>
 
@@ -53,5 +63,6 @@ export class PositioningDemo {
   xPos = 'after';
   yPos = 'center';
   overlap = false;
+  margin = 0;
 
 }

@@ -8,6 +8,7 @@ import {
   MatCardModule,
   MatButtonModule,
   MatSelectModule,
+  MatInputModule,
   MatIconModule,
   MatCheckboxModule,
 } from '@angular/material';
@@ -21,6 +22,7 @@ import { PositioningDemo } from './positioning/positioning.component';
     MatCardModule,
     MatButtonModule,
     MatSelectModule,
+    MatInputModule,
     MatIconModule,
     MatCheckboxModule,
   ]
