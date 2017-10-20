@@ -38,8 +38,8 @@ export class ScrollStrategiesDemo {
   strategy = 'reposition';
 
   scrollOptions = [
+    // TODO: support close on resolution of https://github.com/angular/material2/issues/7922
     { value: 'noop', name: 'Do nothing' },
-    { value: 'close', name: 'Close on scroll' },
     { value: 'block', name: 'Block scrolling' },
     { value: 'reposition', name: 'Reposition on scroll' },
     { value: 'rugrats', name: 'Invalid option' },

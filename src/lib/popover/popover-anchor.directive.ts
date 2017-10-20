@@ -148,6 +148,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
             this.togglePopover();
             break;
           case NotificationAction.REPOSITION:
+          case NotificationAction.UPDATE_CONFIG:
             // TODO: When the overlay's position can be dynamically changed, do not destroy
             this.destroyPopover();
             break;
@@ -196,7 +197,19 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     config.positionStrategy = this._getPosition();
     config.hasBackdrop = this.attachedPopover.hasBackdrop;
     config.backdropClass = this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop';
-    config.scrollStrategy = this._overlay.scrollStrategies.reposition();
+
+    switch (this.attachedPopover.scrollStrategy) {
+      // TODO support 'close' on resolution of https://github.com/angular/material2/issues/7922
+      case 'block':
+        config.scrollStrategy = this._overlay.scrollStrategies.block();
+        break;
+      case 'reposition':
+        config.scrollStrategy = this._overlay.scrollStrategies.reposition();
+        break;
+      default:
+        config.scrollStrategy = this._overlay.scrollStrategies.noop();
+        break;
+    }
 
     return config;
   }
