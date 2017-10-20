@@ -3,5 +3,6 @@ export { SatPopoverAnchor } from './popover/popover-anchor.directive';
 export {
   SatPopover,
   SatPopoverPositionX,
-  SatPopoverPositionY
+  SatPopoverPositionY,
+  SatPopoverScrollStrategy,
 } from './popover/popover.component';
