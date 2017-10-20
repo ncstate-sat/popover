@@ -17,6 +17,8 @@ const GLOBALS = {
   'rxjs/Observable': 'Rx',
   'rxjs/add/operator/takeUntil': 'Rx.Observable.prototype',
   'rxjs/add/operator/switchMap': 'Rx.Observable.prototype',
+  'rxjs/add/operator/take': 'Rx.Observable.prototype',
+  'rxjs/add/observable/merge': 'Rx.Observable',
 };
 
 module.exports = GLOBALS;

@@ -22,6 +22,8 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/observable/merge';
 
 import {
   SatPopover,
@@ -90,7 +92,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
-    this.destroyPopover();
+    this._destroyPopover();
   }
 
   /** Toggles the popover between the open and closed states. */
@@ -116,11 +118,26 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     }
   }
 
-  /** Removes the popover from the DOM. */
-  destroyPopover(): void {
+  /** Removes the popover from the DOM. Does NOT update open state. */
+  private _destroyPopover(): void {
     if (this._overlayRef) {
       this._overlayRef.dispose();
       this._overlayRef = null;
+    }
+  }
+
+  /**
+   * Destroys the popover immediately if it is closed, or waits until it
+   * has been closed to destroy it.
+   */
+  private _destroyPopoverOnceClosed(): void {
+    if (this.isPopoverOpen()) {
+      this._overlayRef.detachments()
+        .take(1)
+        .takeUntil(this._onDestroy)
+        .subscribe(() => this._destroyPopover());
+    } else {
+      this._destroyPopover();
     }
   }
 
@@ -150,9 +167,9 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
             this.togglePopover();
             break;
           case NotificationAction.REPOSITION:
-          case NotificationAction.UPDATE_CONFIG:
             // TODO: When the overlay's position can be dynamically changed, do not destroy
-            this.destroyPopover();
+          case NotificationAction.UPDATE_CONFIG:
+            this._destroyPopoverOnceClosed();
             break;
         }
       });
