@@ -1,4 +1,4 @@
-import { VALID_POSX, VALID_POSY } from './popover.component';
+import { VALID_POSX, VALID_POSY, VALID_SCROLL } from './popover.component';
 
 export function getInvalidPopoverError(): Error {
   return Error('SatPopoverAnchor must be provided an SatPopover component instance.');
@@ -9,13 +9,18 @@ export function getUnanchoredPopoverError(): Error {
 }
 
 export function getInvalidXPositionError(pos): Error {
-  const errorString = `Invalid xPosition: '${pos}'. Valid options are ` +
-    `${VALID_POSX.map(x => `'${x}'`).join(', ')}.`;
-  return Error(errorString);
+  return Error(generateGenericError('xPosition', pos, VALID_POSX));
 }
 
 export function getInvalidYPositionError(pos): Error {
-  const errorString = `Invalid yPosition: '${pos}'. Valid options are ` +
-  `${VALID_POSY.map(x => `'${x}'`).join(', ')}.`;
-  return Error(errorString);
+  return Error(generateGenericError('yPosition', pos, VALID_POSY));
+}
+
+export function getInvalidScrollStrategyError(strategy): Error {
+  return Error(generateGenericError('scrollStrategy', strategy, VALID_SCROLL));
+}
+
+function generateGenericError(apiName: string, invalid: string, valid: string[]): string {
+  return `Invalid ${apiName}: '${invalid}'. Valid options are ` +
+    `${valid.map(v => `'${v}'`).join(', ')}.`;
 }
