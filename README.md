@@ -139,6 +139,24 @@ If used, the default backdrop will be transparent. You can add any custom backdr
 keep in mind that a backdrop will block pointer events once it is open, immediately triggering
 a `mouseleave` event.
 
+### Scrolling
+
+By default, when a popover is open and the user scrolls the container, the popover will reposition
+itself to stay attached to its anchor. You can adjust this behavior through the `scrollStrategy`
+api.
+
+```html
+<sat-popover #importantPopover scrollStrategy="block">
+  <!-- so important that the user must interact with it -->
+</sat-popover>
+```
+
+| Strategy       | Description
+|----------------|------------------------------------------------
+| `'noop'`       | Don't update position.
+| `'block'`      | Block page scrolling while open.
+| `'reposition'` | Reposition the popover on scroll.
+
 ### Animations
 
 By default, the opening and closing animations of a popover are quick with a simple easing curve.
