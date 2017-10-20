@@ -503,6 +503,37 @@ describe('SatPopover', () => {
       expect(strategy instanceof BlockScrollStrategy).toBe(true, 'block strategy');
     }));
 
+    it('should wait until the popover is closed to update the strategy', fakeAsync(() => {
+      let strategy;
+      fixture.detectChanges();
+      comp.popover.open();
+
+      // expect it to be open with default strategy
+      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'reposition strategy');
+      expect(overlayContainerElement.textContent).toContain('Popover', 'initially open');
+
+      // change the strategy while it is open
+      comp.strategy = 'block';
+      fixture.detectChanges();
+      tick();
+
+      // expect it to have remained open with default strategy
+      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'still reposition strategy');
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Still open');
+
+      // close the popover and reopen
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+      comp.popover.open();
+
+      // expect the new strategy to be in place
+      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      expect(strategy instanceof BlockScrollStrategy).toBe(true, 'block strategy');
+    }));
+
     it('should throw an error when an invalid scrollStrategy is provided', () => {
       fixture.detectChanges();
 
