@@ -199,7 +199,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       positionStrategy: this._getPosition(),
       hasBackdrop: this.attachedPopover.hasBackdrop,
       backdropClass: this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop',
-      scrollStrategy: this._getScrollStrategyInstance(this.attachedPopover.scrollStrategy)
+      scrollStrategy: this._getScrollStrategyInstance(this.attachedPopover.scrollStrategy),
     });
 
     return config;
