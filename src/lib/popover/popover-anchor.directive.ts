@@ -131,7 +131,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
    * has been closed to destroy it.
    */
   private _destroyPopoverOnceClosed(): void {
-    if (this.isPopoverOpen()) {
+    if (this.isPopoverOpen() && this._overlayRef) {
       this._overlayRef.detachments()
         .take(1)
         .takeUntil(this._onDestroy)
