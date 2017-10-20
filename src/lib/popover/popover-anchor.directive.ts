@@ -14,7 +14,8 @@ import {
   Overlay,
   OverlayRef,
   OverlayConfig,
-  VerticalConnectionPos
+  ScrollStrategy,
+  VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Subject } from 'rxjs/Subject';
@@ -25,7 +26,8 @@ import 'rxjs/add/operator/switchMap';
 import {
   SatPopover,
   SatPopoverPositionX,
-  SatPopoverPositionY
+  SatPopoverPositionY,
+  SatPopoverScrollStrategy,
 } from './popover.component';
 import { NotificationAction, PopoverNotificationService } from './notification.service';
 import { getInvalidPopoverError } from './popover.errors';
@@ -193,23 +195,12 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
   /** Create and return a config for creating the overlay. */
   private _getOverlayConfig(): OverlayConfig {
-    const config = new OverlayConfig();
-    config.positionStrategy = this._getPosition();
-    config.hasBackdrop = this.attachedPopover.hasBackdrop;
-    config.backdropClass = this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop';
-
-    switch (this.attachedPopover.scrollStrategy) {
-      // TODO support 'close' on resolution of https://github.com/angular/material2/issues/7922
-      case 'block':
-        config.scrollStrategy = this._overlay.scrollStrategies.block();
-        break;
-      case 'reposition':
-        config.scrollStrategy = this._overlay.scrollStrategies.reposition();
-        break;
-      default:
-        config.scrollStrategy = this._overlay.scrollStrategies.noop();
-        break;
-    }
+    const config = new OverlayConfig({
+      positionStrategy: this._getPosition(),
+      hasBackdrop: this.attachedPopover.hasBackdrop,
+      backdropClass: this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop',
+      scrollStrategy: this._getScrollStrategyInstance(this.attachedPopover.scrollStrategy)
+    });
 
     return config;
   }
@@ -226,6 +217,20 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
         const posY = convertFromVerticalPos(change.connectionPair.overlayY, true);
         this.attachedPopover._setPositionClasses(posX, posY);
       });
+  }
+
+  /** Map a scroll strategy string type to an instance of a scroll strategy. */
+  private _getScrollStrategyInstance(strategy: SatPopoverScrollStrategy): ScrollStrategy {
+    // TODO support 'close' on resolution of https://github.com/angular/material2/issues/7922
+    switch (strategy) {
+      case 'block':
+        return this._overlay.scrollStrategies.block();
+      case 'reposition':
+        return this._overlay.scrollStrategies.reposition();
+      case 'noop':
+      default:
+        return this._overlay.scrollStrategies.noop();
+    }
   }
 
   /** Create and return a position strategy based on config provided to the component instance. */
