@@ -15,6 +15,7 @@ import { Component } from '@angular/core';
       <demo-select-trigger></demo-select-trigger>
       <demo-focus></demo-focus>
       <demo-transitions></demo-transitions>
+      <demo-tooltip></demo-tooltip>
     </div>
   `
 })

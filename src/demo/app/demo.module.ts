@@ -21,6 +21,7 @@ import { ActionAPIDemo } from './action-api/action-api.component';
 import { SelectTriggerDemo } from './select-trigger/select-trigger.component';
 import { FocusDemo } from './focus/focus.component';
 import { TransitionsDemo } from './transitions/transitions.component';
+import { TooltipDemo } from './tooltip/tooltip.component';
 
 @NgModule({
   exports: [
@@ -45,6 +46,7 @@ export class DemoMaterialModule { }
     SelectTriggerDemo,
     FocusDemo,
     TransitionsDemo,
+    TooltipDemo,
   ],
   imports: [
     BrowserModule,
