@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.fancy-caption {
+  background: yellow;
+  border: dashed 20px orange;
+  border-radius: 50%;
+  font-size: 40px;
+  height: 64px;
+  width: 64px;
+  line-height: 64px;
+  text-align: center;
+
+  transform: rotate(360deg);
+  transition: transform 600ms ease-out;
+
+  &.opened {
+    transform: rotate(0deg);
+  }
+}

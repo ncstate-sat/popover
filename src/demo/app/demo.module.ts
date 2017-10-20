@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SatPopoverModule } from '@sat/popover';
 import {
@@ -11,10 +11,17 @@ import {
   MatInputModule,
   MatIconModule,
   MatCheckboxModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
 } from '@angular/material';
 
 import { DemoComponent } from './demo.component';
 import { PositioningDemo } from './positioning/positioning.component';
+import { ActionAPIDemo } from './action-api/action-api.component';
+import { SelectTriggerDemo } from './select-trigger/select-trigger.component';
+import { FocusDemo } from './focus/focus.component';
+import { TransitionsDemo } from './transitions/transitions.component';
+import { TooltipDemo } from './tooltip/tooltip.component';
 
 @NgModule({
   exports: [
@@ -25,6 +32,8 @@ import { PositioningDemo } from './positioning/positioning.component';
     MatInputModule,
     MatIconModule,
     MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ]
 })
 export class DemoMaterialModule { }
@@ -33,6 +42,11 @@ export class DemoMaterialModule { }
   declarations: [
     DemoComponent,
     PositioningDemo,
+    ActionAPIDemo,
+    SelectTriggerDemo,
+    FocusDemo,
+    TransitionsDemo,
+    TooltipDemo,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +54,7 @@ export class DemoMaterialModule { }
     DemoMaterialModule,
     SatPopoverModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [DemoComponent]
