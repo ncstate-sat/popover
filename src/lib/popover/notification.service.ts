@@ -12,6 +12,8 @@ export enum NotificationAction {
   TOGGLE,
   /** Popover has new target positions. */
   REPOSITION,
+  /** Popover needs new configuration. */
+  UPDATE_CONFIG,
 }
 
 /** Event object for dispatching to anchor. */

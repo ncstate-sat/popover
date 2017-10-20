@@ -27,14 +27,18 @@ import {
 import {
   getUnanchoredPopoverError,
   getInvalidXPositionError,
-  getInvalidYPositionError
+  getInvalidYPositionError,
+  getInvalidScrollStrategyError,
 } from './popover.errors';
 
 export type SatPopoverPositionX = 'before' | 'center' | 'after';
 export type SatPopoverPositionY = 'above'  | 'center' | 'below';
+// TODO: support close on resolution of https://github.com/angular/material2/issues/7922
+export type SatPopoverScrollStrategy = 'noop' | 'block' | 'reposition';
 
 export const VALID_POSX: SatPopoverPositionX[] = ['before', 'center', 'after'];
 export const VALID_POSY: SatPopoverPositionY[] = ['above', 'center', 'below'];
+export const VALID_SCROLL: SatPopoverScrollStrategy[] = ['noop', 'block', 'reposition'];
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
 const OPEN_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
@@ -86,6 +90,18 @@ export class SatPopover implements AfterViewInit {
     }
   }
   private _overlapAnchor = true;
+
+  /** How the popover should handle scrolling. */
+  @Input()
+  get scrollStrategy() { return this._scrollStrategy; }
+  set scrollStrategy(val: SatPopoverScrollStrategy) {
+    this._validateScrollStrategy(val);
+    if (this._scrollStrategy !== val) {
+      this._scrollStrategy = val;
+      this._dispatchNotification(new PopoverNotification(NotificationAction.UPDATE_CONFIG));
+    }
+  }
+  private _scrollStrategy: SatPopoverScrollStrategy = 'reposition';
 
   /** Whether the popover should have a backdrop (includes closing on click). */
   @Input()
@@ -260,6 +276,13 @@ export class SatPopover implements AfterViewInit {
   private _validateYPosition(pos: SatPopoverPositionY): void {
     if (VALID_POSY.indexOf(pos) === -1) {
       throw getInvalidYPositionError(pos);
+    }
+  }
+
+  /** Throws an error if the scroll strategy is not a valid strategy. */
+  private _validateScrollStrategy(strategy: SatPopoverScrollStrategy): void {
+    if (VALID_SCROLL.indexOf(strategy) === -1) {
+      throw getInvalidScrollStrategyError(strategy);
     }
   }
 }

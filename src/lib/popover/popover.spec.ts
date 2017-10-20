@@ -1,8 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import {
+  OverlayContainer,
+  RepositionScrollStrategy,
+  BlockScrollStrategy,
+} from '@angular/cdk/overlay';
 import { ESCAPE } from '@angular/cdk/keycodes';
+import { Subject } from 'rxjs/Subject';
 
 import { SatPopoverModule } from './popover.module';
 import { SatPopover } from './popover.component';
@@ -11,7 +16,8 @@ import {
   getInvalidPopoverError,
   getUnanchoredPopoverError,
   getInvalidXPositionError,
-  getInvalidYPositionError
+  getInvalidYPositionError,
+  getInvalidScrollStrategyError,
 } from './popover.errors';
 
 
@@ -449,6 +455,66 @@ describe('SatPopover', () => {
 
   });
 
+  describe('scrolling', () => {
+    let fixture: ComponentFixture<ScrollingTestComponent>;
+    let comp:    ScrollingTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SatPopoverModule,
+          NoopAnimationsModule,
+        ],
+        declarations: [ScrollingTestComponent],
+        providers: [
+          {provide: OverlayContainer, useFactory: overlayContainerFactory}
+        ]
+      });
+
+      fixture = TestBed.createComponent(ScrollingTestComponent);
+      comp = fixture.componentInstance;
+
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+        .getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    it('should allow changing the strategy dynamically', fakeAsync(() => {
+      let strategy;
+      fixture.detectChanges();
+      comp.popover.open();
+
+      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'reposition strategy');
+
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+
+      comp.strategy = 'block';
+      fixture.detectChanges();
+      comp.popover.open();
+
+      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      expect(strategy instanceof BlockScrollStrategy).toBe(true, 'block strategy');
+    }));
+
+    it('should throw an error when an invalid scrollStrategy is provided', () => {
+      fixture.detectChanges();
+
+      // set invalid scrollStrategy
+      comp.strategy = 'rambutan';
+
+      expect(() => {
+        fixture.detectChanges();
+      }).toThrow(getInvalidScrollStrategyError('rambutan'));
+    });
+  });
+
 });
 
 /**
@@ -544,6 +610,21 @@ export class PositioningTestComponent {
   xPos = 'center';
   yPos = 'center';
   overlap = true;
+}
+
+/** This component is for testing scroll behavior. */
+@Component({
+  template: `
+    <div [satPopoverAnchorFor]="p">Anchor</div>
+    <sat-popover #p [scrollStrategy]="strategy">
+      Popover
+    </sat-popover>
+  `
+})
+export class ScrollingTestComponent {
+  @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
+  @ViewChild(SatPopover) popover: SatPopover;
+  strategy = 'reposition';
 }
 
 /** This factory function provides an overlay container under test control. */
