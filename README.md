@@ -142,8 +142,7 @@ a `mouseleave` event.
 ### Scrolling
 
 By default, when a popover is open and the user scrolls the container, the popover will reposition
-itself to stay attached to its anchor. You can adjust this behavior through the `scrollStrategy`
-api.
+itself to stay attached to its anchor. You can adjust this behavior with `scrollStrategy`.
 
 ```html
 <sat-popover #importantPopover scrollStrategy="block">
