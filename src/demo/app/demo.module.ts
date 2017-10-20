@@ -18,6 +18,7 @@ import {
 import { DemoComponent } from './demo.component';
 import { PositioningDemo } from './positioning/positioning.component';
 import { ActionAPIDemo } from './action-api/action-api.component';
+import { ScrollStrategiesDemo } from './scroll-strategies/scroll-strategies.component';
 import { SelectTriggerDemo } from './select-trigger/select-trigger.component';
 import { FocusDemo } from './focus/focus.component';
 import { TransitionsDemo } from './transitions/transitions.component';
@@ -43,6 +44,7 @@ export class DemoMaterialModule { }
     DemoComponent,
     PositioningDemo,
     ActionAPIDemo,
+    ScrollStrategiesDemo,
     SelectTriggerDemo,
     FocusDemo,
     TransitionsDemo,

@@ -12,6 +12,7 @@ import { Component } from '@angular/core';
     <div class="page-content">
       <demo-positioning></demo-positioning>
       <demo-action-api></demo-action-api>
+      <demo-scroll-strategies></demo-scroll-strategies>
       <demo-select-trigger></demo-select-trigger>
       <demo-focus></demo-focus>
       <demo-transitions></demo-transitions>
