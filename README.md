@@ -39,7 +39,7 @@ export class AppModule { }
 Finally, import the `SatPopoverModule` to provide the necessary components and directives.
 
 ```ts
-import { SatPopoverModule } from '@angular/material';
+import { SatPopoverModule } from '@sat/popover';
 
 @NgModule({
   ...
