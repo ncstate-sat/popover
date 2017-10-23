@@ -154,7 +154,12 @@ itself to stay attached to its anchor. You can adjust this behavior with `scroll
 |----------------|------------------------------------------------
 | `'noop'`       | Don't update position.
 | `'block'`      | Block page scrolling while open.
-| `'reposition'` | Reposition the popover on scroll.
+| `'reposition'` | Reposition the popover on scroll (default).
+
+> Note: if your popover fails to stay anchored with the `reposition` strategy, you may need to add
+the [`cdkScrollable`](https://material.angular.io/cdk/scrolling/overview) directive to your
+scrolling container. This will ensure scroll events are dispatched to the popover's positioning
+service.
 
 ### Animations
 
