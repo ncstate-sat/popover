@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   OnDestroy,
+  Optional,
   Output,
   ViewContainerRef
 } from '@angular/core';
@@ -17,6 +18,7 @@ import {
   ScrollStrategy,
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -82,6 +84,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef,
     private _notifications: PopoverNotificationService,
+    @Optional() private _dir: Directionality
   ) { }
 
   ngOnInit() {
@@ -116,6 +119,11 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       this._overlayRef.detach();
       this._saveClosedState(value);
     }
+  }
+
+  /** The text direction of the containing app. */
+  private get _direction(): Direction {
+    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
 
   /** Removes the popover from the DOM. Does NOT update open state. */
@@ -217,6 +225,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       hasBackdrop: this.attachedPopover.hasBackdrop,
       backdropClass: this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._getScrollStrategyInstance(this.attachedPopover.scrollStrategy),
+      direction: this._direction,
     });
 
     return config;
@@ -278,6 +287,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
         {originX: originX, originY: originY},
         {overlayX: overlayX, overlayY: overlayY}
       )
+      .withDirection(this._direction)
       // (2)
       .withFallbackPosition(
         {originX: 'center', originY: originY},
