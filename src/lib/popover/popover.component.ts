@@ -41,8 +41,7 @@ export const VALID_POSY: SatPopoverPositionY[] = ['above', 'center', 'below'];
 export const VALID_SCROLL: SatPopoverScrollStrategy[] = ['noop', 'block', 'reposition'];
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
-const OPEN_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
-const CLOSE_TRANSITION = OPEN_TRANSITION;
+const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 
 @Component({
   selector: 'sat-popover',
@@ -112,10 +111,24 @@ export class SatPopover implements AfterViewInit {
   private _hasBackdrop = false;
 
   /** Custom transition to use while opening. */
-  @Input() openTransition = OPEN_TRANSITION;
+  @Input()
+  get openTransition() { return this._openTransition; }
+  set openTransition(val: string) {
+    if (val) {
+      this._openTransition = val;
+    }
+  }
+  private _openTransition = DEFAULT_TRANSITION;
 
   /** Custom transition to use while closing. */
-  @Input() closeTransition = CLOSE_TRANSITION;
+  @Input()
+  get closeTransition() { return this._closeTransition; }
+  set closeTransition(val: string) {
+    if (val) {
+      this._closeTransition = val;
+    }
+  }
+  private _closeTransition = DEFAULT_TRANSITION;
 
   /** Optional backdrop class. */
   @Input() backdropClass = '';

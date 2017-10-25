@@ -17,5 +17,6 @@ watch$('src/lib', { usePolling: true })
     console.log('building...');
     // this is hacky but it gets the job done for now
     spawn$('node', ['tools/build.js'])
+      .switchMap(() => spawn$('npm', ['run', 'copylib']))
       .subscribe(undefined, undefined, () => console.log('build complete'));
   });
