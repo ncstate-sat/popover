@@ -1,12 +1,12 @@
 {
-  "name": "@sat/popover",
+  "name": "@ncstate/sat-popover",
   "version": "POPOVER_VERSION",
   "description": "Popover component for Angular",
   "author": "Will Howell",
   "license": "MIT",
-  "main": "./bundles/popover.umd.js",
-  "module": "./@sat/popover.es5.js",
-  "es2015": "./@sat/popover.js",
+  "main": "./bundles/sat-popover.umd.js",
+  "module": "./@ncstate/sat-popover.es5.js",
+  "es2015": "./@ncstate/sat-popover.js",
   "peerDependencies": {
     "@angular/core": "ANGULAR_VERSION",
     "@angular/common": "ANGULAR_VERSION",
