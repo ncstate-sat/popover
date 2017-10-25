@@ -1,7 +1,7 @@
 #!/bin/bash
 
 packagePath="./dist/lib/*"
-destPath="./node_modules/@sat/popover"
+destPath="./node_modules/@ncstate/sat-popover"
 
 # create directory and copy build artifacts
 rm -rf $destPath

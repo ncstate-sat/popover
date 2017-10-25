@@ -11,7 +11,7 @@
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
     "flatModuleOutFile": "popover.js",
-    "flatModuleId": "@sat/popover",
+    "flatModuleId": "@ncstate/sat-popover",
     "annotateForClosureCompiler": true
   }
 }

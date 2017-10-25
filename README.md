@@ -4,10 +4,10 @@
 
 ## Installation
 
-SAT Popover has a peer dependency on the Angular CDK to leverage its overlay API.
+`sat-popover` has a peer dependency on the Angular CDK to leverage its overlay API.
 
 ```
-npm install --save @sat/popover @angular/cdk
+npm install --save @ncstate/sat-popover @angular/cdk
 ```
 
 If you want the popover animations to work, you must include `BrowserAnimationsModule` in your app.
@@ -39,7 +39,7 @@ export class AppModule { }
 Finally, import the `SatPopoverModule` to provide the necessary components and directives.
 
 ```ts
-import { SatPopoverModule } from '@sat/popover';
+import { SatPopoverModule } from '@ncstate/sat-popover';
 
 @NgModule({
   ...

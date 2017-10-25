@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SatPopoverModule } from '@sat/popover';
+import { SatPopoverModule } from '@ncstate/sat-popover';
 import {
   MatToolbarModule,
   MatCardModule,

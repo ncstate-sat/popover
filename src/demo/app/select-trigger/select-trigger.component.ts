@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { SatPopover } from '@sat/popover';
+import { SatPopover } from '@ncstate/sat-popover';
 
 @Component({
   selector: 'demo-select-trigger',
