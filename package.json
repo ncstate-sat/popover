@@ -22,12 +22,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ncsu-sat/popover.git"
+    "url": "git+https://github.com/ncstate-sat/popover.git"
   },
   "bugs": {
-    "url": "https://github.com/ncsu-sat/popover/issues"
+    "url": "https://github.com/ncstate-sat/popover/issues"
   },
-  "homepage": "https://github.com/ncsu-sat/popover#readme",
+  "homepage": "https://github.com/ncstate-sat/popover#readme",
   "devDependencies": {
     "@angular/animations": "~4.4.4",
     "@angular/cdk": "2.0.0-beta.12",
