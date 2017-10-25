@@ -8,14 +8,26 @@
 
   &.sat-popover-before.sat-popover-above {
     transform-origin: right bottom;
+
+    [dir='rtl'] & {
+      transform-origin: left bottom;
+    }
   }
 
   &.sat-popover-before.sat-popover-center {
     transform-origin: right center;
+
+    [dir='rtl'] & {
+      transform-origin: left center;
+    }
   }
 
   &.sat-popover-before.sat-popover-below {
     transform-origin: right top;
+
+    [dir='rtl'] & {
+      transform-origin: left top;
+    }
   }
 
   &.sat-popover-center.sat-popover-above {
@@ -28,14 +40,26 @@
 
   &.sat-popover-after.sat-popover-above {
     transform-origin: left bottom;
+
+    [dir='rtl'] & {
+      transform-origin: right bottom;
+    }
   }
 
   &.sat-popover-after.sat-popover-center {
     transform-origin: left center;
+
+    [dir='rtl'] & {
+      transform-origin: right center;
+    }
   }
 
   &.sat-popover-after.sat-popover-below {
     transform-origin: left top;
+
+    [dir='rtl'] & {
+      transform-origin: right top;
+    }
   }
 
 }
