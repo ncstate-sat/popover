@@ -121,8 +121,8 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     }
   }
 
-  /** The text direction of the containing app. */
-  private get _direction(): Direction {
+  /** Gets the text direction of the containing app. */
+  private _getDirection(): Direction {
     return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
 
@@ -225,7 +225,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       hasBackdrop: this.attachedPopover.hasBackdrop,
       backdropClass: this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._getScrollStrategyInstance(this.attachedPopover.scrollStrategy),
-      direction: this._direction,
+      direction: this._getDirection(),
     });
 
     return config;
@@ -287,7 +287,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
         {originX: originX, originY: originY},
         {overlayX: overlayX, overlayY: overlayY}
       )
-      .withDirection(this._direction)
+      .withDirection(this._getDirection())
       // (2)
       .withFallbackPosition(
         {originX: 'center', originY: originY},
