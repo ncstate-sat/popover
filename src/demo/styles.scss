@@ -1,14 +1,14 @@
 @import '~@angular/material/theming';
 
 // Material theming
-$ncsu-primary: mat-palette($mat-red, 700);
-$ncsu-accent:  mat-palette($mat-blue-grey);
-$ncsu-warn:    mat-palette($mat-deep-orange);
+$ncstate-primary: mat-palette($mat-red, 700);
+$ncstate-accent:  mat-palette($mat-blue-grey);
+$ncstate-warn:    mat-palette($mat-deep-orange);
 
-$ncsu-theme: mat-light-theme($ncsu-primary, $ncsu-accent, $ncsu-warn);
+$ncstate-theme: mat-light-theme($ncstate-primary, $ncstate-accent, $ncstate-warn);
 
 @include mat-core();
-@include angular-material-theme($ncsu-theme);
+@include angular-material-theme($ncstate-theme);
 
 html, body {
   height: 100%;
