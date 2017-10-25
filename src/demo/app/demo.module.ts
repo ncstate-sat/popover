@@ -14,7 +14,6 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
 } from '@angular/material';
-import { BidiModule } from '@angular/cdk/bidi';
 
 import { DemoComponent } from './demo.component';
 import { PositioningDemo } from './positioning/positioning.component';
@@ -27,7 +26,6 @@ import { TooltipDemo } from './tooltip/tooltip.component';
 
 @NgModule({
   exports: [
-    // material
     MatToolbarModule,
     MatCardModule,
     MatButtonModule,
@@ -37,8 +35,6 @@ import { TooltipDemo } from './tooltip/tooltip.component';
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    // cdk
-    BidiModule,
   ]
 })
 export class DemoMaterialModule { }
