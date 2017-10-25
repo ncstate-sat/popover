@@ -7,16 +7,9 @@ import { Component } from '@angular/core';
   template: `
     <mat-toolbar color="primary">
       SAT Popover Demo
-
-      <button mat-button class="dir-select"
-          (click)="toggleDirection()"
-          title="Toggle between RTL and LTR">
-        {{ direction.toUpperCase() }}
-      </button>
     </mat-toolbar>
 
-
-    <div class="page-content" [dir]="direction">
+    <div class="page-content">
       <demo-positioning></demo-positioning>
       <demo-action-api></demo-action-api>
       <demo-scroll-strategies></demo-scroll-strategies>
@@ -27,11 +20,4 @@ import { Component } from '@angular/core';
     </div>
   `
 })
-export class DemoComponent {
-  direction = 'rtl';
-
-  toggleDirection() {
-    this.direction = (this.direction === 'rtl' ? 'ltr' : 'rtl');
-  }
-
-}
+export class DemoComponent { }
