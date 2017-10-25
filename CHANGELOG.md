@@ -1,4 +1,4 @@
-# 1.0.0-beta.1 flopover-flunkey
+# 1.0.0-beta.1 flopover-facsimile
 
 ### Breaking Changes
 The npm package name has changed from `@sat/popover` to `@ncstate/sat-popover`. All class names
