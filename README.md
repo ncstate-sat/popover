@@ -178,5 +178,5 @@ You can modify these animation curves using `openTransition` and `closeTransitio
 ## Styles
 
 The `<sat-popover>` component only provides styles to affect its own transform origin. It is
-the responsibility of the elements you project inside the popover to styles themselves. This
+the responsibility of the elements you project inside the popover to style themselves. This
 includes background color, box shadows, margin offsets, etc.
