@@ -5,8 +5,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./demo.component.scss'],
   host: { 'class': 'mat-app-background' },
   template: `
-    <mat-toolbar color="primary">
-      SAT Popover Demo
+    <mat-toolbar color="primary" class="mat-elevation-z2">
+      <a class="repo-link mat-title" href="https://github.com/ncstate-sat/popover">
+        @ncstate/sat-popover
+      </a>
     </mat-toolbar>
 
     <div class="page-content">
