@@ -22,10 +22,10 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/observable/merge';
+import { take } from 'rxjs/operators/take';
+import { switchMap } from 'rxjs/operators/switchMap';
+import { takeUntil } from 'rxjs/operators/takeUntil';
+import { merge } from 'rxjs/observable/merge';
 
 import {
   SatPopover,
@@ -140,10 +140,10 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
    */
   private _destroyPopoverOnceClosed(): void {
     if (this.isPopoverOpen() && this._overlayRef) {
-      this._overlayRef.detachments()
-        .take(1)
-        .takeUntil(this._onDestroy)
-        .subscribe(() => this._destroyPopover());
+      this._overlayRef.detachments().pipe(
+        take(1),
+        takeUntil(this._onDestroy)
+      ).subscribe(() => this._destroyPopover());
     } else {
       this._destroyPopover();
     }
@@ -162,7 +162,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
    */
   private _subscribeToNotifications(): void {
     this._notifications.events()
-      .takeUntil(this._onDestroy)
+      .pipe(takeUntil(this._onDestroy))
       .subscribe(event => {
         switch (event.action) {
           case NotificationAction.OPEN:
@@ -187,8 +187,10 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   private _subscribeToBackdrop(): void {
     this._overlayRef
       .backdropClick()
-      .takeUntil(this.popoverClosed)
-      .takeUntil(this._onDestroy)
+      .pipe(
+        takeUntil(this.popoverClosed),
+        takeUntil(this._onDestroy)
+      )
       .subscribe(() => this.closePopover());
   }
 
@@ -237,7 +239,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
    */
   private _subscribeToPositionChanges(position: ConnectedPositionStrategy): void {
     position.onPositionChange
-      .takeUntil(this._onDestroy)
+      .pipe(takeUntil(this._onDestroy))
       .subscribe(change => {
         const posX = convertFromHorizontalPos(change.connectionPair.overlayX, true);
         const posY = convertFromVerticalPos(change.connectionPair.overlayY, true);
