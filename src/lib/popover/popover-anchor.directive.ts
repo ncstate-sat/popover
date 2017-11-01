@@ -22,7 +22,9 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { take, takeUntil, switchMap } from 'rxjs/operators';
+import { take } from 'rxjs/operators/take';
+import { switchMap } from 'rxjs/operators/switchMap';
+import { takeUntil } from 'rxjs/operators/takeUntil';
 import { merge } from 'rxjs/observable/merge';
 
 import {
