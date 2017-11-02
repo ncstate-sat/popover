@@ -1,8 +1,8 @@
 # Popover Component for Angular
 
-[StackBlitz Demo](https://stackblitz.com/edit/sat-popover-examples)
-
-[Development Demo App](https://ncstate-sat.github.io/popover/)
+[Demo](https://stackblitz.com/edit/sat-popover-examples) |
+[StackBlitz Template](https://stackblitz.com/edit/sat-popover-issues) |
+[Development App](https://ncstate-sat.github.io/popover/)
 
 ## Installation
 
