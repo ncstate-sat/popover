@@ -65,6 +65,8 @@ Wrap any component you want to display in a popover with an `<sat-popover>` comp
 
 Next, hook the popover to an anchor element.
 
+> **Note** Be sure to place the element with the `satPopoverAnchorFor` directive before the `sat-popover` component.
+
 ```html
 <button [satPopoverAnchorFor]="contactPopover" (click)="contactPopover.toggle()">
   See Contact Details
