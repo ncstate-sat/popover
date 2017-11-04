@@ -263,11 +263,31 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
   /** Create and return a position strategy based on config provided to the component instance. */
   private _getPosition(): ConnectedPositionStrategy {
-    // Get config values from the popover
-    const overlap = this.attachedPopover.overlapAnchor;
 
-    const xPos = this.attachedPopover.xPosition;
-    const yPos = this.attachedPopover.yPosition;
+    let overlap = false;
+    let xPos: SatPopoverPositionX;
+    let yPos: SatPopoverPositionY;
+
+    // Get config values from the popover
+    if (this.attachedPopover.xPosition === 'start') {
+      overlap = true;
+      xPos = 'after';
+    } else if (this.attachedPopover.xPosition === 'end') {
+      overlap = true;
+      xPos = 'before';
+    } else {
+      xPos = this.attachedPopover.xPosition;
+    }
+
+    if (this.attachedPopover.yPosition === 'start') {
+      overlap = true;
+      yPos = 'below';
+    } else if (this.attachedPopover.yPosition === 'end') {
+      overlap = true;
+      yPos = 'above';
+    } else {
+      yPos = this.attachedPopover.yPosition;
+    }
 
     // Convert position to value usable by strategy. Invert for the overlay so that 'above' means
     // the overlay is attached at the 'bottom'

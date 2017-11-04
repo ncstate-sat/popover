@@ -208,11 +208,11 @@ export class SatPopover implements AfterViewInit {
 
   /** Apply positioning classes based on positioning inputs. */
   _setPositionClasses(posX = this.xPosition, posY = this.yPosition) {
-    this._classList['sat-popover-before'] = ['before', 'end'].includes(posX);
-    this._classList['sat-popover-after']  = ['after', 'start'].includes(posX);
+    this._classList['sat-popover-before'] = posX === 'before' || posX === 'end';
+    this._classList['sat-popover-after']  = posX === 'after' || posX === 'start';
 
-    this._classList['sat-popover-above'] = ['above', 'end'].includes(posY);
-    this._classList['sat-popover-below'] = ['below', 'start'].includes(posY);
+    this._classList['sat-popover-above'] = posY === 'above' || posY === 'end';
+    this._classList['sat-popover-below'] = posY === 'below' || posY === 'start';
 
     this._classList['sat-popover-center'] = posX === 'center' || posY === 'center';
   }

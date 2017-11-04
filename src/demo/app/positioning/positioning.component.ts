@@ -12,7 +12,9 @@ import { Component } from '@angular/core';
           <mat-form-field>
             <mat-select [(ngModel)]="xPos" placeholder="xPosition">
               <mat-option value="before">Before</mat-option>
+              <mat-option value="start">Start</mat-option>
               <mat-option value="center">Center</mat-option>
+              <mat-option value="end">End</mat-option>
               <mat-option value="after">After</mat-option>
               <mat-option value="octopus">Octopus</mat-option>
             </mat-select>
@@ -21,7 +23,9 @@ import { Component } from '@angular/core';
           <mat-form-field>
             <mat-select [(ngModel)]="yPos" placeholder="yPosition">
               <mat-option value="above">Above</mat-option>
+              <mat-option value="start">Start</mat-option>
               <mat-option value="center">Center</mat-option>
+              <mat-option value="end">End</mat-option>
               <mat-option value="below">Below</mat-option>
               <mat-option value="aardvark">Aardvark</mat-option>
             </mat-select>
@@ -32,8 +36,6 @@ import { Component } from '@angular/core';
               [(ngModel)]="margin"
               placeholder="anchor's margin-left (px)">
           </mat-form-field>
-
-          <mat-checkbox [(ngModel)]="overlap">Overlap Trigger</mat-checkbox>
         </div>
 
         <button mat-raised-button
@@ -49,8 +51,7 @@ import { Component } from '@angular/core';
       <sat-popover #p
           [xPosition]="xPos"
           [yPosition]="yPos"
-          hasBackdrop
-          [overlapAnchor]="overlap">
+          hasBackdrop>
         <div class="popover mat-body-2">
           Nifty
         </div>
@@ -63,7 +64,6 @@ export class PositioningDemo {
 
   xPos = 'after';
   yPos = 'center';
-  overlap = false;
   margin = 0;
 
 }

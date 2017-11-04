@@ -630,7 +630,7 @@ export class KeyboardPopoverTestComponent {
   template: `
     <div id="anchor" [satPopoverAnchorFor]="p">Anchor</div>
 
-    <sat-popover #p [xPosition]="xPos" [yPosition]="yPos" [overlapAnchor]="overlap">
+    <sat-popover #p [xPosition]="xPos" [yPosition]="yPos">
       <div id="content">Popover</div>
     </sat-popover>
   `
@@ -640,7 +640,6 @@ export class PositioningTestComponent {
   @ViewChild(SatPopover) popover: SatPopover;
   xPos = 'center';
   yPos = 'center';
-  overlap = true;
 }
 
 /** This component is for testing scroll behavior. */
