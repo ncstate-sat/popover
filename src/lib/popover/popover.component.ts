@@ -31,13 +31,13 @@ import {
   getInvalidScrollStrategyError,
 } from './popover.errors';
 
-export type SatPopoverPositionX = 'before' | 'center' | 'after';
-export type SatPopoverPositionY = 'above'  | 'center' | 'below';
+export type SatPopoverPositionX = 'before' | 'start' | 'center' | 'end' | 'after';
+export type SatPopoverPositionY = 'above'  | 'start' | 'center' | 'end' | 'below';
 // TODO: support close on resolution of https://github.com/angular/material2/issues/7922
 export type SatPopoverScrollStrategy = 'noop' | 'block' | 'reposition';
 
-export const VALID_POSX: SatPopoverPositionX[] = ['before', 'center', 'after'];
-export const VALID_POSY: SatPopoverPositionY[] = ['above', 'center', 'below'];
+export const VALID_POSX: SatPopoverPositionX[] = ['before', 'start', 'center', 'end', 'after'];
+export const VALID_POSY: SatPopoverPositionY[] = ['above', 'start', 'center', 'end', 'below'];
 export const VALID_SCROLL: SatPopoverScrollStrategy[] = ['noop', 'block', 'reposition'];
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
@@ -77,18 +77,6 @@ export class SatPopover implements AfterViewInit {
     }
   }
   private _yPosition: SatPopoverPositionY = 'center';
-
-  /** Whether the popover should overlap its anchor. */
-  @Input()
-  get overlapAnchor() { return this._overlapAnchor; }
-  set overlapAnchor(val: boolean) {
-    const coerced = coerceBooleanProperty(val);
-    if (this._overlapAnchor !== coerced) {
-      this._overlapAnchor = coerced;
-      this._dispatchNotification(new PopoverNotification(NotificationAction.REPOSITION));
-    }
-  }
-  private _overlapAnchor = true;
 
   /** How the popover should handle scrolling. */
   @Input()
@@ -220,11 +208,11 @@ export class SatPopover implements AfterViewInit {
 
   /** Apply positioning classes based on positioning inputs. */
   _setPositionClasses(posX = this.xPosition, posY = this.yPosition) {
-    this._classList['sat-popover-before'] = posX === 'before';
-    this._classList['sat-popover-after']  = posX === 'after';
+    this._classList['sat-popover-before'] = ['before', 'end'].includes(posX);
+    this._classList['sat-popover-after']  = ['after', 'start'].includes(posX);
 
-    this._classList['sat-popover-above'] = posY === 'above';
-    this._classList['sat-popover-below'] = posY === 'below';
+    this._classList['sat-popover-above'] = ['above', 'end'].includes(posY);
+    this._classList['sat-popover-below'] = ['below', 'start'].includes(posY);
 
     this._classList['sat-popover-center'] = posX === 'center' || posY === 'center';
   }
