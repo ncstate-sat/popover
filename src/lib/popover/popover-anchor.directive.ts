@@ -223,7 +223,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   /** Create and return a config for creating the overlay. */
   private _getOverlayConfig(): OverlayConfig {
     const config = new OverlayConfig({
-      positionStrategy: this._getPosition(),
+      positionStrategy: this._getPositionStrategy(),
       hasBackdrop: this.attachedPopover.hasBackdrop,
       backdropClass: this.attachedPopover.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._getScrollStrategyInstance(this.attachedPopover.scrollStrategy),
@@ -241,9 +241,10 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     position.onPositionChange
       .pipe(takeUntil(this._onDestroy))
       .subscribe(change => {
-        const posX = convertFromHorizontalPos(change.connectionPair.overlayX, true);
-        const posY = convertFromVerticalPos(change.connectionPair.overlayY, true);
-        this.attachedPopover._setPositionClasses(posX, posY);
+        this.attachedPopover._setPositionClasses(
+          getHorizontalPopoverPosition(change.connectionPair.overlayX),
+          getVerticalPopoverPosition(change.connectionPair.overlayY),
+        );
       });
   }
 
@@ -262,168 +263,146 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   }
 
   /** Create and return a position strategy based on config provided to the component instance. */
-  private _getPosition(): ConnectedPositionStrategy {
+  private _getPositionStrategy(): ConnectedPositionStrategy {
+    // Attach the overlay at the preferred position
+    const {originX, overlayX} = getHorizontalConnectionPosPair(this.attachedPopover.xPosition);
+    const {originY, overlayY} = getVerticalConnectionPosPair(this.attachedPopover.yPosition);
+    const strategy = this._overlay.position()
+      .connectedTo(this._elementRef, {originX, originY}, {overlayX, overlayY})
+      .withDirection(this._getDirection());
 
-    let overlap = false;
-    let xPos: SatPopoverPositionX;
-    let yPos: SatPopoverPositionY;
+    // Add fallbacks based on the preferred positions
+    this._addFallbacks(strategy, this.attachedPopover.xPosition, this.attachedPopover.yPosition);
 
-    // Get config values from the popover
-    if (this.attachedPopover.xPosition === 'start') {
-      overlap = true;
-      xPos = 'after';
-    } else if (this.attachedPopover.xPosition === 'end') {
-      overlap = true;
-      xPos = 'before';
-    } else {
-      xPos = this.attachedPopover.xPosition;
-    }
+    return strategy;
+  }
 
-    if (this.attachedPopover.yPosition === 'start') {
-      overlap = true;
-      yPos = 'below';
-    } else if (this.attachedPopover.yPosition === 'end') {
-      overlap = true;
-      yPos = 'above';
-    } else {
-      yPos = this.attachedPopover.yPosition;
-    }
+  /** Add fallbacks to a given strategy based around target positions. */
+  private _addFallbacks(strategy: ConnectedPositionStrategy, xTarget: SatPopoverPositionX,
+        yTarget: SatPopoverPositionY): void {
+    // Determine if the target positions overlap the anchor
+    const xOverlapAllowed = xTarget !== 'before' && xTarget !== 'after';
+    const yOverlapAllowed = yTarget !== 'above' && yTarget !== 'below';
 
-    // Convert position to value usable by strategy. Invert for the overlay so that 'above' means
-    // the overlay is attached at the 'bottom'
-    const overlayX = convertToHorizontalPos(xPos, true);
-    const overlayY = convertToVerticalPos(yPos, true);
+    // If a target position doesn't cover the anchor, don't let any of the fallback positions
+    // cover the anchor
+    const possibleXPositions = xOverlapAllowed ?
+      ['before', 'start', 'center', 'end', 'after'] :
+      ['before', 'after'];
+    const possibleYPositions = yOverlapAllowed ?
+      ['above', 'start', 'center', 'end', 'below'] :
+      ['above', 'below'];
 
-    // Invert for the trigger when overlapping. When it isn't supposed to overlap, use the original
-    // translation so that 'above' means 'top'
-    const originX = convertToHorizontalPos(xPos, overlap);
-    const originY = convertToVerticalPos(yPos, overlap);
+    // Add fallbacks for each allowed prioritized fallback position combo
+    prioritizeAroundTarget(xTarget, possibleXPositions).forEach(xPosition => {
+      prioritizeAroundTarget(yTarget, possibleYPositions).forEach(yPosition => {
+        this._addFallback(strategy, xPosition, yPosition);
+      });
+    });
+  }
 
-    // Generate a position strategy with iterative fallback solutions
-    //       1 2 3
-    //  ↖︎ => 4 5 6
-    //       7 8 9
-    return this._overlay.position()
-      // Original Y position (1)
-      .connectedTo(this._elementRef,
-        {originX: originX, originY: originY},
-        {overlayX: overlayX, overlayY: overlayY}
-      )
-      .withDirection(this._getDirection())
-      // (2)
-      .withFallbackPosition(
-        {originX: 'center', originY: originY},
-        {overlayX: 'center', overlayY: overlayY}
-      )
-      // (3)
-      .withFallbackPosition(
-        {originX: reverseHorizontal(originX), originY: originY},
-        {overlayX: reverseHorizontal(overlayX), overlayY: overlayY},
-      )
-      // Center Y position (4)
-      .withFallbackPosition(
-        {originX: originX, originY: 'center'},
-        {overlayX: overlayX, overlayY: 'center'}
-      )
-      // (5)
-      .withFallbackPosition(
-        {originX: 'center', originY: 'center'},
-        {overlayX: 'center', overlayY: 'center'}
-      )
-      // (6)
-      .withFallbackPosition(
-        {originX: reverseHorizontal(originX), originY: 'center'},
-        {overlayX: reverseHorizontal(overlayX), overlayY: 'center'},
-      )
-      // Reverse Y position (7)
-      .withFallbackPosition(
-        {originX: originX, originY: reverseVertical(originY)},
-        {overlayX: overlayX, overlayY: reverseVertical(overlayY)}
-      )
-      // (8)
-      .withFallbackPosition(
-        {originX: 'center', originY: reverseVertical(originY)},
-        {overlayX: 'center', overlayY: reverseVertical(overlayY)}
-      )
-      // (9)
-      .withFallbackPosition(
-        {originX: reverseHorizontal(originX), originY: reverseVertical(originY)},
-        {overlayX: reverseHorizontal(overlayX), overlayY: reverseVertical(overlayY)}
-      );
+  /** Convert a specific x and y position into a fallback and apply it to the strategy. */
+  private _addFallback(strategy, xPos, yPos): void {
+    const {originX, overlayX} = getHorizontalConnectionPosPair(xPos);
+    const {originY, overlayY} = getVerticalConnectionPosPair(yPos);
+    strategy.withFallbackPosition({originX, originY}, {overlayX, overlayY});
   }
 
 }
 
-/** Helper to convert to correct horizontal position */
-function convertToHorizontalPos(val: SatPopoverPositionX, invert?: boolean):
-    HorizontalConnectionPos {
-  switch (val) {
+/** Helper function to convert SatPosition to origin/overlay position pair. */
+function getHorizontalConnectionPosPair(x: SatPopoverPositionX):
+    {originX: HorizontalConnectionPos, overlayX: HorizontalConnectionPos} {
+  switch (x) {
     case 'before':
-      return invert ? 'end' : 'start';
-    case 'center':
-      return 'center';
+      return {originX: 'start', overlayX: 'end'};
+    case 'start':
+      return {originX: 'start', overlayX: 'start'};
+    case 'end':
+      return {originX: 'end', overlayX: 'end'};
     case 'after':
-      return invert ? 'start' : 'end';
+      return {originX: 'end', overlayX: 'start'};
+    default:
+      return {originX: 'center', overlayX: 'center'};
   }
 }
 
-/** Helper to convert from a horizontal position back to an overlay position  */
-function convertFromHorizontalPos(val: HorizontalConnectionPos, invert?: boolean):
-    SatPopoverPositionX {
-  switch (val) {
-    case 'start':
-      return invert ? 'after' : 'before';
-    case 'center':
-      return 'center';
-    case 'end':
-      return invert ? 'before' : 'after';
-  }
-}
-
-/** Helper to convert to correct vertical position */
-function convertToVerticalPos(val: SatPopoverPositionY, invert?: boolean): VerticalConnectionPos {
-  switch (val) {
+/** Helper function to convert SatPosition to origin/overlay position pair. */
+function getVerticalConnectionPosPair(y: SatPopoverPositionY):
+    {originY: VerticalConnectionPos, overlayY: VerticalConnectionPos} {
+  switch (y) {
     case 'above':
-      return invert ? 'bottom' : 'top';
-    case 'center':
-      return 'center';
-    case 'below':
-      return invert ? 'top' : 'bottom';
-  }
-}
-
-/** Helper to convert from a vertical position back to an overlay position */
-function convertFromVerticalPos(val: VerticalConnectionPos, invert?: boolean): SatPopoverPositionY {
-  switch (val) {
-    case 'top':
-      return invert ? 'below' : 'above';
-    case 'center':
-      return 'center';
-    case 'bottom':
-      return invert ? 'above' : 'below';
-  }
-}
-
-/** Helper to reverse horizontal position */
-function reverseHorizontal(val: HorizontalConnectionPos): HorizontalConnectionPos {
-  switch (val) {
+      return {originY: 'top', overlayY: 'bottom'};
     case 'start':
-      return 'end';
+      return {originY: 'top', overlayY: 'top'};
     case 'end':
-      return 'start';
+      return {originY: 'bottom', overlayY: 'bottom'};
+    case 'below':
+      return {originY: 'bottom', overlayY: 'top'};
     default:
-      return 'center';
+      return {originY: 'center', overlayY: 'center'};
   }
 }
 
-/** Helper to reverse vertical position */
-function reverseVertical(val: VerticalConnectionPos): VerticalConnectionPos {
-  switch (val) {
-    case 'top':
-      return 'bottom';
-    case 'bottom':
-      return 'top';
-    default:
-      return 'center';
+/** Helper function an overlay connection position to equivalent popover position. */
+function getHorizontalPopoverPosition(x: HorizontalConnectionPos): SatPopoverPositionX {
+  if (x === 'start') {
+    return 'after';
   }
+
+  if (x === 'end') {
+    return 'before';
+  }
+
+  return 'center';
+}
+
+/** Helper function an overlay connection position to equivalent popover position. */
+function getVerticalPopoverPosition(y: VerticalConnectionPos): SatPopoverPositionY {
+  if (y === 'top') {
+    return 'below';
+  }
+
+  if (y === 'bottom') {
+    return 'above';
+  }
+
+  return 'center';
+}
+
+/**
+ * Helper function that takes an ordered array options and returns a reorderded
+ * array around the target item. e.g.:
+ *
+ * target: 3; options: [1, 2, 3, 4, 5, 6, 7];
+ *
+ * return: [3, 4, 2, 5, 1, 6, 7]
+ */
+function prioritizeAroundTarget<T>(target: T, options: T[]): T[] {
+  const targetIndex = options.indexOf(target);
+
+  // Set the first item to be the target
+  const reordered = [target];
+
+  // Make leftSide and rightSide of the target stacks where the highest priority item is last
+  const leftSide = options.slice(0, targetIndex);
+  const rightSide = options.slice(targetIndex + 1, options.length).reverse();
+
+  // Alternate between stacks until one is empty
+  while (leftSide.length && rightSide.length) {
+    reordered.push(rightSide.pop());
+    reordered.push(leftSide.pop());
+  }
+
+  // Flush out right side
+  while (rightSide.length) {
+    reordered.push(rightSide.pop());
+  }
+
+  // Flush out left side
+  while (leftSide.length) {
+    reordered.push(leftSide.pop());
+  }
+
+  return reordered;
 }
