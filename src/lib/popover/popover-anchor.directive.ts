@@ -293,12 +293,17 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       ['above', 'start', 'center', 'end', 'below'] :
       ['above', 'below'];
 
-    // Add fallbacks for each allowed prioritized fallback position combo
-    prioritizeAroundTarget(xTarget, possibleXPositions).forEach(xPosition => {
-      prioritizeAroundTarget(yTarget, possibleYPositions).forEach(yPosition => {
-        this._addFallback(strategy, xPosition, yPosition);
+    // Create fallbacks for each allowed prioritized fallback position combo
+    const fallbacks = [];
+    prioritizeAroundTarget(xTarget, possibleXPositions).forEach(xPos => {
+      prioritizeAroundTarget(yTarget, possibleYPositions).forEach(yPos => {
+        fallbacks.push({xPos, yPos});
       });
     });
+
+    // Remove the first fallback since it will be the target position that is already applied
+    fallbacks.slice(1, fallbacks.length)
+      .forEach(({xPos, yPos}) => this._addFallback(strategy, xPos, yPos));
   }
 
   /** Convert a specific x and y position into a fallback and apply it to the strategy. */

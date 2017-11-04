@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   OverlayContainer,
+  ConnectedPositionStrategy,
   RepositionScrollStrategy,
   BlockScrollStrategy,
 } from '@angular/cdk/overlay';
@@ -429,6 +430,46 @@ describe('SatPopover', () => {
       const overlayAfterSecondOpen = comp.anchor._overlayRef;
 
       expect(overlayAfterFirstOpen === overlayAfterSecondOpen).toBe(false);
+    }));
+
+    it('should generate the correct number of positions', fakeAsync(() => {
+      let strategy;
+      let overlayConfig;
+      fixture.detectChanges();
+
+      // centered over anchor can be any of 5 x 5 positions
+      comp.popover.open();
+      overlayConfig = comp.anchor._overlayRef.getConfig();
+      strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      expect(strategy.positions.length).toBe(25, 'overlapping');
+
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+
+      // non-overlapping can be any of 2 x 2 positions
+      comp.xPos = 'after';
+      comp.yPos = 'below';
+      fixture.detectChanges();
+
+      comp.popover.open();
+      overlayConfig = comp.anchor._overlayRef.getConfig();
+      strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      expect(strategy.positions.length).toBe(4, 'non-overlapping');
+
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+
+      // overlapping in one direction can be any of 2 x 5 positions
+      comp.xPos = 'start';
+      comp.yPos = 'below';
+      fixture.detectChanges();
+
+      comp.popover.open();
+      overlayConfig = comp.anchor._overlayRef.getConfig();
+      strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      expect(strategy.positions.length).toBe(10, 'overlapping in one dimension');
     }));
 
     it('should throw an error when an invalid xPosition is provided', () => {
