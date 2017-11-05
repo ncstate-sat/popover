@@ -18,7 +18,7 @@ import { SatPopover } from '@ncstate/sat-popover';
           <p><b>Birth Date</b>: {{ form.value.birthDate | date }}</p>
         </div>
 
-        <sat-popover #p hasBackdrop xPosition="after" overlapAnchor="false">
+        <sat-popover #p hasBackdrop xPosition="after">
           <div class="form" [formGroup]="form">
             <mat-form-field>
               <input matInput (keydown)="closeOnEnter($event)"

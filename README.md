@@ -83,21 +83,17 @@ By default, the popover will appear centered over the button. If you instead wan
 to appear below the anchor:
 
 ```html
-<sat-popover #contactPopover yPosition="below" [overlapAnchor]="false">
+<sat-popover #contactPopover yPosition="below">
   <!-- ... -->
 </sat-popover>
 ```
 
 You can use the following to position the popover around the anchor:
 
-| Input         | Type                            | Default  |
-|---------------|---------------------------------|----------|
-| xPosition     | 'before' \| 'center' \| 'after' | 'center' |
-| yPosition     | 'above' \| 'center' \| 'below'  | 'center' |
-| overlapAnchor | boolean                         | true     |
-
-> Note: When `xPosition` and `yPosition` are both `'center'`, `overlapAnchor` will have no
-effect.
+| Input         | Type                                                | Default  |
+|---------------|-----------------------------------------------------|----------|
+| xPosition     | 'before' \| 'start' \| 'center' \| 'end' \| 'after' | 'center' |
+| yPosition     | 'above'  \| 'start' \| 'center' \| 'end' \| 'below' | 'center' |
 
 ### Opening and closing
 
