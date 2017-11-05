@@ -60,7 +60,7 @@ export class SatPopover implements AfterViewInit {
     if (this._xPosition !== val) {
       this._xPosition = val;
       this._setPositionClasses();
-      this._dispatchNotification(new PopoverNotification(NotificationAction.REPOSITION));
+      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
     }
   }
   private _xPosition: SatPopoverPositionX = 'center';
@@ -73,7 +73,7 @@ export class SatPopover implements AfterViewInit {
     if (this._yPosition !== val) {
       this._yPosition = val;
       this._setPositionClasses();
-      this._dispatchNotification(new PopoverNotification(NotificationAction.REPOSITION));
+      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
     }
   }
   private _yPosition: SatPopoverPositionY = 'center';
@@ -85,7 +85,7 @@ export class SatPopover implements AfterViewInit {
     this._validateScrollStrategy(val);
     if (this._scrollStrategy !== val) {
       this._scrollStrategy = val;
-      this._dispatchNotification(new PopoverNotification(NotificationAction.UPDATE_CONFIG));
+      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.UPDATE_CONFIG));
     }
   }
   private _scrollStrategy: SatPopoverScrollStrategy = 'reposition';
@@ -161,19 +161,19 @@ export class SatPopover implements AfterViewInit {
   /** Open this popover. */
   open(): void {
     const notification = new PopoverNotification(NotificationAction.OPEN);
-    this._dispatchNotification(notification);
+    this._dispatchActionNotification(notification);
   }
 
   /** Close this popover. */
   close(value?: any): void {
     const notification = new PopoverNotification(NotificationAction.CLOSE, value);
-    this._dispatchNotification(notification);
+    this._dispatchActionNotification(notification);
   }
 
   /** Toggle this popover open or closed. */
   toggle(): void {
     const notification = new PopoverNotification(NotificationAction.TOGGLE);
-    this._dispatchNotification(notification);
+    this._dispatchActionNotification(notification);
   }
 
   /** Gets whether the popover is presently open. */
@@ -257,8 +257,15 @@ export class SatPopover implements AfterViewInit {
     }
   }
 
-  /** Dispatch a notification to the notification service. */
-  private _dispatchNotification(notification: PopoverNotification) {
+  /** Dispatch a notification to the notification service, if possible. */
+  private _dispatchConfigNotification(notification: PopoverNotification) {
+    if (this._notifications) {
+      this._notifications.dispatch(notification);
+    }
+  }
+
+  /** Dispatch a notification to the notification service and throw if unable to. */
+  private _dispatchActionNotification(notification: PopoverNotification) {
     if (!this._notifications) {
       throw getUnanchoredPopoverError();
     }
