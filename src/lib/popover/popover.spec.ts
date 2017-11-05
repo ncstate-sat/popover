@@ -55,10 +55,15 @@ describe('SatPopover', () => {
       }).not.toThrowError();
     });
 
-    it('should throw an error if a popover has no corresponding anchor', () => {
+    it('should throw an error if open is called on a popover with no anchor', () => {
       fixture = TestBed.createComponent(AnchorlessPopoverTestComponent);
-      fixture.detectChanges();
 
+      // should not throw when just initializing
+      expect(() => {
+        fixture.detectChanges();
+      }).not.toThrowError();
+
+      // should throw if it is opening
       expect(() => {
         fixture.componentInstance.popover.open();
       }).toThrow(getUnanchoredPopoverError());
@@ -607,7 +612,7 @@ class InvalidPopoverTestComponent { }
  */
 @Component({
   template: `
-    <sat-popover>Anchorless</sat-popover>
+    <sat-popover xPosition="after">Anchorless</sat-popover>
   `
 })
 class AnchorlessPopoverTestComponent {
