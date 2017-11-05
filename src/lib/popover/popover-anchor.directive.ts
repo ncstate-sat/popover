@@ -303,11 +303,11 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
     // Remove the first fallback since it will be the target position that is already applied
     fallbacks.slice(1, fallbacks.length)
-      .forEach(({xPos, yPos}) => this._addFallback(strategy, xPos, yPos));
+      .forEach(({xPos, yPos}) => this._applyFallback(strategy, xPos, yPos));
   }
 
   /** Convert a specific x and y position into a fallback and apply it to the strategy. */
-  private _addFallback(strategy, xPos, yPos): void {
+  private _applyFallback(strategy, xPos, yPos): void {
     const {originX, overlayX} = getHorizontalConnectionPosPair(xPos);
     const {originY, overlayY} = getVerticalConnectionPosPair(yPos);
     strategy.withFallbackPosition({originX, originY}, {overlayX, overlayY});
@@ -349,7 +349,7 @@ function getVerticalConnectionPosPair(y: SatPopoverPositionY):
   }
 }
 
-/** Helper function an overlay connection position to equivalent popover position. */
+/** Helper function to convert an overlay connection position to equivalent popover position. */
 function getHorizontalPopoverPosition(x: HorizontalConnectionPos): SatPopoverPositionX {
   if (x === 'start') {
     return 'after';
@@ -362,7 +362,7 @@ function getHorizontalPopoverPosition(x: HorizontalConnectionPos): SatPopoverPos
   return 'center';
 }
 
-/** Helper function an overlay connection position to equivalent popover position. */
+/** Helper function to convert an overlay connection position to equivalent popover position. */
 function getVerticalPopoverPosition(y: VerticalConnectionPos): SatPopoverPositionY {
   if (y === 'top') {
     return 'below';
@@ -389,24 +389,24 @@ function prioritizeAroundTarget<T>(target: T, options: T[]): T[] {
   // Set the first item to be the target
   const reordered = [target];
 
-  // Make leftSide and rightSide of the target stacks where the highest priority item is last
-  const leftSide = options.slice(0, targetIndex);
-  const rightSide = options.slice(targetIndex + 1, options.length).reverse();
+  // Make left and right stacks where the highest priority item is last
+  const left = options.slice(0, targetIndex);
+  const right = options.slice(targetIndex + 1, options.length).reverse();
 
   // Alternate between stacks until one is empty
-  while (leftSide.length && rightSide.length) {
-    reordered.push(rightSide.pop());
-    reordered.push(leftSide.pop());
+  while (left.length && right.length) {
+    reordered.push(right.pop());
+    reordered.push(left.pop());
   }
 
   // Flush out right side
-  while (rightSide.length) {
-    reordered.push(rightSide.pop());
+  while (right.length) {
+    reordered.push(right.pop());
   }
 
   // Flush out left side
-  while (leftSide.length) {
-    reordered.push(leftSide.pop());
+  while (left.length) {
+    reordered.push(left.pop());
   }
 
   return reordered;
