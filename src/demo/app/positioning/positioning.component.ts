@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 
         <div class="config">
           <mat-form-field>
-            <mat-select [(ngModel)]="xPos" placeholder="xPosition">
+            <mat-select [(ngModel)]="horizontalAlign" placeholder="horizontalAlign">
               <mat-option value="before">Before</mat-option>
               <mat-option value="start">Start</mat-option>
               <mat-option value="center">Center</mat-option>
@@ -21,7 +21,7 @@ import { Component } from '@angular/core';
           </mat-form-field>
 
           <mat-form-field>
-            <mat-select [(ngModel)]="yPos" placeholder="yPosition">
+            <mat-select [(ngModel)]="verticalAlign" placeholder="verticalAlign">
               <mat-option value="above">Above</mat-option>
               <mat-option value="start">Start</mat-option>
               <mat-option value="center">Center</mat-option>
@@ -48,10 +48,9 @@ import { Component } from '@angular/core';
 
       </mat-card-content>
 
-      <sat-popover #p
-          [xPosition]="xPos"
-          [yPosition]="yPos"
-          hasBackdrop>
+      <sat-popover #p hasBackdrop
+          [horizontalAlign]="horizontalAlign"
+          [verticalAlign]="verticalAlign">
         <div class="popover mat-body-2">
           Nifty
         </div>
@@ -62,8 +61,8 @@ import { Component } from '@angular/core';
 })
 export class PositioningDemo {
 
-  xPos = 'after';
-  yPos = 'center';
+  horizontalAlign = 'after';
+  verticalAlign = 'center';
   margin = 0;
 
 }

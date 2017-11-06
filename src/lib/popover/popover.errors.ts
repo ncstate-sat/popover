@@ -1,4 +1,4 @@
-import { VALID_POSX, VALID_POSY, VALID_SCROLL } from './popover.component';
+import { VALID_HORIZ_ALIGN, VALID_VERT_ALIGN, VALID_SCROLL } from './popover.component';
 
 export function getInvalidPopoverError(): Error {
   return Error('SatPopoverAnchor must be provided an SatPopover component instance.');
@@ -8,12 +8,12 @@ export function getUnanchoredPopoverError(): Error {
   return Error('SatPopover is not anchored to any SatPopoverAnchor.');
 }
 
-export function getInvalidXPositionError(pos): Error {
-  return Error(generateGenericError('xPosition', pos, VALID_POSX));
+export function getInvalidHorizontalAlignError(alignment): Error {
+  return Error(generateGenericError('horizontalAlign/xAlign', alignment, VALID_HORIZ_ALIGN));
 }
 
-export function getInvalidYPositionError(pos): Error {
-  return Error(generateGenericError('yPosition', pos, VALID_POSY));
+export function getInvalidVerticalAlignError(alignment): Error {
+  return Error(generateGenericError('verticalAlign/yAlign', alignment, VALID_VERT_ALIGN));
 }
 
 export function getInvalidScrollStrategyError(strategy): Error {

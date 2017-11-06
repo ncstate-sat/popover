@@ -77,23 +77,26 @@ Next, hook the popover to an anchor element.
 
 > Note: `hasBackdrop` is explained below
 
-### Positioning
+### Alignment
 
-By default, the popover will appear centered over the button. If you instead want the popover
+By default, the popover will appear centered over the anchor. If you instead want the popover
 to appear below the anchor:
 
 ```html
-<sat-popover #contactPopover yPosition="below">
+<sat-popover #contactPopover verticalAlign="below">
   <!-- ... -->
 </sat-popover>
 ```
 
-You can use the following to position the popover around the anchor:
+You can use the following to align the popover around the anchor:
 
-| Input         | Type                                                | Default  |
-|---------------|-----------------------------------------------------|----------|
-| xPosition     | 'before' \| 'start' \| 'center' \| 'end' \| 'after' | 'center' |
-| yPosition     | 'above'  \| 'start' \| 'center' \| 'end' \| 'below' | 'center' |
+| Input             | Type                                                | Default  |
+|-------------------|-----------------------------------------------------|----------|
+| `horizontalAlign` | 'before' \| 'start' \| 'center' \| 'end' \| 'after' | 'center' |
+| `verticalAlign`   | 'above'  \| 'start' \| 'center' \| 'end' \| 'below' | 'center' |
+
+For convenience, you can also use `xAlign` and `yAlign` as shorthand for `horizontalAlign`
+and `verticalAlign`, respectively.
 
 ### Opening and closing
 

@@ -16,8 +16,8 @@ import { SatPopoverAnchor } from './popover-anchor.directive';
 import {
   getInvalidPopoverError,
   getUnanchoredPopoverError,
-  getInvalidXPositionError,
-  getInvalidYPositionError,
+  getInvalidHorizontalAlignError,
+  getInvalidVerticalAlignError,
   getInvalidScrollStrategyError,
 } from './popover.errors';
 
@@ -378,7 +378,7 @@ describe('SatPopover', () => {
           SatPopoverModule,
           NoopAnimationsModule,
         ],
-        declarations: [PositioningTestComponent],
+        declarations: [PositioningTestComponent, PositioningAliasTestComponent],
         providers: [
           {provide: OverlayContainer, useFactory: overlayContainerFactory}
         ]
@@ -407,7 +407,7 @@ describe('SatPopover', () => {
       tick();
 
       // change the position to the same thing and reopen, saving the new overlayRef
-      comp.xPos = 'center';
+      comp.hAlign = 'center';
       fixture.detectChanges();
 
       comp.popover.open();
@@ -428,7 +428,7 @@ describe('SatPopover', () => {
       tick();
 
       // change the position and reopen, saving the new overlayRef
-      comp.xPos = 'after';
+      comp.hAlign = 'after';
       fixture.detectChanges();
 
       comp.popover.open();
@@ -453,8 +453,8 @@ describe('SatPopover', () => {
       tick();
 
       // non-overlapping can be any of 2 x 2 positions
-      comp.xPos = 'after';
-      comp.yPos = 'below';
+      comp.hAlign = 'after';
+      comp.vAlign = 'below';
       fixture.detectChanges();
 
       comp.popover.open();
@@ -467,8 +467,8 @@ describe('SatPopover', () => {
       tick();
 
       // overlapping in one direction can be any of 2 x 5 positions
-      comp.xPos = 'start';
-      comp.yPos = 'below';
+      comp.hAlign = 'start';
+      comp.vAlign = 'below';
       fixture.detectChanges();
 
       comp.popover.open();
@@ -477,26 +477,39 @@ describe('SatPopover', () => {
       expect(strategy.positions.length).toBe(10, 'overlapping in one dimension');
     }));
 
-    it('should throw an error when an invalid xPosition is provided', () => {
+    it('should throw an error when an invalid horizontalAlign is provided', () => {
       fixture.detectChanges();
 
-      // set invalid xPosition
-      comp.xPos = 'kiwi';
+      // set invalid horizontalAlign
+      comp.hAlign = 'kiwi';
 
       expect(() => {
         fixture.detectChanges();
-      }).toThrow(getInvalidXPositionError('kiwi'));
+      }).toThrow(getInvalidHorizontalAlignError('kiwi'));
     });
 
-    it('should throw an error when an invalid yPosition is provided', () => {
+    it('should throw an error when an invalid verticalAlign is provided', () => {
       fixture.detectChanges();
 
-      // set invalid yPosition
-      comp.yPos = 'banana';
+      // set invalid verticalAlign
+      comp.vAlign = 'banana';
 
       expect(() => {
         fixture.detectChanges();
-      }).toThrow(getInvalidYPositionError('banana'));
+      }).toThrow(getInvalidVerticalAlignError('banana'));
+    });
+
+    it('should allow aliases for horizontal and vertical align inputs', () => {
+      const aliasFixture = TestBed.createComponent(PositioningAliasTestComponent);
+      const aliasComp = aliasFixture.componentInstance;
+
+      aliasComp.xAlign = 'before';
+      aliasComp.yAlign = 'end';
+
+      aliasFixture.detectChanges();
+
+      expect(aliasComp.popover.horizontalAlign).toBe('before');
+      expect(aliasComp.popover.verticalAlign).toBe('end');
     });
 
   });
@@ -612,7 +625,7 @@ class InvalidPopoverTestComponent { }
  */
 @Component({
   template: `
-    <sat-popover xPosition="after">Anchorless</sat-popover>
+    <sat-popover horizontalAlign="after">Anchorless</sat-popover>
   `
 })
 class AnchorlessPopoverTestComponent {
@@ -674,18 +687,33 @@ export class KeyboardPopoverTestComponent {
 /** This component is for testing dynamic positioning behavior. */
 @Component({
   template: `
-    <div id="anchor" [satPopoverAnchorFor]="p">Anchor</div>
-
-    <sat-popover #p [xPosition]="xPos" [yPosition]="yPos">
-      <div id="content">Popover</div>
+    <div [satPopoverAnchorFor]="p">Anchor</div>
+    <sat-popover #p [horizontalAlign]="hAlign" [verticalAlign]="vAlign">
+      Popover
     </sat-popover>
   `
 })
 export class PositioningTestComponent {
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
   @ViewChild(SatPopover) popover: SatPopover;
-  xPos = 'center';
-  yPos = 'center';
+  hAlign = 'center';
+  vAlign = 'center';
+}
+
+/** This component is for testing position aliases. */
+@Component({
+  template: `
+    <div [satPopoverAnchorFor]="p">Anchor</div>
+    <sat-popover #p [xAlign]="xAlign" [yAlign]="yAlign">
+      Popover
+    </sat-popover>
+  `
+})
+export class PositioningAliasTestComponent {
+  @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
+  @ViewChild(SatPopover) popover: SatPopover;
+  xAlign = 'center';
+  yAlign = 'center';
 }
 
 /** This component is for testing scroll behavior. */

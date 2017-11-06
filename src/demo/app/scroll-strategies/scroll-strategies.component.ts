@@ -23,7 +23,7 @@ import { Component } from '@angular/core';
           TOGGLE
         </button>
 
-        <sat-popover #p xPosition="after" hasBackdrop [scrollStrategy]="strategy">
+        <sat-popover #p horizontalAlign="after" hasBackdrop [scrollStrategy]="strategy">
           <div class="popover mat-body-1">Scroll the page to observe behavior.</div>
         </sat-popover>
 
