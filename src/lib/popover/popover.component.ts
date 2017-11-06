@@ -67,6 +67,11 @@ export class SatPopover implements AfterViewInit {
   }
   private _horizontalAlign: SatPopoverHorizontalAlign = 'center';
 
+  /** Alignment of the popover on the x axis. Alias for `horizontalAlign`. */
+  @Input()
+  get xAlign() { return this.horizontalAlign; }
+  set xAlign(val: SatPopoverHorizontalAlign) { this.horizontalAlign = val; }
+
   /** Alignment of the popover on the vertical axis. */
   @Input()
   get verticalAlign() { return this._verticalAlign; }
@@ -79,6 +84,11 @@ export class SatPopover implements AfterViewInit {
     }
   }
   private _verticalAlign: SatPopoverVerticalAlign = 'center';
+
+  /** Alignment of the popover on the y axis. Alias for `verticalAlign`. */
+  @Input()
+  get yAlign() { return this.verticalAlign; }
+  set yAlign(val: SatPopoverVerticalAlign) { this.verticalAlign = val; }
 
   /** How the popover should handle scrolling. */
   @Input()

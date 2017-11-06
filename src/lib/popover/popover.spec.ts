@@ -378,7 +378,7 @@ describe('SatPopover', () => {
           SatPopoverModule,
           NoopAnimationsModule,
         ],
-        declarations: [PositioningTestComponent],
+        declarations: [PositioningTestComponent, PositioningAliasTestComponent],
         providers: [
           {provide: OverlayContainer, useFactory: overlayContainerFactory}
         ]
@@ -497,6 +497,19 @@ describe('SatPopover', () => {
       expect(() => {
         fixture.detectChanges();
       }).toThrow(getInvalidVerticalAlignError('banana'));
+    });
+
+    it('should allow aliases for horizontal and vertical align inputs', () => {
+      const aliasFixture = TestBed.createComponent(PositioningAliasTestComponent);
+      const aliasComp = aliasFixture.componentInstance;
+
+      aliasComp.xAlign = 'before';
+      aliasComp.yAlign = 'end';
+
+      aliasFixture.detectChanges();
+
+      expect(aliasComp.popover.horizontalAlign).toBe('before');
+      expect(aliasComp.popover.verticalAlign).toBe('end');
     });
 
   });
@@ -686,6 +699,23 @@ export class PositioningTestComponent {
   @ViewChild(SatPopover) popover: SatPopover;
   hAlign = 'center';
   vAlign = 'center';
+}
+
+/** This component is for testing position aliases. */
+@Component({
+  template: `
+    <div id="anchor" [satPopoverAnchorFor]="p">Anchor</div>
+
+    <sat-popover #p [xAlign]="xAlign" [yAlign]="yAlign">
+      <div id="content">Popover</div>
+    </sat-popover>
+  `
+})
+export class PositioningAliasTestComponent {
+  @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
+  @ViewChild(SatPopover) popover: SatPopover;
+  xAlign = 'center';
+  yAlign = 'center';
 }
 
 /** This component is for testing scroll behavior. */

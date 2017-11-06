@@ -9,11 +9,11 @@ export function getUnanchoredPopoverError(): Error {
 }
 
 export function getInvalidHorizontalAlignError(alignment): Error {
-  return Error(generateGenericError('horizontalAlign', alignment, VALID_HORIZ_ALIGN));
+  return Error(generateGenericError('horizontalAlign/xAlign', alignment, VALID_HORIZ_ALIGN));
 }
 
 export function getInvalidVerticalAlignError(alignment): Error {
-  return Error(generateGenericError('verticalAlign', alignment, VALID_VERT_ALIGN));
+  return Error(generateGenericError('verticalAlign/yAlign', alignment, VALID_VERT_ALIGN));
 }
 
 export function getInvalidScrollStrategyError(strategy): Error {
