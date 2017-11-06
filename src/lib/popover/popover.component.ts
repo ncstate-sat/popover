@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -52,7 +51,7 @@ const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   styleUrls: ['./popover.component.scss'],
   templateUrl: './popover.component.html',
 })
-export class SatPopover implements AfterViewInit {
+export class SatPopover {
 
   /** Alignment of the popover on the horizontal axis. */
   @Input()
@@ -61,7 +60,6 @@ export class SatPopover implements AfterViewInit {
     this._validateHorizontalAlign(val);
     if (this._horizontalAlign !== val) {
       this._horizontalAlign = val;
-      this._setAlignmentClasses();
       this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
     }
   }
@@ -79,7 +77,6 @@ export class SatPopover implements AfterViewInit {
     this._validateVerticalAlign(val);
     if (this._verticalAlign !== val) {
       this._verticalAlign = val;
-      this._setAlignmentClasses();
       this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
     }
   }
@@ -165,10 +162,6 @@ export class SatPopover implements AfterViewInit {
     private _focusTrapFactory: FocusTrapFactory,
     @Optional() @Inject(DOCUMENT) private _document: any
   ) { }
-
-  ngAfterViewInit() {
-    this._setAlignmentClasses();
-  }
 
   /** Open this popover. */
   open(): void {

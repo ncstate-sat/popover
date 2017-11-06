@@ -264,21 +264,18 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
   /** Create and return a position strategy based on config provided to the component instance. */
   private _getPositionStrategy(): ConnectedPositionStrategy {
+    const horizontalTarget = this.attachedPopover.horizontalAlign;
+    const verticalTarget = this.attachedPopover.verticalAlign;
+
     // Attach the overlay at the preferred position
-    const {originX, overlayX} =
-        getHorizontalConnectionPosPair(this.attachedPopover.horizontalAlign);
-    const {originY, overlayY} =
-        getVerticalConnectionPosPair(this.attachedPopover.verticalAlign);
+    const {originX, overlayX} = getHorizontalConnectionPosPair(horizontalTarget);
+    const {originY, overlayY} = getVerticalConnectionPosPair(verticalTarget);
     const strategy = this._overlay.position()
       .connectedTo(this._elementRef, {originX, originY}, {overlayX, overlayY})
       .withDirection(this._getDirection());
 
     // Add fallbacks based on the preferred positions
-    this._addFallbacks(
-      strategy,
-      this.attachedPopover.horizontalAlign,
-      this.attachedPopover.verticalAlign
-    );
+    this._addFallbacks(strategy, horizontalTarget, verticalTarget);
 
     return strategy;
   }

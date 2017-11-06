@@ -687,10 +687,9 @@ export class KeyboardPopoverTestComponent {
 /** This component is for testing dynamic positioning behavior. */
 @Component({
   template: `
-    <div id="anchor" [satPopoverAnchorFor]="p">Anchor</div>
-
+    <div [satPopoverAnchorFor]="p">Anchor</div>
     <sat-popover #p [horizontalAlign]="hAlign" [verticalAlign]="vAlign">
-      <div id="content">Popover</div>
+      Popover
     </sat-popover>
   `
 })
@@ -704,10 +703,9 @@ export class PositioningTestComponent {
 /** This component is for testing position aliases. */
 @Component({
   template: `
-    <div id="anchor" [satPopoverAnchorFor]="p">Anchor</div>
-
+    <div [satPopoverAnchorFor]="p">Anchor</div>
     <sat-popover #p [xAlign]="xAlign" [yAlign]="yAlign">
-      <div id="content">Popover</div>
+      Popover
     </sat-popover>
   `
 })
