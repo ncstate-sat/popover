@@ -16,7 +16,7 @@ import { Component } from '@angular/core';
           </mat-form-field>
         </div>
         <div class="anchor" [satPopoverAnchorFor]="p" (click)="p.toggle()"></div>
-        <sat-popover #p xPosition="after" yPosition="below"
+        <sat-popover #p xAlign="after" yAlign="below"
             [openTransition]="openTransition"
             [closeTransition]="closeTransition">
           <div class="popover mat-subtitle">Hello!</div>

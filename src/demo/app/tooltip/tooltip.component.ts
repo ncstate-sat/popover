@@ -21,7 +21,7 @@ import 'rxjs/add/observable/of';
           Hover Me (instant)
         </div>
 
-        <sat-popover #instant xPosition="after">
+        <sat-popover #instant horizontalAlign="after">
           <div class="tooltip-wrapper mat-body-1">
             Multi-line <br>
             <span class="seagreen">Tooltip</span>
@@ -35,7 +35,7 @@ import 'rxjs/add/observable/of';
           Hover Me (1000ms delay)
         </div>
 
-        <sat-popover #delayed xPosition="after">
+        <sat-popover #delayed horizontalAlign="after">
           <div class="tooltip-wrapper mat-body-1">
             A tooltip that's slow to open
           </div>
