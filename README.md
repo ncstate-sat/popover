@@ -112,12 +112,12 @@ trigger that fits your application's needs.
 | toggle | Toggle the popover open or closed.           |
 | isOpen | Get whether the popover is presently open.   |
 
-| Output     | Description                                 |
-|------------|---------------------------------------------|
-| opened     | Emits when the popover is opened.           |
-| closed     | Emits when the popover is closed.           |
-| afterOpen  | Emits when the popover is finished opening. |
-| afterClose | Emits when the popover is finished closing. |
+| Output     | Description                                  |
+|------------|----------------------------------------------|
+| opened     | Emits when the popover is opened.            |
+| closed     | Emits when the popover is closed.            |
+| afterOpen  | Emits when the popover has finished opening. |
+| afterClose | Emits when the popover has finished closing. |
 
 #### `SatPopoverAnchor` has the following methods and outputs
 

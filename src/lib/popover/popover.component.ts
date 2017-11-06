@@ -136,10 +136,10 @@ export class SatPopover {
   /** Emits when the popover is closed. */
   @Output() closed = new EventEmitter<any>();
 
-  /** Emits when the popover is finished opening. */
+  /** Emits when the popover has finished opening. */
   @Output() afterOpen = new EventEmitter<void>();
 
-  /** Emits when the popover is finished closing. */
+  /** Emits when the popover has finished closing. */
   @Output() afterClose = new EventEmitter<void>();
 
   /** Reference to template so it can be placed within a portal. */
