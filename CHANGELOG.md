@@ -1,3 +1,54 @@
+# 1.0.0-beta.2 deserting-descartes
+
+### Breaking Changes
+The biggest change this release is how positioning the popover works. You can now align
+popovers at the `start` or `end` of the anchor, on either or both axes. This  removes the need to
+have an `overlapAnchor` option. Further, to better describe the intention of the positioning
+parameters, `xPosition` has been renamed to `horizontalAlign` and `yPosition` has been renamed to
+`verticalAlign`.
+
+We hope these two changes will make it easier to depict a mental model of the expected behavior.
+It also gives you 8 more possible positions!
+
+This table should give you an idea of how to migrate:
+
+| Previously                                | Currently                 |
+|-------------------------------------------|---------------------------|
+| `xPosition="before" overlapAnchor="true"` | `horizontalAlign="end"`   |
+| `xPosition="after" overlapAnchor="false"` | `horizontalAlign="after"` |
+| `yPosition="below" overlapAnchor="true"`  | `verticalAlign="start"`   |
+| `yPosition="above" overlapAnchor="false"` | `verticalAlign="above"`   |
+
+For convenience, aliases have also been provided
+
+| Input             | Alias    |
+|-------------------|----------|
+| `horizontalAlign` | `xAlign` |
+| `verticalAlign`   | `yAlign` |
+
+The following have also been renamed:
+* `SatPopoverPositionX` -> `SatPopoverHorizontalAlign`
+* `SatPopoverPositionY` -> `SatPopoverVerticalAlign`
+
+### Features
+* Add `start` and `end` options to `horizontalAlign` and `verticalAlign`.
+* Use better fallback strategy that originates from target alignment
+* The popover now has `afterOpen` and `afterClose` outputs that emit when the animation is complete
+* The popover now has a `'close'` scroll strategy. It will close itself whenever the parent
+container is scrolled.
+
+### Fixes
+* Switch to rxjs lettable operators to avoid polluting user's global Rx prototype
+* Allow user to declare popover eariler in a template than the anchor
+
+### Other
+* Fix typo in readme
+* Publish demo app at https://ncstate-sat.github.io/popover/
+* Add stacblitz starter to readme and issue template
+* Rename 'position' to 'align' and 'x/y' to 'horizontal/vertical'
+* Support cdk @ 5.0.0-rc0 and Angular 5
+
+
 # 1.0.0-beta.1 flopover-facsimile
 
 ### Breaking Changes
