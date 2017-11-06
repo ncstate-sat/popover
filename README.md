@@ -103,17 +103,35 @@ and `verticalAlign`, respectively.
 You are in full control of when the popover opens and closes. You can hook into any event or
 trigger that fits your application's needs.
 
-`SatPopover` has the following methods,
+#### `SatPopover` has the following methods and outputs
 
-* `open`
-* `close`
-* `toggle`
+| Method | Description                                  |
+|--------|----------------------------------------------|
+| open   | Open the popover.                            |
+| close  | Close the popover. Optionally takes a value. |
+| toggle | Toggle the popover open or closed.           |
+| isOpen | Get whether the popover is presently open.   |
 
-`SatPopoverAnchor` has similar methods,
+| Output     | Description                                 |
+|------------|---------------------------------------------|
+| opened     | Emits when the popover is opened.           |
+| closed     | Emits when the popover is closed.           |
+| afterOpen  | Emits when the popover is finished opening. |
+| afterClose | Emits when the popover is finished closing. |
 
-* `openPopover`
-* `closePopover`
-* `togglePopover`
+#### `SatPopoverAnchor` has the following methods and outputs
+
+| Method        | Description                                  |
+|---------------|----------------------------------------------|
+| openPopover   | Open the popover.                            |
+| closePopover  | Close the popover. Optionally takes a value. |
+| togglePopover | Toggle the popover open or closed.           |
+| isPopoverOpen | Get whether the popover is presently open.   |
+
+| Output        | Description                       |
+|---------------|-----------------------------------|
+| popoverOpened | Emits when the popover is opened. |
+| popoverClosed | Emits when the popover is closed. |
 
 ### Backdrop
 
