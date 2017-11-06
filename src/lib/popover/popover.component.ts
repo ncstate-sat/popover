@@ -26,19 +26,21 @@ import {
 } from './notification.service';
 import {
   getUnanchoredPopoverError,
-  getInvalidXPositionError,
-  getInvalidYPositionError,
+  getInvalidHorizontalAlignError,
+  getInvalidVerticalAlignError,
   getInvalidScrollStrategyError,
 } from './popover.errors';
 
-export type SatPopoverPositionX = 'before' | 'start' | 'center' | 'end' | 'after';
-export type SatPopoverPositionY = 'above'  | 'start' | 'center' | 'end' | 'below';
 // TODO: support close on resolution of https://github.com/angular/material2/issues/7922
 export type SatPopoverScrollStrategy = 'noop' | 'block' | 'reposition';
+export type SatPopoverHorizontalAlign = 'before' | 'start' | 'center' | 'end' | 'after';
+export type SatPopoverVerticalAlign = 'above'  | 'start' | 'center' | 'end' | 'below';
 
-export const VALID_POSX: SatPopoverPositionX[] = ['before', 'start', 'center', 'end', 'after'];
-export const VALID_POSY: SatPopoverPositionY[] = ['above', 'start', 'center', 'end', 'below'];
 export const VALID_SCROLL: SatPopoverScrollStrategy[] = ['noop', 'block', 'reposition'];
+export const VALID_HORIZ_ALIGN: SatPopoverHorizontalAlign[] =
+    ['before', 'start', 'center', 'end', 'after'];
+export const VALID_VERT_ALIGN: SatPopoverVerticalAlign[] =
+    ['above', 'start', 'center', 'end', 'below'];
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
 const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
@@ -52,31 +54,31 @@ const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 })
 export class SatPopover implements AfterViewInit {
 
-  /** Position of the popover on the x axis. */
+  /** Alignment of the popover on the horizontal axis. */
   @Input()
-  get xPosition() { return this._xPosition; }
-  set xPosition(val: SatPopoverPositionX) {
-    this._validateXPosition(val);
-    if (this._xPosition !== val) {
-      this._xPosition = val;
-      this._setPositionClasses();
+  get horizontalAlign() { return this._horizontalAlign; }
+  set horizontalAlign(val: SatPopoverHorizontalAlign) {
+    this._validateHorizontalAlign(val);
+    if (this._horizontalAlign !== val) {
+      this._horizontalAlign = val;
+      this._setAlignmentClasses();
       this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
     }
   }
-  private _xPosition: SatPopoverPositionX = 'center';
+  private _horizontalAlign: SatPopoverHorizontalAlign = 'center';
 
-  /** Position of the popover on the y axis. */
+  /** Alignment of the popover on the vertical axis. */
   @Input()
-  get yPosition() { return this._yPosition; }
-  set yPosition(val: SatPopoverPositionY) {
-    this._validateYPosition(val);
-    if (this._yPosition !== val) {
-      this._yPosition = val;
-      this._setPositionClasses();
+  get verticalAlign() { return this._verticalAlign; }
+  set verticalAlign(val: SatPopoverVerticalAlign) {
+    this._validateVerticalAlign(val);
+    if (this._verticalAlign !== val) {
+      this._verticalAlign = val;
+      this._setAlignmentClasses();
       this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
     }
   }
-  private _yPosition: SatPopoverPositionY = 'center';
+  private _verticalAlign: SatPopoverVerticalAlign = 'center';
 
   /** How the popover should handle scrolling. */
   @Input()
@@ -155,7 +157,7 @@ export class SatPopover implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this._setPositionClasses();
+    this._setAlignmentClasses();
   }
 
   /** Open this popover. */
@@ -206,15 +208,15 @@ export class SatPopover implements AfterViewInit {
     }
   }
 
-  /** Apply positioning classes based on positioning inputs. */
-  _setPositionClasses(posX = this.xPosition, posY = this.yPosition) {
-    this._classList['sat-popover-before'] = posX === 'before' || posX === 'end';
-    this._classList['sat-popover-after']  = posX === 'after' || posX === 'start';
+  /** Apply alignment classes based on alignment inputs. */
+  _setAlignmentClasses(horizAlign = this.horizontalAlign, vertAlign = this.verticalAlign) {
+    this._classList['sat-popover-before'] = horizAlign === 'before' || horizAlign === 'end';
+    this._classList['sat-popover-after']  = horizAlign === 'after' || horizAlign === 'start';
 
-    this._classList['sat-popover-above'] = posY === 'above' || posY === 'end';
-    this._classList['sat-popover-below'] = posY === 'below' || posY === 'start';
+    this._classList['sat-popover-above'] = vertAlign === 'above' || vertAlign === 'end';
+    this._classList['sat-popover-below'] = vertAlign === 'below' || vertAlign === 'start';
 
-    this._classList['sat-popover-center'] = posX === 'center' || posY === 'center';
+    this._classList['sat-popover-center'] = horizAlign === 'center' || vertAlign === 'center';
   }
 
   /** Move the focus inside the focus trap and remember where to return later. */
@@ -273,17 +275,17 @@ export class SatPopover implements AfterViewInit {
     this._notifications.dispatch(notification);
   }
 
-  /** Throws an error if the position is not a valid xPosition. */
-  private _validateXPosition(pos: SatPopoverPositionX): void {
-    if (VALID_POSX.indexOf(pos) === -1) {
-      throw getInvalidXPositionError(pos);
+  /** Throws an error if the alignment is not a valid horizontalAlign. */
+  private _validateHorizontalAlign(pos: SatPopoverHorizontalAlign): void {
+    if (VALID_HORIZ_ALIGN.indexOf(pos) === -1) {
+      throw getInvalidHorizontalAlignError(pos);
     }
   }
 
-  /** Throws an error if the position is not a valid yPosition. */
-  private _validateYPosition(pos: SatPopoverPositionY): void {
-    if (VALID_POSY.indexOf(pos) === -1) {
-      throw getInvalidYPositionError(pos);
+  /** Throws an error if the alignment is not a valid verticalAlign. */
+  private _validateVerticalAlign(pos: SatPopoverVerticalAlign): void {
+    if (VALID_VERT_ALIGN.indexOf(pos) === -1) {
+      throw getInvalidVerticalAlignError(pos);
     }
   }
 

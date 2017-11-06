@@ -29,8 +29,8 @@ import { merge } from 'rxjs/observable/merge';
 
 import {
   SatPopover,
-  SatPopoverPositionX,
-  SatPopoverPositionY,
+  SatPopoverHorizontalAlign,
+  SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
 } from './popover.component';
 import { NotificationAction, PopoverNotificationService } from './notification.service';
@@ -234,16 +234,16 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   }
 
   /**
-   * Listen to changes in the position of the overlay and set the correct classes,
+   * Listen to changes in the position of the overlay and set the correct alignment classes,
    * ensuring that the animation origin is correct, even with a fallback position.
    */
   private _subscribeToPositionChanges(position: ConnectedPositionStrategy): void {
     position.onPositionChange
       .pipe(takeUntil(this._onDestroy))
       .subscribe(change => {
-        this.attachedPopover._setPositionClasses(
-          getHorizontalPopoverPosition(change.connectionPair.overlayX),
-          getVerticalPopoverPosition(change.connectionPair.overlayY),
+        this.attachedPopover._setAlignmentClasses(
+          getHorizontalPopoverAlignment(change.connectionPair.overlayX),
+          getVerticalPopoverAlignment(change.connectionPair.overlayY),
         );
       });
   }
@@ -265,60 +265,69 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   /** Create and return a position strategy based on config provided to the component instance. */
   private _getPositionStrategy(): ConnectedPositionStrategy {
     // Attach the overlay at the preferred position
-    const {originX, overlayX} = getHorizontalConnectionPosPair(this.attachedPopover.xPosition);
-    const {originY, overlayY} = getVerticalConnectionPosPair(this.attachedPopover.yPosition);
+    const {originX, overlayX} =
+        getHorizontalConnectionPosPair(this.attachedPopover.horizontalAlign);
+    const {originY, overlayY} =
+        getVerticalConnectionPosPair(this.attachedPopover.verticalAlign);
     const strategy = this._overlay.position()
       .connectedTo(this._elementRef, {originX, originY}, {overlayX, overlayY})
       .withDirection(this._getDirection());
 
     // Add fallbacks based on the preferred positions
-    this._addFallbacks(strategy, this.attachedPopover.xPosition, this.attachedPopover.yPosition);
+    this._addFallbacks(
+      strategy,
+      this.attachedPopover.horizontalAlign,
+      this.attachedPopover.verticalAlign
+    );
 
     return strategy;
   }
 
-  /** Add fallbacks to a given strategy based around target positions. */
-  private _addFallbacks(strategy: ConnectedPositionStrategy, xTarget: SatPopoverPositionX,
-        yTarget: SatPopoverPositionY): void {
-    // Determine if the target positions overlap the anchor
-    const xOverlapAllowed = xTarget !== 'before' && xTarget !== 'after';
-    const yOverlapAllowed = yTarget !== 'above' && yTarget !== 'below';
+  /** Add fallbacks to a given strategy based around target alignments. */
+  private _addFallbacks(strategy: ConnectedPositionStrategy, hTarget: SatPopoverHorizontalAlign,
+        vTarget: SatPopoverVerticalAlign): void {
+    // Determine if the target alignments overlap the anchor
+    const horizontalOverlapAllowed = hTarget !== 'before' && hTarget !== 'after';
+    const verticalOverlapAllowed = vTarget !== 'above' && vTarget !== 'below';
 
-    // If a target position doesn't cover the anchor, don't let any of the fallback positions
+    // If a target alignment doesn't cover the anchor, don't let any of the fallback alignments
     // cover the anchor
-    const possibleXPositions = xOverlapAllowed ?
+    const possibleHorizontalAlignments = horizontalOverlapAllowed ?
       ['before', 'start', 'center', 'end', 'after'] :
       ['before', 'after'];
-    const possibleYPositions = yOverlapAllowed ?
+    const possibleVerticalAlignments = verticalOverlapAllowed ?
       ['above', 'start', 'center', 'end', 'below'] :
       ['above', 'below'];
 
-    // Create fallbacks for each allowed prioritized fallback position combo
+    // Create fallbacks for each allowed prioritized fallback alignment combo
     const fallbacks = [];
-    prioritizeAroundTarget(xTarget, possibleXPositions).forEach(xPos => {
-      prioritizeAroundTarget(yTarget, possibleYPositions).forEach(yPos => {
-        fallbacks.push({xPos, yPos});
+    prioritizeAroundTarget(hTarget, possibleHorizontalAlignments).forEach(h => {
+      prioritizeAroundTarget(vTarget, possibleVerticalAlignments).forEach(v => {
+        fallbacks.push({h, v});
       });
     });
 
-    // Remove the first fallback since it will be the target position that is already applied
+    // Remove the first fallback since it will be the target alignment that is already applied
     fallbacks.slice(1, fallbacks.length)
-      .forEach(({xPos, yPos}) => this._applyFallback(strategy, xPos, yPos));
+      .forEach(({h, v}) => this._applyFallback(strategy, h, v));
   }
 
-  /** Convert a specific x and y position into a fallback and apply it to the strategy. */
-  private _applyFallback(strategy, xPos, yPos): void {
-    const {originX, overlayX} = getHorizontalConnectionPosPair(xPos);
-    const {originY, overlayY} = getVerticalConnectionPosPair(yPos);
+  /**
+   * Convert a specific horizontal and vertical alignment into a fallback and apply it to
+   * the strategy.
+   */
+  private _applyFallback(strategy, horizontalAlign, verticalAlign): void {
+    const {originX, overlayX} = getHorizontalConnectionPosPair(horizontalAlign);
+    const {originY, overlayY} = getVerticalConnectionPosPair(verticalAlign);
     strategy.withFallbackPosition({originX, originY}, {overlayX, overlayY});
   }
 
 }
 
-/** Helper function to convert SatPosition to origin/overlay position pair. */
-function getHorizontalConnectionPosPair(x: SatPopoverPositionX):
+/** Helper function to convert alignment to origin/overlay position pair. */
+function getHorizontalConnectionPosPair(h: SatPopoverHorizontalAlign):
     {originX: HorizontalConnectionPos, overlayX: HorizontalConnectionPos} {
-  switch (x) {
+  switch (h) {
     case 'before':
       return {originX: 'start', overlayX: 'end'};
     case 'start':
@@ -332,10 +341,10 @@ function getHorizontalConnectionPosPair(x: SatPopoverPositionX):
   }
 }
 
-/** Helper function to convert SatPosition to origin/overlay position pair. */
-function getVerticalConnectionPosPair(y: SatPopoverPositionY):
+/** Helper function to convert alignment to origin/overlay position pair. */
+function getVerticalConnectionPosPair(v: SatPopoverVerticalAlign):
     {originY: VerticalConnectionPos, overlayY: VerticalConnectionPos} {
-  switch (y) {
+  switch (v) {
     case 'above':
       return {originY: 'top', overlayY: 'bottom'};
     case 'start':
@@ -349,26 +358,26 @@ function getVerticalConnectionPosPair(y: SatPopoverPositionY):
   }
 }
 
-/** Helper function to convert an overlay connection position to equivalent popover position. */
-function getHorizontalPopoverPosition(x: HorizontalConnectionPos): SatPopoverPositionX {
-  if (x === 'start') {
+/** Helper function to convert an overlay connection position to equivalent popover alignment. */
+function getHorizontalPopoverAlignment(h: HorizontalConnectionPos): SatPopoverHorizontalAlign {
+  if (h === 'start') {
     return 'after';
   }
 
-  if (x === 'end') {
+  if (h === 'end') {
     return 'before';
   }
 
   return 'center';
 }
 
-/** Helper function to convert an overlay connection position to equivalent popover position. */
-function getVerticalPopoverPosition(y: VerticalConnectionPos): SatPopoverPositionY {
-  if (y === 'top') {
+/** Helper function to convert an overlay connection position to equivalent popover alignment. */
+function getVerticalPopoverAlignment(v: VerticalConnectionPos): SatPopoverVerticalAlign {
+  if (v === 'top') {
     return 'below';
   }
 
-  if (y === 'bottom') {
+  if (v === 'bottom') {
     return 'above';
   }
 

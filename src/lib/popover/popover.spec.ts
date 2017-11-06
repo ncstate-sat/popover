@@ -16,8 +16,8 @@ import { SatPopoverAnchor } from './popover-anchor.directive';
 import {
   getInvalidPopoverError,
   getUnanchoredPopoverError,
-  getInvalidXPositionError,
-  getInvalidYPositionError,
+  getInvalidHorizontalAlignError,
+  getInvalidVerticalAlignError,
   getInvalidScrollStrategyError,
 } from './popover.errors';
 
@@ -407,7 +407,7 @@ describe('SatPopover', () => {
       tick();
 
       // change the position to the same thing and reopen, saving the new overlayRef
-      comp.xPos = 'center';
+      comp.hAlign = 'center';
       fixture.detectChanges();
 
       comp.popover.open();
@@ -428,7 +428,7 @@ describe('SatPopover', () => {
       tick();
 
       // change the position and reopen, saving the new overlayRef
-      comp.xPos = 'after';
+      comp.hAlign = 'after';
       fixture.detectChanges();
 
       comp.popover.open();
@@ -453,8 +453,8 @@ describe('SatPopover', () => {
       tick();
 
       // non-overlapping can be any of 2 x 2 positions
-      comp.xPos = 'after';
-      comp.yPos = 'below';
+      comp.hAlign = 'after';
+      comp.vAlign = 'below';
       fixture.detectChanges();
 
       comp.popover.open();
@@ -467,8 +467,8 @@ describe('SatPopover', () => {
       tick();
 
       // overlapping in one direction can be any of 2 x 5 positions
-      comp.xPos = 'start';
-      comp.yPos = 'below';
+      comp.hAlign = 'start';
+      comp.vAlign = 'below';
       fixture.detectChanges();
 
       comp.popover.open();
@@ -477,26 +477,26 @@ describe('SatPopover', () => {
       expect(strategy.positions.length).toBe(10, 'overlapping in one dimension');
     }));
 
-    it('should throw an error when an invalid xPosition is provided', () => {
+    it('should throw an error when an invalid horizontalAlign is provided', () => {
       fixture.detectChanges();
 
-      // set invalid xPosition
-      comp.xPos = 'kiwi';
+      // set invalid horizontalAlign
+      comp.hAlign = 'kiwi';
 
       expect(() => {
         fixture.detectChanges();
-      }).toThrow(getInvalidXPositionError('kiwi'));
+      }).toThrow(getInvalidHorizontalAlignError('kiwi'));
     });
 
-    it('should throw an error when an invalid yPosition is provided', () => {
+    it('should throw an error when an invalid verticalAlign is provided', () => {
       fixture.detectChanges();
 
-      // set invalid yPosition
-      comp.yPos = 'banana';
+      // set invalid verticalAlign
+      comp.vAlign = 'banana';
 
       expect(() => {
         fixture.detectChanges();
-      }).toThrow(getInvalidYPositionError('banana'));
+      }).toThrow(getInvalidVerticalAlignError('banana'));
     });
 
   });
@@ -612,7 +612,7 @@ class InvalidPopoverTestComponent { }
  */
 @Component({
   template: `
-    <sat-popover xPosition="after">Anchorless</sat-popover>
+    <sat-popover horizontalAlign="after">Anchorless</sat-popover>
   `
 })
 class AnchorlessPopoverTestComponent {
@@ -676,7 +676,7 @@ export class KeyboardPopoverTestComponent {
   template: `
     <div id="anchor" [satPopoverAnchorFor]="p">Anchor</div>
 
-    <sat-popover #p [xPosition]="xPos" [yPosition]="yPos">
+    <sat-popover #p [horizontalAlign]="hAlign" [verticalAlign]="vAlign">
       <div id="content">Popover</div>
     </sat-popover>
   `
@@ -684,8 +684,8 @@ export class KeyboardPopoverTestComponent {
 export class PositioningTestComponent {
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
   @ViewChild(SatPopover) popover: SatPopover;
-  xPos = 'center';
-  yPos = 'center';
+  hAlign = 'center';
+  vAlign = 'center';
 }
 
 /** This component is for testing scroll behavior. */
