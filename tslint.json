@@ -105,9 +105,6 @@
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-life-cycle-interface": true,
-    "use-pipe-transform-interface": true,
-    "no-access-missing-member": true,
-    "templates-use-public": true,
-    "invoke-injectable": true
+    "use-pipe-transform-interface": true
   }
 }

@@ -109,6 +109,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       this._createOverlay();
       this._overlayRef.attach(this._portal);
       this._subscribeToBackdrop();
+      this._subscribeToDetachments();
       this._saveOpenedState();
     }
   }
@@ -116,8 +117,8 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   /** Closes the popover. */
   closePopover(value?: any): void {
     if (this._overlayRef) {
-      this._overlayRef.detach();
       this._saveClosedState(value);
+      this._overlayRef.detach();
     }
   }
 
@@ -194,20 +195,32 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       .subscribe(() => this.closePopover());
   }
 
+  /** Set state back to closed when detached. */
+  private _subscribeToDetachments(): void {
+    this._overlayRef
+      .detachments()
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => this._saveClosedState());
+  }
+
   /** Save the opened state of the popover and emit. */
   private _saveOpenedState(): void {
-    this.attachedPopover._open = this._popoverOpen = true;
+    if (!this._popoverOpen) {
+      this.attachedPopover._open = this._popoverOpen = true;
 
-    this.popoverOpened.emit();
-    this.attachedPopover.opened.emit();
+      this.popoverOpened.emit();
+      this.attachedPopover.opened.emit();
+    }
   }
 
   /** Save the closed state of the popover and emit. */
   private _saveClosedState(value?: any): void {
-    this.attachedPopover._open = this._popoverOpen = false;
+    if (this._popoverOpen) {
+      this.attachedPopover._open = this._popoverOpen = false;
 
-    this.popoverClosed.emit(value);
-    this.attachedPopover.closed.emit(value);
+      this.popoverClosed.emit(value);
+      this.attachedPopover.closed.emit(value);
+    }
   }
 
   /** Create an overlay to be attached to the portal. */
@@ -256,6 +269,8 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
         return this._overlay.scrollStrategies.block();
       case 'reposition':
         return this._overlay.scrollStrategies.reposition();
+      case 'close':
+        return this._overlay.scrollStrategies.close();
       case 'noop':
       default:
         return this._overlay.scrollStrategies.noop();
