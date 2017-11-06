@@ -136,6 +136,12 @@ export class SatPopover {
   /** Emits when the popover is closed. */
   @Output() closed = new EventEmitter<any>();
 
+  /** Emits when the popover has finished opening. */
+  @Output() afterOpen = new EventEmitter<void>();
+
+  /** Emits when the popover has finished closing. */
+  @Output() afterClose = new EventEmitter<void>();
+
   /** Reference to template so it can be placed within a portal. */
   @ViewChild(TemplateRef) _templateRef: TemplateRef<any>;
 
@@ -206,8 +212,10 @@ export class SatPopover {
   _onAnimationDone(event: AnimationEvent) {
     if (event.toState === 'visible') {
       this._trapFocus();
+      this.afterOpen.emit();
     } else if (event.toState === 'void') {
       this._restoreFocus();
+      this.afterClose.emit();
     }
   }
 

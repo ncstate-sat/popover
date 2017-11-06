@@ -161,19 +161,25 @@ describe('SatPopover', () => {
       expect(overlayContainerElement.textContent).toBe('', 'Closed after second toggle');
     }));
 
-    it('should emit when opened', () => {
+    it('should emit when opened', fakeAsync(() => {
       fixture.detectChanges();
       let popoverOpenedEvent = false;
       let anchorOpenedEvent = false;
+      let popoverAfterOpenEvent = false;
 
       comp.popover.opened.subscribe(() => popoverOpenedEvent = true);
       comp.anchor.popoverOpened.subscribe(() => anchorOpenedEvent = true);
+      comp.popover.afterOpen.subscribe(() => popoverAfterOpenEvent = true);
 
       comp.popover.open();
 
       expect(popoverOpenedEvent).toBe(true, 'popoverOpened called');
       expect(anchorOpenedEvent).toBe(true, 'anchorOpened called');
-    });
+      expect(popoverAfterOpenEvent).toBe(false, 'popoverAfterOpen not yet called');
+
+      tick();
+      expect(popoverAfterOpenEvent).toBe(true, 'popoverAfterOpen called after animation');
+    }));
 
     it('should emit when closed', fakeAsync(() => {
       fixture.detectChanges();
@@ -181,16 +187,21 @@ describe('SatPopover', () => {
 
       let popoverClosedEvent = false;
       let anchorClosedEvent = false;
+      let popoverAfterCloseEvent = false;
 
       comp.popover.closed.subscribe(() => popoverClosedEvent = true);
       comp.anchor.popoverClosed.subscribe(() => anchorClosedEvent = true);
+      comp.popover.afterClose.subscribe(() => popoverAfterCloseEvent = true);
 
       comp.popover.close();
       fixture.detectChanges();
-      tick();
 
       expect(popoverClosedEvent).toBe(true, 'popoverClosed called');
       expect(anchorClosedEvent).toBe(true, 'anchorClosed called');
+      expect(popoverAfterCloseEvent).toBe(false, 'popoverAfterClose not yet called');
+
+      tick();
+      expect(popoverAfterCloseEvent).toBe(true, 'popoverAfterClose called after animation');
     }));
 
     it('should emit a value when closed with a value', fakeAsync(() => {
