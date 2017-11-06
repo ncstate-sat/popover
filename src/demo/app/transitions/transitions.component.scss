@@ -2,8 +2,19 @@
   display: block;
 }
 
-.controls {
+.indicators {
+  display: flex;
   margin-bottom: 32px;
+}
+
+.indicator {
+  margin-right: 8px;
+  padding: 8px;
+  background: pink;
+
+  &.active {
+    background: red;
+  }
 }
 
 .anchor {
