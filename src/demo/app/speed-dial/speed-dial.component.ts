@@ -32,8 +32,8 @@ import {
     <!-- Fab -->
     <button mat-fab
         color="primary"
-        [satPopoverAnchorFor]="dial"
         [@preventInitialAnimation]
+        [satPopoverAnchorFor]="dial"
         (click)="dial.toggle()">
       <mat-icon [@spinInOut]="'in'" *ngIf="dial.isOpen()">close</mat-icon>
       <mat-icon [@spinInOut]="'in'" *ngIf="!dial.isOpen()">edit</mat-icon>
@@ -43,8 +43,7 @@ import {
     <sat-popover #dial verticalAlign="above">
       <div class="dial">
         <ng-container *ngFor="let a of actions">
-          <button
-              mat-mini-fab
+          <button mat-mini-fab
               color="accent"
               [satPopoverAnchorFor]="tooltip"
               (mouseenter)="tooltip.open()"
