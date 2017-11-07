@@ -3,6 +3,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   OnInit,
   OnDestroy,
   Optional,
@@ -84,6 +85,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef,
     private _notifications: PopoverNotificationService,
+    private _ngZone: NgZone,
     @Optional() private _dir: Directionality
   ) { }
 
@@ -254,10 +256,13 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     position.onPositionChange
       .pipe(takeUntil(this._onDestroy))
       .subscribe(change => {
-        this.attachedPopover._setAlignmentClasses(
-          getHorizontalPopoverAlignment(change.connectionPair.overlayX),
-          getVerticalPopoverAlignment(change.connectionPair.overlayY),
-        );
+        // Position changes may occur outside the Angular zone
+        this._ngZone.run(() => {
+          this.attachedPopover._setAlignmentClasses(
+            getHorizontalPopoverAlignment(change.connectionPair.overlayX),
+            getVerticalPopoverAlignment(change.connectionPair.overlayY),
+          );
+        });
       });
   }
 
