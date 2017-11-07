@@ -23,6 +23,7 @@ import { SelectTriggerDemo } from './select-trigger/select-trigger.component';
 import { FocusDemo } from './focus/focus.component';
 import { TransitionsDemo } from './transitions/transitions.component';
 import { TooltipDemo } from './tooltip/tooltip.component';
+import { SpeedDialDemo } from './speed-dial/speed-dial.component';
 
 @NgModule({
   exports: [
@@ -49,6 +50,7 @@ export class DemoMaterialModule { }
     FocusDemo,
     TransitionsDemo,
     TooltipDemo,
+    SpeedDialDemo,
   ],
   imports: [
     BrowserModule,
