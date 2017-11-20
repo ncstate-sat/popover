@@ -10,7 +10,7 @@
     "gh-pages": "ngh --dir dist/app",
     "copylib": "bash ./scripts/copy_lib_dist.sh",
     "lint": "ng lint --type-check",
-    "test": "concurrently \"node tools/watch-test.js\" \"karma start karma.conf.js\"",
+    "test": "concurrently -r \"node tools/watch-test.js\" \"karma start karma.conf.js\"",
     "watch": "node tools/watch.js",
     "test:once": "node tools/build-test.js && karma start karma.conf.js --single-run"
   },

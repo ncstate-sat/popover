@@ -14,9 +14,8 @@ function watch$(directory, opts) {
 watch$('src/lib', { usePolling: true })
   .debounceTime(300)
   .subscribe(() => {
-    console.log('building...');
+    console.log('building for test...');
     // this is hacky but it gets the job done for now
     spawn$('node', ['tools/build-test.js'])
-      .switchMap(() => spawn$('npm', ['run', 'copylib']))
       .subscribe(undefined, undefined, () => console.log('build complete'));
   });
