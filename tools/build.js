@@ -5,7 +5,7 @@
 const { sync } = require('glob');
 const { rollup } = require('rollup');
 const { Observable } = require('rxjs');
-const { copy, readFileSync, writeFileSync } = require('fs-extra');
+const { readFileSync, writeFileSync } = require('fs-extra');
 const { join } = require('path');
 const resolve = require('rollup-plugin-node-resolve');
 const sourcemaps = require('rollup-plugin-sourcemaps');
@@ -109,6 +109,9 @@ function buildLibrary$(globals, versions) {
 
       // Inline resources
       inlineResources(BUILD_DIR, LIB_DIR);
+
+      // Copy to "ready to test" directory
+      copyFiles(join(BUILD_DIR, 'spec'), '**/*', join(BUILD_DIR, 'spec-ready'))
     })
     // Rollup
     .switchMap(() => Observable.forkJoin(

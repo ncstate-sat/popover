@@ -6,7 +6,7 @@ Error.stackTraceLimit = 0; // "No stacktrace"" is us11 best for testing.
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
 
-const libBase = '.ng_build/spec/'; // transpiled app JS and map files
+const libBase = '.ng_build/spec-ready/'; // transpiled app JS and map files
 
 // builtPaths: root paths for output ("built") files
 // get from karma.config.js, then prefix with '/base/'
@@ -40,7 +40,7 @@ System.config({
     'npm:': 'node_modules/'
   },
   // Base URL for System.js calls. 'base/' is where Karma serves files from.
-  baseURL: 'base/.ng_build/spec',
+  baseURL: 'base/.ng_build/spec-ready',
   // Extend usual application package list with test folder
   packages: {
     rxjs: { defaultExtension: 'js' },

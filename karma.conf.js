@@ -2,7 +2,7 @@
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
 module.exports = config => {
-  const libBase = '.ng_build/spec/'; // transpiled app JS and map files
+  const libBase = '.ng_build/spec-ready/'; // transpiled app JS and map files
 
   config.set({
     basePath: '',
@@ -45,12 +45,13 @@ module.exports = config => {
       'karma-test-shim.js', // optionally extend SystemJS mapping e.g., with barrels
 
       // transpiled application & spec code paths loaded via module imports
-      { pattern: libBase + '**/*.js', included: false, watched: true },
+      { pattern: libBase + '**/*.js', included: false, watched: false },
+      { pattern: libBase + '**/*.spec.js', included: false, watched: true },
 
       // Asset (HTML & CSS) paths loaded via Angular's component compiler
       // (these paths need to be rewritten, see proxies section)
-      { pattern: libBase + '**/*.html', included: false, watched: true },
-      { pattern: libBase + '**/*.css', included: false, watched: true },
+      { pattern: libBase + '**/*.html', included: false, watched: false },
+      { pattern: libBase + '**/*.css', included: false, watched: false },
 
       // Paths for debugging with source maps in dev tools
       { pattern: libBase + '**/*.js.map', included: false, watched: false }
@@ -59,8 +60,8 @@ module.exports = config => {
     // Proxied base paths for loading assets
     proxies: {
       // required for modules fetched by SystemJS
-      '/base/.ng_build/spec/node_modules/': '/base/node_modules/',
-      '/base/.ng_build/spec/demo/': '/base/src/demo/'
+      '/base/.ng_build/spec-ready/node_modules/': '/base/node_modules/',
+      '/base/.ng_build/spec-ready/demo/': '/base/src/demo/'
     },
 
     reporters: ['progress', 'kjhtml'],
