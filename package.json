@@ -49,6 +49,7 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
     "angular-cli-ghpages": "^0.5.1",
+    "chalk": "^2.3.0",
     "chokidar": "^1.7.0",
     "codelyzer": "^4.0.0",
     "concurrently": "^3.5.0",

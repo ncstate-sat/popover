@@ -1,21 +1,13 @@
 const { Observable } = require('rxjs');
-const chokidar = require('chokidar');
+const chalk = require('chalk');
 const spawn$ = require('./utils/rx-spawn');
+const watch$ = require('./utils/rx-watch');
 
-/** Watch a directory with chokidar. */
-function watch$(directory, opts) {
-  return Observable.create(observer => {
-    chokidar.watch(directory, opts)
-      .on('all', (event, path) => observer.next({ event, path }))
-      .on('error', error => observer.error(error));
-  });
-}
+// Imitate karma log with blue.
+const log = string => console.log(chalk.blueBright('[watch-test]: ') + string);
 
 watch$('src/lib', { usePolling: true })
   .debounceTime(300)
-  .subscribe(() => {
-    console.log('building for test...');
-    // this is hacky but it gets the job done for now
-    spawn$('node', ['tools/build-test.js'])
-      .subscribe(undefined, undefined, () => console.log('build complete'));
-  });
+  .do(() => log('Building spec files'))
+  .switchMap(() => Observable.forkJoin(spawn$('node', ['tools/build-test.js'])))
+  .subscribe(() => log('Build complete'));
