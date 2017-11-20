@@ -6,8 +6,6 @@
     "sourceMap": true,
     "inlineSources": true,
     "experimentalDecorators": true,
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
     "skipLibCheck": true,
     "stripInternal": true,
     "lib": [
