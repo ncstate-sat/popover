@@ -1,6 +1,8 @@
 import {
   Component,
+  ComponentRef,
   ElementRef,
+  EmbeddedViewRef,
   EventEmitter,
   Inject,
   Input,
@@ -15,6 +17,7 @@ import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/platform-browser';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ComponentPortal, CdkPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { Subject } from 'rxjs/Subject';
 
@@ -145,6 +148,9 @@ export class SatPopover implements OnInit {
   /** Reference to template so it can be placed within a portal. */
   @ViewChild(TemplateRef) _templateRef: TemplateRef<any>;
 
+  /** Reference to the portal outlet inside the popover where content can be loaded. */
+  @ViewChild(CdkPortalOutlet) _portalOutlet: CdkPortalOutlet;
+
   /** Classes to be added to the popover for setting the correct transform origin. */
   _classList: any = {};
 
@@ -232,6 +238,18 @@ export class SatPopover implements OnInit {
     this._classList['sat-popover-below'] = vertAlign === 'below' || vertAlign === 'start';
 
     this._classList['sat-popover-center'] = horizAlign === 'center' || vertAlign === 'center';
+  }
+
+  // TODO comment
+  attachComponentPortal<C>(portal: ComponentPortal<C>): ComponentRef<C> {
+    // TODO throw error if something is already attached or if content is projected
+    return this._portalOutlet.attachComponentPortal(portal);
+  }
+
+  // TODO comment
+  attachTemplatePortal<T>(portal: TemplatePortal<T>): EmbeddedViewRef<T> {
+    // TODO throw error if something is already attached or if content is projected
+    return this._portalOutlet.attachTemplatePortal(portal);
   }
 
   /** Move the focus inside the focus trap and remember where to return later. */

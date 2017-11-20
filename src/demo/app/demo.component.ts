@@ -20,6 +20,7 @@ import { Component } from '@angular/core';
       <demo-transitions></demo-transitions>
       <demo-tooltip></demo-tooltip>
       <demo-speed-dial></demo-speed-dial>
+      <demo-factory-anchoring></demo-factory-anchoring>
     </div>
   `
 })

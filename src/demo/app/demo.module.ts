@@ -24,6 +24,10 @@ import { FocusDemo } from './focus/focus.component';
 import { TransitionsDemo } from './transitions/transitions.component';
 import { TooltipDemo } from './tooltip/tooltip.component';
 import { SpeedDialDemo } from './speed-dial/speed-dial.component';
+import {
+  FactoryAnchoringDemo,
+  FactoryDemoContent
+} from './factory-anchoring/factory-anchoring.component';
 
 @NgModule({
   exports: [
@@ -51,6 +55,8 @@ export class DemoMaterialModule { }
     TransitionsDemo,
     TooltipDemo,
     SpeedDialDemo,
+    FactoryAnchoringDemo,
+    FactoryDemoContent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +65,9 @@ export class DemoMaterialModule { }
     SatPopoverModule,
     FormsModule,
     ReactiveFormsModule,
+  ],
+  entryComponents: [
+    FactoryDemoContent,
   ],
   providers: [],
   bootstrap: [DemoComponent]

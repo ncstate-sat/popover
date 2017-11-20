@@ -6,3 +6,7 @@ export {
   SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
 } from './popover/popover.component';
+export {
+  SatPopoverFactory,
+  SatPopoverRef,
+} from './popover/popover-factory.service';
