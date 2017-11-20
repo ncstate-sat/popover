@@ -12,7 +12,7 @@ Build the library into `dist/lib` and copy the library into `node_modules` for t
 to use.
 
 ```
-npm run build && npm run copylib
+npm run build
 ```
 
 ### Watching

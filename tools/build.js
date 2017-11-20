@@ -21,8 +21,8 @@ const spawn$ = require('./utils/rx-spawn');
 // Directory constants
 const BASE_DIR = process.cwd();
 const LIB_DIR = join(BASE_DIR, 'src/lib');
-const DIST_DIR = join(BASE_DIR, 'dist/lib');
 const BUILD_DIR = join(BASE_DIR, '.ng_build');
+const DIST_DIR = join(BASE_DIR, 'dist/lib');
 
 // Map versions across packages
 const VERSIONS = {
@@ -33,9 +33,7 @@ const VERSIONS = {
 
 // Constants for running typescript commands
 const NGC = 'node_modules/.bin/ngc';
-const TSC = 'node_modules/.bin/tsc';
 const NGC_ARGS = (config) => [`-p`, join(LIB_DIR, `tsconfig.${config}.json`)];
-const TSC_ARGS = NGC_ARGS;
 
 /** Replaces the version placeholders in the specified package. */
 function replacePackageVersions(packagePath, versions) {
@@ -93,11 +91,10 @@ function buildLibrary$(globals, versions) {
     .forkJoin(
       spawn$(NGC, NGC_ARGS('lib')),
       spawn$(NGC, NGC_ARGS('es5')),
-      spawn$(TSC, TSC_ARGS('spec')),
     )
     .do(() => {
       // Copy styles and markup
-      ['es2015', 'es5', 'spec']
+      ['es2015', 'es5']
         .forEach(dir => copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, dir)));
 
       // Compile sass in build directory
@@ -109,9 +106,6 @@ function buildLibrary$(globals, versions) {
 
       // Inline resources
       inlineResources(BUILD_DIR, LIB_DIR);
-
-      // Copy to "ready to test" directory
-      copyFiles(join(BUILD_DIR, 'spec'), '**/*', join(BUILD_DIR, 'spec-ready'))
     })
     // Rollup
     .switchMap(() => Observable.forkJoin(
@@ -139,8 +133,10 @@ function buildLibrary$(globals, versions) {
 }
 
 // Kick it off
-buildLibrary$(GLOBALS, VERSIONS).subscribe(
-  undefined,
-  err => console.error('err', err),
-  () => console.log('\ncomplete')
-);
+buildLibrary$(GLOBALS, VERSIONS)
+  .switchMap(() => Observable.forkJoin(spawn$('npm', ['run', 'copylib'])))
+  .subscribe(
+    undefined,
+    err => console.error('err', err),
+    () => console.log('\ncomplete')
+  );

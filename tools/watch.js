@@ -10,5 +10,4 @@ watch$('src/lib', { usePolling: true })
   .debounceTime(300)
   .do(() => log('Building lib'))
   .switchMap(() => Observable.forkJoin(spawn$('node', ['tools/build.js'])))
-  .switchMap(() => Observable.forkJoin(spawn$('npm', ['run', 'copylib'])))
   .subscribe(() => log('Build complete'));
