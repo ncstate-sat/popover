@@ -45,14 +45,12 @@ module.exports = config => {
       'karma-test-shim.js', // optionally extend SystemJS mapping e.g., with barrels
 
       // transpiled application & spec code paths loaded via module imports
-      { pattern: libBase + '**/*.js', included: false, watched: false },
-      // Only watch a single file. All files will be changed on each update to source.
-      { pattern: libBase + '**/*.spec.js', included: false, watched: true },
+      { pattern: libBase + '**/*.js', included: false, watched: true },
 
       // Asset (HTML & CSS) paths loaded via Angular's component compiler
       // (these paths need to be rewritten, see proxies section)
-      { pattern: libBase + '**/*.html', included: false, watched: false },
-      { pattern: libBase + '**/*.css', included: false, watched: false },
+      { pattern: libBase + '**/*.html', included: false, watched: true },
+      { pattern: libBase + '**/*.css', included: false, watched: true },
 
       // Paths for debugging with source maps in dev tools
       { pattern: libBase + '**/*.js.map', included: false, watched: false }
