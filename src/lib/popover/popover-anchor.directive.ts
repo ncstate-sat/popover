@@ -28,6 +28,7 @@ import { take } from 'rxjs/operators/take';
 import { switchMap } from 'rxjs/operators/switchMap';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
+import { tap } from 'rxjs/operators/tap';
 import { merge } from 'rxjs/observable/merge';
 
 import {
@@ -197,7 +198,10 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
         takeUntil(this.popoverClosed),
         takeUntil(this._onDestroy)
       )
-      .subscribe(() => this.closePopover());
+      .subscribe(() => {
+        this.attachedPopover.backdropClicked.emit();
+        this.closePopover();
+      });
   }
 
   /** Close popover when escape keydown event occurs. */
@@ -205,6 +209,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     this._overlayRef
       .keydownEvents()
       .pipe(
+        tap(event => this.attachedPopover.overlayKeydown.emit(event)),
         filter(event => event.keyCode === ESCAPE),
         takeUntil(this.popoverClosed),
         takeUntil(this._onDestroy)

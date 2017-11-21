@@ -17,6 +17,7 @@ const GLOBALS = {
   'rxjs/Observable': 'Rx',
   'rxjs/observable/merge': 'Rx.Observable',
   'rxjs/operators/take': 'Rx.operators',
+  'rxjs/operators/tap': 'Rx.operators',
   'rxjs/operators/filter': 'Rx.operators',
   'rxjs/operators/takeUntil': 'Rx.operators',
   'rxjs/operators/switchMap': 'Rx.operators',

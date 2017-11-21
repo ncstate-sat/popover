@@ -7,7 +7,7 @@ import {
   RepositionScrollStrategy,
   BlockScrollStrategy,
 } from '@angular/cdk/overlay';
-import { ESCAPE } from '@angular/cdk/keycodes';
+import { ESCAPE, A } from '@angular/cdk/keycodes';
 import { Subject } from 'rxjs/Subject';
 
 import { SatPopoverModule } from './popover.module';
@@ -303,6 +303,20 @@ describe('SatPopover', () => {
       expect(backdrop).toBeTruthy();
     });
 
+    it('should emit an event when the backdrop is clicked', fakeAsync(() => {
+      comp.backdrop = true;
+      fixture.detectChanges();
+      comp.popover.open();
+
+      const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(comp.clicks).toBe(0, 'not yet clicked');
+
+      backdrop.click();
+      fixture.detectChanges();
+      expect(comp.clicks).toBe(1, 'clicked once');
+      tick(500);
+    }));
+
     it('should close when backdrop is clicked', fakeAsync(() => {
       comp.backdrop = true;
       fixture.detectChanges();
@@ -368,12 +382,38 @@ describe('SatPopover', () => {
 
       // Emit ESCAPE keydown event
       const currentlyFocusedElement = document.activeElement;
+      expect(currentlyFocusedElement.classList).toContain('first', 'Ensure input is focused');
       currentlyFocusedElement.dispatchEvent(createKeyboardEvent('keydown', ESCAPE));
 
       fixture.detectChanges();
       tick(500);
 
       expect(overlayContainerElement.textContent).toBe('', 'Closed after escape keydown');
+    }));
+
+    it('should emit keydown events when key is pressed', fakeAsync(() => {
+      fixture.detectChanges();
+      comp.popover.open();
+
+      // Let focus move to the first focusable element
+      fixture.detectChanges();
+      tick();
+
+      expect(comp.lastKeyCode).toBe(undefined, 'no key presses yet');
+
+      // Emit A keydown event on input element
+      const currentlyFocusedElement = document.activeElement;
+      currentlyFocusedElement.dispatchEvent(createKeyboardEvent('keydown', A));
+
+      fixture.detectChanges();
+      expect(comp.lastKeyCode).toBe(A, 'pressed A key on input');
+
+      // Emit ESCAPE keydown event on body
+      document.body.dispatchEvent(createKeyboardEvent('keydown', ESCAPE));
+      fixture.detectChanges();
+      expect(comp.lastKeyCode).toBe(ESCAPE, 'pressed ESCAPE key on body');
+
+      tick(500);
     }));
 
   });
@@ -666,7 +706,10 @@ class SimplePopoverTestComponent {
 @Component({
   template: `
     <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p [hasBackdrop]="backdrop" [backdropClass]="klass">
+    <sat-popover #p
+        [hasBackdrop]="backdrop"
+        [backdropClass]="klass"
+        (backdropClicked)="clicks = clicks + 1">
       Popover
     </sat-popover>
   `
@@ -674,6 +717,7 @@ class SimplePopoverTestComponent {
 class BackdropPopoverTestComponent {
   @ViewChild(SatPopover) popover: SatPopover;
   backdrop = false;
+  clicks = 0;
   klass: string;
 }
 
@@ -684,7 +728,7 @@ class BackdropPopoverTestComponent {
 @Component({
   template: `
     <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p>
+    <sat-popover #p (overlayKeydown)="lastKeyCode = $event.keyCode">
       Popover
       <input type="text" class="first">
       <input type="text" class="second">
@@ -693,6 +737,7 @@ class BackdropPopoverTestComponent {
 })
 export class KeyboardPopoverTestComponent {
   @ViewChild(SatPopover) popover: SatPopover;
+  lastKeyCode: number;
 }
 
 /** This component is for testing dynamic positioning behavior. */
