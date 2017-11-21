@@ -15,7 +15,6 @@ import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/platform-browser';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ESCAPE } from '@angular/cdk/keycodes';
 import { Subject } from 'rxjs/Subject';
 
 import { transformPopover } from './popover.animations';
@@ -194,14 +193,6 @@ export class SatPopover implements OnInit {
   /** Gets whether the popover is presently open. */
   isOpen(): boolean {
     return this._open;
-  }
-
-  /** Respond to key events. */
-  _handleKeydown(event: KeyboardEvent): void {
-    if (event.keyCode === ESCAPE) {
-      event.stopPropagation();
-      this.close();
-    }
   }
 
   /** Gets an animation config with customized (or default) transition values. */

@@ -21,11 +21,13 @@ import {
 } from '@angular/cdk/overlay';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators/take';
 import { switchMap } from 'rxjs/operators/switchMap';
 import { takeUntil } from 'rxjs/operators/takeUntil';
+import { filter } from 'rxjs/operators/filter';
 import { merge } from 'rxjs/observable/merge';
 
 import {
@@ -111,6 +113,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       this._createOverlay();
       this._overlayRef.attach(this._portal);
       this._subscribeToBackdrop();
+      this._subscribeToEscape();
       this._subscribeToDetachments();
       this._saveOpenedState();
     }
@@ -191,6 +194,18 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     this._overlayRef
       .backdropClick()
       .pipe(
+        takeUntil(this.popoverClosed),
+        takeUntil(this._onDestroy)
+      )
+      .subscribe(() => this.closePopover());
+  }
+
+  /** Close popover when escape keydown event occurs. */
+  private _subscribeToEscape(): void {
+    this._overlayRef
+      .keydownEvents()
+      .pipe(
+        filter(event => event.keyCode === ESCAPE),
         takeUntil(this.popoverClosed),
         takeUntil(this._onDestroy)
       )
