@@ -32,6 +32,7 @@
   "homepage": "https://github.com/ncstate-sat/popover#readme",
   "devDependencies": {
     "@angular/animations": "^5.0.0",
+    "@angular/cdk": "^5.0.0-rc.1",
     "@angular/cli": "1.5.0",
     "@angular/common": "^5.0.0",
     "@angular/compiler": "^5.0.0",
@@ -75,8 +76,5 @@
     "typescript": "~2.4.2",
     "uglify-js": "^3.1.1",
     "zone.js": "^0.8.14"
-  },
-  "dependencies": {
-    "@angular/cdk": "^5.0.0-rc.1"
   }
 }
