@@ -1,5 +1,8 @@
 # Popover Component for Angular
 
+[![npm version](https://badge.fury.io/js/%40ncstate%2Fsat-popover.svg)](https://badge.fury.io/js/%40ncstate%2Fsat-popover)
+[![Build Status](https://travis-ci.org/ncstate-sat/popover.svg?branch=master)](https://travis-ci.org/ncstate-sat/popover)
+
 [Demo](https://stackblitz.com/edit/sat-popover-examples) |
 [StackBlitz Template](https://stackblitz.com/edit/sat-popover-issues) |
 [Development App](https://ncstate-sat.github.io/popover/)
