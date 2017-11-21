@@ -303,6 +303,20 @@ describe('SatPopover', () => {
       expect(backdrop).toBeTruthy();
     });
 
+    it('should emit an event when the backdrop is clicked', fakeAsync(() => {
+      comp.backdrop = true;
+      fixture.detectChanges();
+      comp.popover.open();
+
+      const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(comp.clicks).toBe(0, 'not yet clicked');
+
+      backdrop.click();
+      fixture.detectChanges();
+      expect(comp.clicks).toBe(1, 'clicked once');
+      tick(500);
+    }));
+
     it('should close when backdrop is clicked', fakeAsync(() => {
       comp.backdrop = true;
       fixture.detectChanges();
@@ -666,7 +680,10 @@ class SimplePopoverTestComponent {
 @Component({
   template: `
     <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p [hasBackdrop]="backdrop" [backdropClass]="klass">
+    <sat-popover #p
+        [hasBackdrop]="backdrop"
+        [backdropClass]="klass"
+        (backdropClicked)="clicks = clicks + 1">
       Popover
     </sat-popover>
   `
@@ -674,6 +691,7 @@ class SimplePopoverTestComponent {
 class BackdropPopoverTestComponent {
   @ViewChild(SatPopover) popover: SatPopover;
   backdrop = false;
+  clicks = 0;
   klass: string;
 }
 

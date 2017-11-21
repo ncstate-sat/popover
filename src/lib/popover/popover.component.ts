@@ -141,6 +141,9 @@ export class SatPopover implements OnInit {
   /** Emits when the popover has finished closing. */
   @Output() afterClose = new EventEmitter<void>();
 
+  /** Emits when the backdrop is clicked. */
+  @Output() backdropClicked = new EventEmitter<void>();
+
   /** Reference to template so it can be placed within a portal. */
   @ViewChild(TemplateRef) _templateRef: TemplateRef<any>;
 

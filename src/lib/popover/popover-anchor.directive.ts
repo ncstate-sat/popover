@@ -197,7 +197,10 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
         takeUntil(this.popoverClosed),
         takeUntil(this._onDestroy)
       )
-      .subscribe(() => this.closePopover());
+      .subscribe(() => {
+        this.attachedPopover.backdropClicked.emit();
+        this.closePopover();
+      });
   }
 
   /** Close popover when escape keydown event occurs. */
