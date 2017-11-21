@@ -222,7 +222,7 @@ describe('SatPopover', () => {
       tick();
 
       // Working when closed via anchor api
-      expect(popoverClosedValue).toBe(74, 'popoverClosed with value - anchor api');
+      expect(popoverClosedValue).toBe(firstTestVal, 'popoverClosed with value - anchor api');
       expect(anchorClosedValue).toBe(firstTestVal, 'anchorClosed with value - anchor api');
 
       comp.popover.open();
