@@ -33,7 +33,11 @@ const VERSIONS = {
 
 // Constants for running typescript commands
 const NGC = 'node_modules/.bin/ngc';
-const NGC_ARGS = (config) => [`-p`, join(LIB_DIR, `tsconfig.${config}.json`)];
+const NGC_ARGS = [`-p`, join(LIB_DIR, 'tsconfig.lib.json')];
+const NGC_ARGS_ES5 = NGC_ARGS.concat(
+  ['--outDir', join(BUILD_DIR, 'es5')],
+  ['--target', 'ES5']
+);
 
 /** Replaces the version placeholders in the specified package. */
 function replacePackageVersions(packagePath, versions) {
@@ -89,8 +93,8 @@ function buildLibrary$(globals, versions) {
   return Observable
     // Compile to build folder for es2015 and es5
     .forkJoin(
-      spawn$(NGC, NGC_ARGS('lib')),
-      spawn$(NGC, NGC_ARGS('es5')),
+      spawn$(NGC, NGC_ARGS),
+      spawn$(NGC, NGC_ARGS_ES5),
     )
     .do(() => {
       // Copy styles and markup
