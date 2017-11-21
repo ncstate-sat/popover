@@ -1,3 +1,25 @@
+# 1.0.0-beta.3 karmic-kismet
+
+### Breaking Changes
+Peer dependency of `@angular/cdk` is now set to `^5.0.0-rc.1`.
+
+### Features
+* The popover now has `backdropClicked` and `overlayKeydown` outputs.
+
+### Fixes
+* The last release had a regression where the transform origin wouldn't update when the position
+changed. This would cause the popover to sometimes animate to or from the wrong direction.
+
+### Other
+* Check the new [speed dial demo](https://ncstate-sat.github.io/popover)
+* Using the test runner is way less obnoxious
+* Build script is somewhat simplified by not required extra tsconfigs
+* The popover is now closed with the overlay keydown stream instead of a keydown handler in the
+template. This means that even popovers without focusable elements can be closed with
+<kbd>esc</kbd>. Try it on a tooltip.
+* Rudimentary Travis tests are in place with some sweet new badges in the README
+
+
 # 1.0.0-beta.2 deserting-descartes
 
 ### Breaking Changes
