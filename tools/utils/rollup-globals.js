@@ -16,9 +16,9 @@ const GLOBALS = {
   'rxjs/Subject': 'Rx',
   'rxjs/Observable': 'Rx',
   'rxjs/observable/merge': 'Rx.Observable',
-  'rxjs/operators/take': 'Rx.Observable',
-  'rxjs/operators/takeUntil': 'Rx.Observable',
-  'rxjs/operators/switchMap': 'Rx.Observable',
+  'rxjs/operators/take': 'Rx.operators',
+  'rxjs/operators/takeUntil': 'Rx.operators',
+  'rxjs/operators/switchMap': 'Rx.operators',
 };
 
 module.exports = GLOBALS;
