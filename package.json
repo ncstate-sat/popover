@@ -1,6 +1,6 @@
 {
   "name": "sat-popover",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf dist .ng_build",
