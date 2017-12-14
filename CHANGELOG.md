@@ -1,3 +1,8 @@
+# 1.0.0-beta.4 rezoned-rhombus
+
+### Breaking Changes
+Peer dependency of `@angular/cdk` is now set to `^5.0.0`.
+
 # 1.0.0-beta.3 karmic-kismet
 
 ### Breaking Changes
