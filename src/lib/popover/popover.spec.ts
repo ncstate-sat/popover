@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ElementRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -424,7 +424,8 @@ describe('SatPopover', () => {
       const focusComp = focusFixture.componentInstance;
 
       focusFixture.detectChanges();
-      focusComp.defaultPopover.open();
+      focusComp.defaultPopoverAnchor.nativeElement.focus();
+      focusComp.defaultPopoverAnchor.nativeElement.click();
 
       focusFixture.detectChanges();
       tick();
@@ -437,12 +438,13 @@ describe('SatPopover', () => {
       const focusComp = focusFixture.componentInstance;
 
       focusFixture.detectChanges();
-      focusComp.notAutoFocusedPopover.open();
+      focusComp.defaultPopoverAnchor.nativeElement.focus();
+      focusComp.notAutoFocusedPopoverAnchor.nativeElement.click();
 
       focusFixture.detectChanges();
       tick();
 
-      expect(document.activeElement).toEqual(document.body);
+      expect(document.activeElement).toEqual(focusComp.defaultPopoverAnchor.nativeElement);
     }));
 
   });
@@ -751,23 +753,6 @@ class BackdropPopoverTestComponent {
 }
 
 /**
- * This component is for testing focus behavior in the popover.
- */
-@Component({
-  template: `
-    <div [satPopoverAnchorFor]="p1">Anchor 1</div>
-    <div [satPopoverAnchorFor]="p2">Anchor 2</div>
-
-    <sat-popover #p1><input type="text" class="input"></sat-popover>
-    <sat-popover #p2 autoFocus="false"><input type="text" class="input"></sat-popover>
-  `
-})
-export class FocusPopoverTestComponent {
-  @ViewChild('p1') defaultPopover: SatPopover;
-  @ViewChild('p2') notAutoFocusedPopover: SatPopover;
-}
-
-/**
  * This component is for testing behavior related to keyboard events
  * inside the popover.
  */
@@ -784,6 +769,23 @@ export class FocusPopoverTestComponent {
 export class KeyboardPopoverTestComponent {
   @ViewChild(SatPopover) popover: SatPopover;
   lastKeyCode: number;
+}
+
+/**
+ * This component is for testing focus behavior in the popover.
+ */
+@Component({
+  template: `
+    <button #b1 [satPopoverAnchorFor]="p1" (click)="p1.open()">Anchor 1</button>
+    <button #b2 [satPopoverAnchorFor]="p2" (click)="p2.open()">Anchor 2</button>
+
+    <sat-popover #p1><input type="text" class="input"></sat-popover>
+    <sat-popover #p2 autoFocus="false"><input type="text" class="input"></sat-popover>
+  `
+})
+export class FocusPopoverTestComponent {
+  @ViewChild('b1') defaultPopoverAnchor: ElementRef;
+  @ViewChild('b2') notAutoFocusedPopoverAnchor: ElementRef;
 }
 
 /** This component is for testing dynamic positioning behavior. */
