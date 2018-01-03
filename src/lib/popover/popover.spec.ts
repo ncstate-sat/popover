@@ -353,7 +353,10 @@ describe('SatPopover', () => {
           SatPopoverModule,
           NoopAnimationsModule,
         ],
-        declarations: [KeyboardPopoverTestComponent],
+        declarations: [
+          KeyboardPopoverTestComponent,
+          FocusPopoverTestComponent,
+        ],
         providers: [
           {provide: OverlayContainer, useFactory: overlayContainerFactory}
         ]
@@ -414,6 +417,32 @@ describe('SatPopover', () => {
       expect(comp.lastKeyCode).toBe(ESCAPE, 'pressed ESCAPE key on body');
 
       tick(500);
+    }));
+
+    it('should focus the initial element by default', fakeAsync(() => {
+      const focusFixture = TestBed.createComponent(FocusPopoverTestComponent);
+      const focusComp = focusFixture.componentInstance;
+
+      focusFixture.detectChanges();
+      focusComp.defaultPopover.open();
+
+      focusFixture.detectChanges();
+      tick();
+
+      expect(document.activeElement.classList).toContain('input', 'Ensure input is focused');
+    }));
+
+    it('should not focus the initial element if autoFocus is false', fakeAsync(() => {
+      const focusFixture = TestBed.createComponent(FocusPopoverTestComponent);
+      const focusComp = focusFixture.componentInstance;
+
+      focusFixture.detectChanges();
+      focusComp.notAutoFocusedPopover.open();
+
+      focusFixture.detectChanges();
+      tick();
+
+      expect(document.activeElement).toEqual(document.body);
     }));
 
   });
@@ -722,7 +751,24 @@ class BackdropPopoverTestComponent {
 }
 
 /**
- * This component is for testing behavior related to focus being
+ * This component is for testing focus behavior in the popover.
+ */
+@Component({
+  template: `
+    <div [satPopoverAnchorFor]="p1">Anchor 1</div>
+    <div [satPopoverAnchorFor]="p2">Anchor 2</div>
+
+    <sat-popover #p1><input type="text" class="input"></sat-popover>
+    <sat-popover #p2 autoFocus="false"><input type="text" class="input"></sat-popover>
+  `
+})
+export class FocusPopoverTestComponent {
+  @ViewChild('p1') defaultPopover: SatPopover;
+  @ViewChild('p2') notAutoFocusedPopover: SatPopover;
+}
+
+/**
+ * This component is for testing behavior related to keyboard events
  * inside the popover.
  */
 @Component({

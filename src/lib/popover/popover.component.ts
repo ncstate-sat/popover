@@ -86,6 +86,14 @@ export class SatPopover implements OnInit {
   get yAlign() { return this.verticalAlign; }
   set yAlign(val: SatPopoverVerticalAlign) { this.verticalAlign = val; }
 
+  /** Whether the first focusable element should be focused on open. */
+  @Input()
+  get autoFocus() { return this._autoFocus; }
+  set autoFocus(val: boolean) {
+    this._autoFocus = coerceBooleanProperty(val);
+  }
+  private _autoFocus = true;
+
   /** How the popover should handle scrolling. */
   @Input()
   get scrollStrategy() { return this._scrollStrategy; }
@@ -244,7 +252,9 @@ export class SatPopover implements OnInit {
       this._focusTrap = this._focusTrapFactory.create(this._focusTrapElement.nativeElement);
     }
 
-    this._focusTrap.focusInitialElementWhenReady();
+    if (this.autoFocus) {
+      this._focusTrap.focusInitialElementWhenReady();
+    }
   }
 
   /** Restore focus to the element focused before the popover opened. Also destroy trap. */
