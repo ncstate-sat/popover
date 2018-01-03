@@ -138,6 +138,23 @@ trigger that fits your application's needs.
 | popoverOpened | Emits when the popover is opened. |
 | popoverClosed | Emits when the popover is closed. |
 
+### Focus behavior
+
+By default, the popover will apply focus to the first tabbable element when opened and trap focus
+within the popover until closed. If the popover does not contain any focusable elements, focus
+will remain on the most recently focused element.
+
+You can target a different element for initial focus using the `cdkFocusInitial` attribute.
+
+To prevent focus from automatically moving into the popover, you can set the `autoFocus` property
+to `false`.
+
+```html
+<sat-popover [autoFocus]="false">
+  <!-- ... -->
+</sat-popover>
+```
+
 ### Backdrop
 
 You can add a fullscreen backdrop that appears behind the popover when it is open. It prevents
