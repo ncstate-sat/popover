@@ -24,6 +24,7 @@ import { FocusDemo } from './focus/focus.component';
 import { TransitionsDemo } from './transitions/transitions.component';
 import { TooltipDemo } from './tooltip/tooltip.component';
 import { SpeedDialDemo } from './speed-dial/speed-dial.component';
+import { DisableCloseDemo } from './disable-close/disable-close.component';
 
 @NgModule({
   exports: [
@@ -51,6 +52,7 @@ export class DemoMaterialModule { }
     TransitionsDemo,
     TooltipDemo,
     SpeedDialDemo,
+    DisableCloseDemo,
   ],
   imports: [
     BrowserModule,

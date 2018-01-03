@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+
+:host {
+  display: block;
+}
+
+.options {
+  @include mat-elevation(8);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background: white;
+
+  button {
+    margin-top: 8px;
+  }
+}

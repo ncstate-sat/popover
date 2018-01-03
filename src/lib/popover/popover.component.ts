@@ -114,6 +114,14 @@ export class SatPopover implements OnInit {
   }
   private _hasBackdrop = false;
 
+  /** Whether the popover should close when the user clicks the backdrop or presses ESC. */
+  @Input()
+  get interactiveClose() { return this._interactiveClose; }
+  set interactiveClose(val: boolean) {
+    this._interactiveClose = coerceBooleanProperty(val);
+  }
+  private _interactiveClose = true;
+
   /** Custom transition to use while opening. */
   @Input()
   get openTransition() { return this._openTransition; }

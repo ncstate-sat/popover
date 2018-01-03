@@ -195,8 +195,9 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     this._overlayRef
       .backdropClick()
       .pipe(
+        filter(() => this.attachedPopover.interactiveClose),
         takeUntil(this.popoverClosed),
-        takeUntil(this._onDestroy)
+        takeUntil(this._onDestroy),
       )
       .subscribe(() => {
         this.attachedPopover.backdropClicked.emit();
@@ -211,8 +212,9 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
       .pipe(
         tap(event => this.attachedPopover.overlayKeydown.emit(event)),
         filter(event => event.keyCode === ESCAPE),
+        filter(() => this.attachedPopover.interactiveClose),
         takeUntil(this.popoverClosed),
-        takeUntil(this._onDestroy)
+        takeUntil(this._onDestroy),
       )
       .subscribe(() => this.closePopover());
   }
@@ -288,7 +290,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
 
   /** Map a scroll strategy string type to an instance of a scroll strategy. */
   private _getScrollStrategyInstance(strategy: SatPopoverScrollStrategy): ScrollStrategy {
-    // TODO support 'close' on resolution of https://github.com/angular/material2/issues/7922
     switch (strategy) {
       case 'block':
         return this._overlay.scrollStrategies.block();
