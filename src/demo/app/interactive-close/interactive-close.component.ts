@@ -7,15 +7,20 @@ import { filter } from 'rxjs/operators/filter';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 
 @Component({
-  selector: 'demo-disable-close',
-  styleUrls: ['./disable-close.component.scss'],
+  selector: 'demo-interactive-close',
+  styleUrls: ['./interactive-close.component.scss'],
   template: `
     <mat-card>
       <mat-card-title>Interactive Close Behavior</mat-card-title>
       <mat-card-content>
-        <p>
+        <mat-checkbox [(ngModel)]="interactiveClose">Allow Interactive Closing</mat-checkbox>
+        <p *ngIf="!interactiveClose">
           You must select one of the options in the popover. Pressing ESC or clicking outside
           the popover will not close it.
+        </p>
+        <p *ngIf="interactiveClose">
+          You don't necessarily need to select an option. You can press ESC or click on the
+          backdrop to close the popover.
         </p>
         <button mat-raised-button
             color="accent"
@@ -26,7 +31,11 @@ import { takeUntil } from 'rxjs/operators/takeUntil';
       </mat-card-content>
     </mat-card>
 
-    <sat-popover #p hasBackdrop interactiveClose="false" (closed)="showError = false">
+    <sat-popover #p
+        hasBackdrop
+        backdropClass="demo-background-dark"
+        [interactiveClose]="interactiveClose"
+        (closed)="showError = false">
       <div class="options" #optionsPanel>
         <p class="mat-body-1" [class.error]="showError">Please select one of the following:</p>
         <button mat-button (click)="p.close(true)">Agree</button>
@@ -35,12 +44,13 @@ import { takeUntil } from 'rxjs/operators/takeUntil';
     </sat-popover>
   `
 })
-export class DisableCloseDemo implements AfterViewInit, OnDestroy {
+export class InteractiveCloseDemo implements AfterViewInit, OnDestroy {
 
   @ViewChild(SatPopover) popover: SatPopover;
   @ViewChild('optionsPanel') optionsPanel: ElementRef;
 
   showError = false;
+  interactiveClose = false;
 
   private _onDestroy = new Subject<void>();
 

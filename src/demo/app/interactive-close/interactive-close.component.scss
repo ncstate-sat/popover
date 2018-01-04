@@ -1,5 +1,7 @@
 @import '~@angular/material/theming';
 
+$error-text: #e63922;
+
 :host {
   display: block;
 }
@@ -12,10 +14,10 @@
   background: white;
 
   .error {
-    color: #e63922;
+    color: $error-text;
   }
 
-  button {
+  .mat-button {
     margin-top: 8px;
   }
 }
