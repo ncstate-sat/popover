@@ -330,6 +330,30 @@ describe('SatPopover', () => {
       expect(overlayContainerElement.textContent).toBe('');
     }));
 
+    it('should not close when interactiveClose is false', fakeAsync(() => {
+      comp.backdrop = true;
+      comp.popover.interactiveClose = false;
+      fixture.detectChanges();
+      comp.popover.open();
+
+      const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(comp.clicks).toBe(0, 'Not yet clicked');
+      backdrop.click();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.textContent)
+          .toContain('Popover', 'Interactive close disabled');
+
+      comp.popover.interactiveClose = true;
+      backdrop.click();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(comp.clicks).toBe(2, 'Clicked twice');
+      expect(overlayContainerElement.textContent).toBe('', 'Interactive close allowed');
+    }));
+
     it('should allow a custom backdrop to be added', () => {
       comp.backdrop = true;
       comp.klass = 'test-custom-class';
@@ -392,6 +416,37 @@ describe('SatPopover', () => {
       tick(500);
 
       expect(overlayContainerElement.textContent).toBe('', 'Closed after escape keydown');
+    }));
+
+    it('should not close when interactiveClose is false', fakeAsync(() => {
+      comp.popover.interactiveClose = false;
+      fixture.detectChanges();
+      comp.popover.open();
+
+      // Let focus move to the first focusable element
+      fixture.detectChanges();
+      tick();
+
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
+
+      // Emit ESCAPE keydown event
+      const currentlyFocusedElement = document.activeElement;
+      expect(currentlyFocusedElement.classList).toContain('first', 'Ensure input is focused');
+      currentlyFocusedElement.dispatchEvent(createKeyboardEvent('keydown', ESCAPE));
+
+      fixture.detectChanges();
+      tick(500);
+
+      expect(comp.lastKeyCode).toBe(ESCAPE, 'Keydown still captured');
+      expect(overlayContainerElement.textContent)
+          .toContain('Popover', 'Interactive close disabled');
+
+      comp.popover.interactiveClose = true;
+      currentlyFocusedElement.dispatchEvent(createKeyboardEvent('keydown', ESCAPE));
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.textContent).toBe('', 'Interactive close allowed');
     }));
 
     it('should emit keydown events when key is pressed', fakeAsync(() => {

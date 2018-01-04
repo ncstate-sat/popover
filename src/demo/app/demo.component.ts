@@ -19,6 +19,7 @@ import { Component } from '@angular/core';
       <demo-focus></demo-focus>
       <demo-transitions></demo-transitions>
       <demo-tooltip></demo-tooltip>
+      <demo-interactive-close></demo-interactive-close>
       <demo-speed-dial></demo-speed-dial>
     </div>
   `
