@@ -9,9 +9,14 @@ import { Component } from '@angular/core';
       <a class="repo-link mat-title" href="https://github.com/ncstate-sat/popover">
         @ncstate/sat-popover
       </a>
+      <button mat-button
+          title="Toggle between RTL and LTR"
+          (click)="direction = (direction == 'rtl' ? 'ltr' : 'rtl')">
+        {{ direction.toUpperCase() }}
+      </button>
     </mat-toolbar>
 
-    <div class="page-content">
+    <div [dir]="direction" class="page-content">
       <demo-positioning></demo-positioning>
       <demo-action-api></demo-action-api>
       <demo-scroll-strategies></demo-scroll-strategies>
@@ -24,4 +29,6 @@ import { Component } from '@angular/core';
     </div>
   `
 })
-export class DemoComponent { }
+export class DemoComponent {
+  direction = 'ltr';
+}

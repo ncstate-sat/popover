@@ -14,6 +14,7 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
 } from '@angular/material';
+import { BidiModule } from '@angular/cdk/bidi';
 
 import { DemoComponent } from './demo.component';
 import { PositioningDemo } from './positioning/positioning.component';
@@ -37,6 +38,7 @@ import { InteractiveCloseDemo } from './interactive-close/interactive-close.comp
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    BidiModule,
   ]
 })
 export class DemoMaterialModule { }
