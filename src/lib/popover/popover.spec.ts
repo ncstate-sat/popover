@@ -337,6 +337,7 @@ describe('SatPopover', () => {
       comp.popover.open();
 
       const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(comp.clicks).toBe(0, 'Not yet clicked');
       backdrop.click();
       fixture.detectChanges();
       tick(500);
@@ -349,6 +350,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       tick(500);
 
+      expect(comp.clicks).toBe(2, 'Clicked twice');
       expect(overlayContainerElement.textContent).toBe('', 'Interactive close allowed');
     }));
 
@@ -435,6 +437,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       tick(500);
 
+      expect(comp.lastKeyCode).toBe(ESCAPE, 'Keydown still captured');
       expect(overlayContainerElement.textContent)
           .toContain('Popover', 'Interactive close disabled');
 
