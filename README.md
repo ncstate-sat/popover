@@ -180,6 +180,28 @@ If used, the default backdrop will be transparent. You can add any custom backdr
 keep in mind that a backdrop will block pointer events once it is open, immediately triggering
 a `mouseleave` event.
 
+### Interactive Closing
+
+If your popover has a backdrop, it will automatically close when clicked. The popover will also
+automatically close when <kbd>esc</kbd> is pressed. These two behaviors are wrapped in the
+`interactiveClose` property, which defaults to `true`. Set `interactiveClose` to `false` to prevent
+the popover from automatically closing on these user interactions.
+
+```html
+<sat-popover hasBackdrop [interactiveClose]="false">
+  <!-- ... -->
+</sat-popover>
+```
+
+If you wish to only disable the automatic <kbd>esc</kbd> behavior, you must disable all
+interactive close options and then manually react to `backdropClicked` events.
+
+```html
+<sat-popover #p hasBackdrop [interactiveClose]="false" (backdropClicked)="p.close()">
+  <!-- ... -->
+</sat-popover>
+```
+
 ### Scrolling
 
 By default, when a popover is open and the user scrolls the container, the popover will reposition
