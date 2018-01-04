@@ -21,6 +21,7 @@ import { SatPopoverAnchor } from './popover-anchor.directive';
   exports: [
     SatPopover,
     SatPopoverAnchor,
+    BidiModule,
   ]
 })
 export class SatPopoverModule { }
