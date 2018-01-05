@@ -30,8 +30,8 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   set attachedPopover(value: SatPopover) {
     this._validateAttachedPopover(value);
     this._attachedPopover = value;
-    // TODO: does this need to send the new popover to the anchoring service
-    // again?
+    // Anchor the popover to the element ref
+    this._anchoring.anchor(this.attachedPopover, this._viewContainerRef, this._elementRef);
   }
   private _attachedPopover: SatPopover;
 
@@ -56,9 +56,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Anchor the popover to the element ref
-    this._anchoring.anchor(this.attachedPopover, this._viewContainerRef, this._elementRef);
-
     // Re-emit open and close events
     const opened$ = this._anchoring.popoverOpened
       .pipe(tap(() => this.popoverOpened.emit()));
