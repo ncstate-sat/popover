@@ -45,13 +45,19 @@ export class PopoverAnchoringService implements OnDestroy {
   /** Reference to the overlay containing the popover component. */
   _overlayRef: OverlayRef;
 
-  _popover: SatPopover;
-  _viewContainerRef: ViewContainerRef;
-  _anchor: ElementRef;
+  /** Reference to the target popover. */
+  private _popover: SatPopover;
+
+  /** Reference to the view container for the popover template. */
+  private _viewContainerRef: ViewContainerRef;
+
+  /** Reference to the anchor element. */
+  private _anchor: ElementRef;
 
   /** Reference to a template portal where the overlay will be attached. */
   private _portal: TemplatePortal<any>;
 
+  /** Communications channel with the popover. */
   private _notifications: PopoverNotificationService;
 
   /** Whether the popover is presently open. */
@@ -64,27 +70,30 @@ export class PopoverAnchoringService implements OnDestroy {
     private _overlay: Overlay,
     private _ngZone: NgZone,
     @Optional() private _dir: Directionality
-  ) {
-    this._notifications = new PopoverNotificationService();
-  }
+  ) { }
 
   ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
     this._destroyPopover();
+
+    this.popoverOpened.complete();
+    this.popoverClosed.complete();
   }
 
-  initialize(popover: SatPopover, viewContainerRef: ViewContainerRef, anchor: ElementRef): void {
-    // store value and provide notification service as a communication
-    // channel between popover and anchor
+  /** Anchor a popover instance to a view and connection element. */
+  anchor(popover: SatPopover, viewContainerRef: ViewContainerRef, anchor: ElementRef): void {
     this._popover = popover;
-    this._popover._notifications = this._notifications;
-
     this._viewContainerRef = viewContainerRef;
     this._anchor = anchor;
 
-    this._subscribeToNotifications();
+    // Verify proper popover instance is provided
     this._validateAttachedPopover(this._popover);
+
+    // Provide notification service as a communication channel between popover and anchor.
+    // Then subscribe to notifications to take appropriate actions.
+    this._popover._notifications = this._notifications = new PopoverNotificationService();
+    this._subscribeToNotifications();
   }
 
   /** Gets whether the popover is presently open. */
