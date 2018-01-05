@@ -196,7 +196,9 @@ export class SatPopover implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._notifications.dispose();
+    if (this._notifications) {
+      this._notifications.dispose();
+    }
   }
 
   /** Open this popover. */

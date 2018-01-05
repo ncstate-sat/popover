@@ -93,8 +93,12 @@ export class PopoverAnchoringService implements OnDestroy {
 
   ngOnDestroy() {
     // Terminate subscriptions
-    this._notificationsSubscription.unsubscribe();
-    this._positionChangeSubscription.unsubscribe();
+    if (this._notificationsSubscription) {
+      this._notificationsSubscription.unsubscribe();
+    }
+    if (this._positionChangeSubscription) {
+      this._positionChangeSubscription.unsubscribe();
+    }
     this._onDestroy.next();
     this._onDestroy.complete();
 
