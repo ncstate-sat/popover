@@ -18,6 +18,7 @@ import {
 import { Directionality, Direction} from '@angular/cdk/bidi';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { take } from 'rxjs/operators/take';
@@ -32,6 +33,18 @@ import {
 } from './popover.component';
 import { getInvalidPopoverError } from './popover.errors';
 import { PopoverNotificationService, NotificationAction } from './notification.service';
+
+/**
+ * Configuration provided by the popover for the anchoring service
+ * to build the correct overlay config.
+ */
+interface PopoverConfig {
+  horizontalAlign: SatPopoverHorizontalAlign;
+  verticalAlign: SatPopoverVerticalAlign;
+  hasBackdrop: boolean;
+  backdropClass: string;
+  scrollStrategy: SatPopoverScrollStrategy;
+};
 
 @Injectable()
 export class PopoverAnchoringService implements OnDestroy {
@@ -60,6 +73,12 @@ export class PopoverAnchoringService implements OnDestroy {
   /** Communications channel with the popover. */
   private _notifications: PopoverNotificationService;
 
+  /** Single subscription to notifications service events. */
+  private _notificationsSubscription: Subscription;
+
+  /** Single subscription to position changes. */
+  private _positionChangeSubscription: Subscription;
+
   /** Whether the popover is presently open. */
   private _popoverOpen = false;
 
@@ -73,8 +92,12 @@ export class PopoverAnchoringService implements OnDestroy {
   ) { }
 
   ngOnDestroy() {
+    // Terminate subscriptions
+    this._notificationsSubscription.unsubscribe();
+    this._positionChangeSubscription.unsubscribe();
     this._onDestroy.next();
     this._onDestroy.complete();
+
     this._destroyPopover();
 
     this.popoverOpened.complete();
@@ -83,12 +106,16 @@ export class PopoverAnchoringService implements OnDestroy {
 
   /** Anchor a popover instance to a view and connection element. */
   anchor(popover: SatPopover, viewContainerRef: ViewContainerRef, anchor: ElementRef): void {
+    // Verify proper popover instance is provided
+    this._validateAttachedPopover(popover);
+
+    // Destroy any previous popovers
+    this._destroyPopover();
+
+    // Assign local refs
     this._popover = popover;
     this._viewContainerRef = viewContainerRef;
     this._anchor = anchor;
-
-    // Verify proper popover instance is provided
-    this._validateAttachedPopover(this._popover);
 
     // Provide notification service as a communication channel between popover and anchor.
     // Then subscribe to notifications to take appropriate actions.
@@ -129,12 +156,20 @@ export class PopoverAnchoringService implements OnDestroy {
   createOverlay(): OverlayRef {
     if (!this._overlayRef) {
       this._portal = new TemplatePortal(this._popover._templateRef, this._viewContainerRef);
-      const config = this._getOverlayConfig(this._popover, this._anchor);
-      this._subscribeToPositionChanges(
-        config.positionStrategy as ConnectedPositionStrategy,
-        this._popover
-      );
-      this._overlayRef = this._overlay.create(config);
+
+      const popoverConfig = {
+        horizontalAlign: this._popover.horizontalAlign,
+        verticalAlign: this._popover.verticalAlign,
+        hasBackdrop: this._popover.hasBackdrop,
+        backdropClass: this._popover.backdropClass,
+        scrollStrategy: this._popover.scrollStrategy,
+      };
+
+      const overlayConfig = this._getOverlayConfig(popoverConfig, this._anchor);
+
+      this._subscribeToPositionChanges(overlayConfig.positionStrategy as ConnectedPositionStrategy);
+
+      this._overlayRef = this._overlay.create(overlayConfig);
     }
 
     this._overlayRef.attach(this._portal);
@@ -170,8 +205,11 @@ export class PopoverAnchoringService implements OnDestroy {
    * the notification service.
    */
   private _subscribeToNotifications(): void {
-    this._notifications.events()
-      .pipe(takeUntil(this._onDestroy))
+    if (this._notificationsSubscription) {
+      this._notificationsSubscription.unsubscribe();
+    }
+
+    this._notificationsSubscription = this._notifications.events()
       .subscribe(event => {
         switch (event.action) {
           case NotificationAction.OPEN:
@@ -253,32 +291,35 @@ export class PopoverAnchoringService implements OnDestroy {
   }
 
   /** Create and return a config for creating the overlay. */
-  private _getOverlayConfig(popover: SatPopover, anchor: ElementRef): OverlayConfig {
-    const config = new OverlayConfig({
-      positionStrategy: this._getPositionStrategy(popover, anchor),
-      hasBackdrop: popover.hasBackdrop,
-      backdropClass: popover.backdropClass || 'cdk-overlay-transparent-backdrop',
-      scrollStrategy: this._getScrollStrategyInstance(popover.scrollStrategy),
+  private _getOverlayConfig(config: PopoverConfig, anchor: ElementRef): OverlayConfig {
+    return new OverlayConfig({
+      positionStrategy: this._getPositionStrategy(
+        config.horizontalAlign,
+        config.verticalAlign,
+        anchor,
+      ),
+      hasBackdrop: config.hasBackdrop,
+      backdropClass: config.backdropClass || 'cdk-overlay-transparent-backdrop',
+      scrollStrategy: this._getScrollStrategyInstance(config.scrollStrategy),
       direction: this._getDirection(),
     });
-
-    return config;
   }
 
   /**
    * Listen to changes in the position of the overlay and set the correct alignment classes,
    * ensuring that the animation origin is correct, even with a fallback position.
    */
-  private _subscribeToPositionChanges(
-    position: ConnectedPositionStrategy,
-    popover: SatPopover
-  ): void {
-    position.onPositionChange
+  private _subscribeToPositionChanges(position: ConnectedPositionStrategy): void {
+    if (this._positionChangeSubscription) {
+      this._positionChangeSubscription.unsubscribe();
+    }
+
+    this._positionChangeSubscription = position.onPositionChange
       .pipe(takeUntil(this._onDestroy))
       .subscribe(change => {
         // Position changes may occur outside the Angular zone
         this._ngZone.run(() => {
-          popover._setAlignmentClasses(
+          this._popover._setAlignmentClasses(
             getHorizontalPopoverAlignment(change.connectionPair.overlayX),
             getVerticalPopoverAlignment(change.connectionPair.overlayY),
           );
@@ -302,10 +343,11 @@ export class PopoverAnchoringService implements OnDestroy {
   }
 
   /** Create and return a position strategy based on config provided to the component instance. */
-  private _getPositionStrategy(popover: SatPopover, anchor: ElementRef): ConnectedPositionStrategy {
-    const horizontalTarget = popover.horizontalAlign;
-    const verticalTarget = popover.verticalAlign;
-
+  private _getPositionStrategy(
+    horizontalTarget: SatPopoverHorizontalAlign,
+    verticalTarget: SatPopoverVerticalAlign,
+    anchor: ElementRef
+  ): ConnectedPositionStrategy {
     // Attach the overlay at the preferred position
     const {originX, overlayX} = getHorizontalConnectionPosPair(horizontalTarget);
     const {originY, overlayY} = getVerticalConnectionPosPair(verticalTarget);
@@ -320,8 +362,11 @@ export class PopoverAnchoringService implements OnDestroy {
   }
 
   /** Add fallbacks to a given strategy based around target alignments. */
-  private _addFallbacks(strategy: ConnectedPositionStrategy, hTarget: SatPopoverHorizontalAlign,
-      vTarget: SatPopoverVerticalAlign): void {
+  private _addFallbacks(
+    strategy: ConnectedPositionStrategy,
+    hTarget: SatPopoverHorizontalAlign,
+    vTarget: SatPopoverVerticalAlign
+  ): void {
     // Determine if the target alignments overlap the anchor
     const horizontalOverlapAllowed = hTarget !== 'before' && hTarget !== 'after';
     const verticalOverlapAllowed = vTarget !== 'above' && vTarget !== 'below';
