@@ -84,7 +84,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     this._anchoring.closePopover(value);
   }
 
-  // TODO: what to do with this?
   /** Throws an error if the popover instance is not provided. */
   private _validateAttachedPopover(popover: SatPopover): void {
     if (!popover || !(popover instanceof SatPopover)) {

@@ -31,7 +31,6 @@ import {
   SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
 } from './popover.component';
-import { getInvalidPopoverError } from './popover.errors';
 import { PopoverNotificationService, NotificationAction } from './notification.service';
 
 /**
@@ -44,7 +43,7 @@ interface PopoverConfig {
   hasBackdrop: boolean;
   backdropClass: string;
   scrollStrategy: SatPopoverScrollStrategy;
-};
+}
 
 @Injectable()
 export class PopoverAnchoringService implements OnDestroy {
@@ -110,9 +109,6 @@ export class PopoverAnchoringService implements OnDestroy {
 
   /** Anchor a popover instance to a view and connection element. */
   anchor(popover: SatPopover, viewContainerRef: ViewContainerRef, anchor: ElementRef): void {
-    // Verify proper popover instance is provided
-    this._validateAttachedPopover(popover);
-
     // Destroy any previous popovers
     this._destroyPopover();
 
@@ -407,13 +403,6 @@ export class PopoverAnchoringService implements OnDestroy {
     strategy.withFallbackPosition({originX, originY}, {overlayX, overlayY});
   }
 
-  // TODO: what to do with this?
-  /** Throws an error if the popover instance is not provided. */
-  private _validateAttachedPopover(popover: SatPopover): void {
-    if (!popover || !(popover instanceof SatPopover)) {
-      throw getInvalidPopoverError();
-    }
-  }
 
 }
 
