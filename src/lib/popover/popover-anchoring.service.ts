@@ -16,9 +16,13 @@ import {
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import { Directionality, Direction} from '@angular/cdk/bidi';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
+import { take } from 'rxjs/operators/take';
+import { filter } from 'rxjs/operators/filter';
+import { tap } from 'rxjs/operators/tap';
 
 import {
   SatPopover,
@@ -26,15 +30,32 @@ import {
   SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
 } from './popover.component';
+import { getInvalidPopoverError } from './popover.errors';
+import { PopoverNotificationService, NotificationAction } from './notification.service';
 
 @Injectable()
 export class PopoverAnchoringService implements OnDestroy {
 
+  /** Emits when the popover is opened. */
+  popoverOpened = new Subject<void>();
+
+  /** Emits when the popover is closed. */
+  popoverClosed = new Subject<void>();
+
   /** Reference to the overlay containing the popover component. */
   _overlayRef: OverlayRef;
 
+  _popover: SatPopover;
+  _viewContainerRef: ViewContainerRef;
+  _anchor: ElementRef;
+
   /** Reference to a template portal where the overlay will be attached. */
   private _portal: TemplatePortal<any>;
+
+  private _notifications: PopoverNotificationService;
+
+  /** Whether the popover is presently open. */
+  private _popoverOpen = false;
 
   /** Emits when the directive is destroyed. */
   private _onDestroy = new Subject<void>();
@@ -43,31 +64,178 @@ export class PopoverAnchoringService implements OnDestroy {
     private _overlay: Overlay,
     private _ngZone: NgZone,
     @Optional() private _dir: Directionality
-  ) { }
+  ) {
+    this._notifications = new PopoverNotificationService();
+  }
 
   ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
+    this._destroyPopover();
+  }
+
+  initialize(popover: SatPopover, viewContainerRef: ViewContainerRef, anchor: ElementRef): void {
+    // store value and provide notification service as a communication
+    // channel between popover and anchor
+    this._popover = popover;
+    this._popover._notifications = this._notifications;
+
+    this._viewContainerRef = viewContainerRef;
+    this._anchor = anchor;
+
+    this._subscribeToNotifications();
+    this._validateAttachedPopover(this._popover);
+  }
+
+  /** Gets whether the popover is presently open. */
+  isPopoverOpen(): boolean {
+    return this._popoverOpen;
+  }
+
+  /** Toggles the popover between the open and closed states. */
+  togglePopover(): void {
+    return this._popoverOpen ? this.closePopover() : this.openPopover();
+  }
+
+  /** Opens the popover. */
+  openPopover(): void {
+    if (!this._popoverOpen) {
+      this.createOverlay();
+      this._subscribeToBackdrop();
+      this._subscribeToEscape();
+      this._subscribeToDetachments();
+      this._saveOpenedState();
+    }
+  }
+
+  /** Closes the popover. */
+  closePopover(value?: any): void {
+    if (this._overlayRef) {
+      this._saveClosedState(value);
+      this._overlayRef.detach();
+    }
   }
 
   /** Create an overlay to be attached to the portal. */
-  createOverlay(
-    popover: SatPopover,
-    viewContainerRef: ViewContainerRef,
-    anchor: ElementRef
-  ): OverlayRef {
+  createOverlay(): OverlayRef {
     if (!this._overlayRef) {
-      this._portal = new TemplatePortal(popover._templateRef, viewContainerRef);
-      const config = this._getOverlayConfig(popover, anchor);
+      this._portal = new TemplatePortal(this._popover._templateRef, this._viewContainerRef);
+      const config = this._getOverlayConfig(this._popover, this._anchor);
       this._subscribeToPositionChanges(
         config.positionStrategy as ConnectedPositionStrategy,
-        popover
+        this._popover
       );
       this._overlayRef = this._overlay.create(config);
     }
 
     this._overlayRef.attach(this._portal);
     return this._overlayRef;
+  }
+
+
+  /** Removes the popover from the DOM. Does NOT update open state. */
+  private _destroyPopover(): void {
+    if (this._overlayRef) {
+      this._overlayRef.dispose();
+      this._overlayRef = null;
+    }
+  }
+
+  /**
+   * Destroys the popover immediately if it is closed, or waits until it
+   * has been closed to destroy it.
+   */
+  private _destroyPopoverOnceClosed(): void {
+    if (this.isPopoverOpen() && this._overlayRef) {
+      this._overlayRef.detachments().pipe(
+        take(1),
+        takeUntil(this._onDestroy)
+      ).subscribe(() => this._destroyPopover());
+    } else {
+      this._destroyPopover();
+    }
+  }
+
+  /**
+   * Call appropriate anchor method when an event is dispatched through
+   * the notification service.
+   */
+  private _subscribeToNotifications(): void {
+    this._notifications.events()
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(event => {
+        switch (event.action) {
+          case NotificationAction.OPEN:
+            this.openPopover();
+            break;
+          case NotificationAction.CLOSE:
+            this.closePopover(event.value);
+            break;
+          case NotificationAction.TOGGLE:
+            this.togglePopover();
+            break;
+          case NotificationAction.REPOSITION:
+            // TODO: When the overlay's position can be dynamically changed, do not destroy
+          case NotificationAction.UPDATE_CONFIG:
+            this._destroyPopoverOnceClosed();
+            break;
+        }
+      });
+  }
+
+  /** Close popover when backdrop is clicked. */
+  private _subscribeToBackdrop(): void {
+    this._overlayRef
+      .backdropClick()
+      .pipe(
+        tap(() => this._popover.backdropClicked.emit()),
+        filter(() => this._popover.interactiveClose),
+        takeUntil(this.popoverClosed),
+        takeUntil(this._onDestroy),
+      )
+      .subscribe(() => this.closePopover());
+  }
+
+  /** Close popover when escape keydown event occurs. */
+  private _subscribeToEscape(): void {
+    this._overlayRef
+      .keydownEvents()
+      .pipe(
+        tap(event => this._popover.overlayKeydown.emit(event)),
+        filter(event => event.keyCode === ESCAPE),
+        filter(() => this._popover.interactiveClose),
+        takeUntil(this.popoverClosed),
+        takeUntil(this._onDestroy),
+      )
+      .subscribe(() => this.closePopover());
+  }
+
+  /** Set state back to closed when detached. */
+  private _subscribeToDetachments(): void {
+    this._overlayRef
+      .detachments()
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => this._saveClosedState());
+  }
+
+  /** Save the opened state of the popover and emit. */
+  private _saveOpenedState(): void {
+    if (!this._popoverOpen) {
+      this._popover._open = this._popoverOpen = true;
+
+      this.popoverOpened.next();
+      this._popover.opened.emit();
+    }
+  }
+
+  /** Save the closed state of the popover and emit. */
+  private _saveClosedState(value?: any): void {
+    if (this._popoverOpen) {
+      this._popover._open = this._popoverOpen = false;
+
+      this.popoverClosed.next(value);
+      this._popover.closed.emit(value);
+    }
   }
 
   /** Gets the text direction of the containing app. */
@@ -179,6 +347,14 @@ export class PopoverAnchoringService implements OnDestroy {
     const {originX, overlayX} = getHorizontalConnectionPosPair(horizontalAlign);
     const {originY, overlayY} = getVerticalConnectionPosPair(verticalAlign);
     strategy.withFallbackPosition({originX, originY}, {overlayX, overlayY});
+  }
+
+  // TODO: what to do with this?
+  /** Throws an error if the popover instance is not provided. */
+  private _validateAttachedPopover(popover: SatPopover): void {
+    if (!popover || !(popover instanceof SatPopover)) {
+      throw getInvalidPopoverError();
+    }
   }
 
 }
