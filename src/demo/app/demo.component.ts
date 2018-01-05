@@ -10,13 +10,18 @@ import { Component } from '@angular/core';
         @ncstate/sat-popover
       </a>
       <button mat-button
+          title="Toggle all content"
+          (click)="showContent = !showContent">
+        {{ showContent ? 'Hide' : 'Show' }} content
+      </button>
+      <button mat-button
           title="Toggle between RTL and LTR"
           (click)="direction = (direction == 'rtl' ? 'ltr' : 'rtl')">
         {{ direction.toUpperCase() }}
       </button>
     </mat-toolbar>
 
-    <div [dir]="direction" class="page-content">
+    <div *ngIf="showContent" [dir]="direction" class="page-content">
       <demo-positioning></demo-positioning>
       <demo-action-api></demo-action-api>
       <demo-scroll-strategies></demo-scroll-strategies>
@@ -32,4 +37,5 @@ import { Component } from '@angular/core';
 })
 export class DemoComponent {
   direction = 'ltr';
+  showContent = true;
 }
