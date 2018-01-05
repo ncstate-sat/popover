@@ -41,4 +41,9 @@ export class PopoverNotificationService {
     return this.store.asObservable();
   }
 
+  /** Complete event stream. */
+  dispose(): void {
+    this.store.complete();
+  }
+
 }

@@ -7,6 +7,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   TemplateRef,
+  OnDestroy,
   OnInit,
   Optional,
   Output,
@@ -50,7 +51,7 @@ const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   styleUrls: ['./popover.component.scss'],
   templateUrl: './popover.component.html',
 })
-export class SatPopover implements OnInit {
+export class SatPopover implements OnInit, OnDestroy {
 
   /** Alignment of the popover on the horizontal axis. */
   @Input()
@@ -192,6 +193,10 @@ export class SatPopover implements OnInit {
 
   ngOnInit() {
     this._setAlignmentClasses();
+  }
+
+  ngOnDestroy() {
+    this._notifications.dispose();
   }
 
   /** Open this popover. */
