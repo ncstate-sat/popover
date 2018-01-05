@@ -1,0 +1,42 @@
+import { Component, ViewChild } from '@angular/core';
+import { SatPopover } from '@ncstate/sat-popover';
+
+@Component({
+  selector: 'demo-anchor-reuse',
+  styleUrls: ['anchor-reuse.component.scss'],
+  template: `
+    <mat-card>
+      <mat-card-title>Anchor Reuse</mat-card-title>
+      <mat-card-content>
+        Active Popover:
+        <mat-radio-group [(ngModel)]="activePopover">
+          <mat-radio-button value="a">A</mat-radio-button>
+          <mat-radio-button value="b">B</mat-radio-button>
+        </mat-radio-group>
+
+        <br>
+
+        <button mat-button
+            [satPopoverAnchorFor]="getActivePopover()"
+            (click)="getActivePopover().toggle()">
+          Anchor
+        </button>
+
+        <sat-popover #a xAlign="after"><div class="wrapper">A</div></sat-popover>
+        <sat-popover #b xAlign="after"><div class="wrapper">B</div></sat-popover>
+
+      </mat-card-content>
+
+    </mat-card>
+  `
+})
+export class AnchorReuseComponent {
+  @ViewChild('a') aPopover: SatPopover;
+  @ViewChild('b') bPopover: SatPopover;
+
+  activePopover = 'a';
+
+  getActivePopover(): SatPopover {
+    return this.activePopover === 'a' ? this.aPopover : this.bPopover;
+  }
+}

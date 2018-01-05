@@ -13,6 +13,7 @@ import {
   MatCheckboxModule,
   MatDatepickerModule,
   MatNativeDateModule,
+  MatRadioModule,
 } from '@angular/material';
 import { BidiModule } from '@angular/cdk/bidi';
 
@@ -26,6 +27,7 @@ import { TransitionsDemo } from './transitions/transitions.component';
 import { TooltipDemo } from './tooltip/tooltip.component';
 import { SpeedDialDemo } from './speed-dial/speed-dial.component';
 import { InteractiveCloseDemo } from './interactive-close/interactive-close.component';
+import { AnchorReuseComponent } from './anchor-reuse/anchor-reuse.component';
 
 @NgModule({
   exports: [
@@ -38,6 +40,7 @@ import { InteractiveCloseDemo } from './interactive-close/interactive-close.comp
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatRadioModule,
     BidiModule,
   ]
 })
@@ -55,6 +58,7 @@ export class DemoMaterialModule { }
     TooltipDemo,
     SpeedDialDemo,
     InteractiveCloseDemo,
+    AnchorReuseComponent,
   ],
   imports: [
     BrowserModule,
