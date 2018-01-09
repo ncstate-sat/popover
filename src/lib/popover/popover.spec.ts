@@ -537,7 +537,7 @@ describe('SatPopover', () => {
 
       // open the overlay and store the overlayRef
       comp.popover.open();
-      const overlayAfterFirstOpen = comp.anchor._overlayRef;
+      const overlayAfterFirstOpen = comp.anchor._anchoring._overlayRef;
 
       comp.popover.close();
       fixture.detectChanges();
@@ -548,7 +548,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      const overlayAfterSecondOpen = comp.anchor._overlayRef;
+      const overlayAfterSecondOpen = comp.anchor._anchoring._overlayRef;
 
       expect(overlayAfterFirstOpen === overlayAfterSecondOpen).toBe(true);
     }));
@@ -558,7 +558,7 @@ describe('SatPopover', () => {
 
       // open the overlay and store the overlayRef
       comp.popover.open();
-      const overlayAfterFirstOpen = comp.anchor._overlayRef;
+      const overlayAfterFirstOpen = comp.anchor._anchoring._overlayRef;
 
       comp.popover.close();
       fixture.detectChanges();
@@ -569,7 +569,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      const overlayAfterSecondOpen = comp.anchor._overlayRef;
+      const overlayAfterSecondOpen = comp.anchor._anchoring._overlayRef;
 
       expect(overlayAfterFirstOpen === overlayAfterSecondOpen).toBe(false);
     }));
@@ -581,7 +581,7 @@ describe('SatPopover', () => {
 
       // centered over anchor can be any of 5 x 5 positions
       comp.popover.open();
-      overlayConfig = comp.anchor._overlayRef.getConfig();
+      overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
       strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(25, 'overlapping');
 
@@ -595,7 +595,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      overlayConfig = comp.anchor._overlayRef.getConfig();
+      overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
       strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(4, 'non-overlapping');
 
@@ -609,7 +609,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      overlayConfig = comp.anchor._overlayRef.getConfig();
+      overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
       strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(10, 'overlapping in one dimension');
     }));
@@ -684,7 +684,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       comp.popover.open();
 
-      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'reposition strategy');
 
       comp.popover.close();
@@ -695,7 +695,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       comp.popover.open();
 
-      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof BlockScrollStrategy).toBe(true, 'block strategy');
     }));
 
@@ -705,7 +705,7 @@ describe('SatPopover', () => {
       comp.popover.open();
 
       // expect it to be open with default strategy
-      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'reposition strategy');
       expect(overlayContainerElement.textContent).toContain('Popover', 'initially open');
 
@@ -715,7 +715,7 @@ describe('SatPopover', () => {
       tick();
 
       // expect it to have remained open with default strategy
-      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'still reposition strategy');
       expect(overlayContainerElement.textContent).toContain('Popover', 'Still open');
 
@@ -726,7 +726,7 @@ describe('SatPopover', () => {
       comp.popover.open();
 
       // expect the new strategy to be in place
-      strategy = comp.anchor._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof BlockScrollStrategy).toBe(true, 'block strategy');
     }));
 
