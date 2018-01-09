@@ -46,7 +46,7 @@ interface PopoverConfig {
 }
 
 @Injectable()
-export class PopoverAnchoringService implements OnDestroy {
+export class SatPopoverAnchoringService implements OnDestroy {
 
   /** Emits when the popover is opened. */
   popoverOpened = new Subject<void>();
@@ -155,7 +155,7 @@ export class PopoverAnchoringService implements OnDestroy {
   }
 
   /** Create an overlay to be attached to the portal. */
-  createOverlay(): OverlayRef {
+  private createOverlay(): OverlayRef {
     // Create overlay if it doesn't yet exist
     if (!this._overlayRef) {
       this._portal = new TemplatePortal(this._popover._templateRef, this._viewContainerRef);

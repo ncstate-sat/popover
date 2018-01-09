@@ -15,6 +15,7 @@ import {
   MatNativeDateModule,
   MatRadioModule,
   MatSlideToggleModule,
+  MatTableModule,
 } from '@angular/material';
 import { BidiModule } from '@angular/cdk/bidi';
 
@@ -29,6 +30,7 @@ import { TooltipDemo } from './tooltip/tooltip.component';
 import { SpeedDialDemo } from './speed-dial/speed-dial.component';
 import { InteractiveCloseDemo } from './interactive-close/interactive-close.component';
 import { AnchorReuseComponent } from './anchor-reuse/anchor-reuse.component';
+import { EventDelegationDemo } from './event-delegation/event-delegation.component';
 
 @NgModule({
   exports: [
@@ -43,6 +45,7 @@ import { AnchorReuseComponent } from './anchor-reuse/anchor-reuse.component';
     MatNativeDateModule,
     MatRadioModule,
     MatSlideToggleModule,
+    MatTableModule,
     BidiModule,
   ]
 })
@@ -61,6 +64,7 @@ export class DemoMaterialModule { }
     SpeedDialDemo,
     InteractiveCloseDemo,
     AnchorReuseComponent,
+    EventDelegationDemo,
   ],
   imports: [
     BrowserModule,

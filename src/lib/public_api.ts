@@ -6,3 +6,4 @@ export {
   SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
 } from './popover/popover.component';
+export { SatPopoverAnchoringService } from './popover/popover-anchoring.service';

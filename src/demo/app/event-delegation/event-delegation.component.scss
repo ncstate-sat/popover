@@ -1,0 +1,22 @@
+@import '~@angular/material/theming';
+
+:host {
+  display: block;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 200px;
+}
+
+.view-popover {
+  @include mat-elevation(4);
+  background: white;
+  padding: 16px;
+}
+
+.remove-popover {
+  @include mat-elevation(4);
+  background: white;
+  padding: 16px;
+}

@@ -31,6 +31,7 @@ import { Component } from '@angular/core';
       <demo-tooltip></demo-tooltip>
       <demo-interactive-close></demo-interactive-close>
       <demo-anchor-reuse></demo-anchor-reuse>
+      <demo-event-delegation></demo-event-delegation>
       <demo-speed-dial></demo-speed-dial>
     </div>
   `
