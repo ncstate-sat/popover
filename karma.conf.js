@@ -4,7 +4,7 @@
 module.exports = config => {
   const libBase = '.ng_build/spec/'; // transpiled app JS and map files
 
-  config.set({
+  const configuration = {
     basePath: '',
     frameworks: ['jasmine'],
     plugins: [
@@ -69,6 +69,19 @@ module.exports = config => {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: false
-  });
+    singleRun: false,
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox'],
+      },
+    },
+  };
+
+  // Run with --no-sandbox mode on Travis
+  if (process.env.TRAVIS) {
+    configuration.browsers = ['Chrome_travis_ci'];
+  }
+
+  config.set(configuration);
 };
