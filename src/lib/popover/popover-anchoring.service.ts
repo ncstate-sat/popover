@@ -91,6 +91,10 @@ export class PopoverAnchoringService implements OnDestroy {
   ) { }
 
   ngOnDestroy() {
+    // Destroy popover before terminating subscriptions so that any resulting
+    // detachments update 'closed state'
+    this._destroyPopover();
+
     // Terminate subscriptions
     if (this._notificationsSubscription) {
       this._notificationsSubscription.unsubscribe();
@@ -100,8 +104,6 @@ export class PopoverAnchoringService implements OnDestroy {
     }
     this._onDestroy.next();
     this._onDestroy.complete();
-
-    this._destroyPopover();
 
     this.popoverOpened.complete();
     this.popoverClosed.complete();
@@ -154,6 +156,7 @@ export class PopoverAnchoringService implements OnDestroy {
 
   /** Create an overlay to be attached to the portal. */
   createOverlay(): OverlayRef {
+    // Create overlay if it doesn't yet exist
     if (!this._overlayRef) {
       this._portal = new TemplatePortal(this._popover._templateRef, this._viewContainerRef);
 
@@ -172,6 +175,7 @@ export class PopoverAnchoringService implements OnDestroy {
       this._overlayRef = this._overlay.create(overlayConfig);
     }
 
+    // Actually open the popover
     this._overlayRef.attach(this._portal);
     return this._overlayRef;
   }

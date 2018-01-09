@@ -14,6 +14,7 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
   MatRadioModule,
+  MatSlideToggleModule,
 } from '@angular/material';
 import { BidiModule } from '@angular/cdk/bidi';
 
@@ -41,6 +42,7 @@ import { AnchorReuseComponent } from './anchor-reuse/anchor-reuse.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
+    MatSlideToggleModule,
     BidiModule,
   ]
 })
