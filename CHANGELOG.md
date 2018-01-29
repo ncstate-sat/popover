@@ -1,3 +1,18 @@
+# 1.0.0-beta.5 cryptographic-cereal
+
+### Features
+* Autofocus behavior can be disabled via [`autoFocus`](https://github.com/ncstate-sat/popover/blob/master/README.md#focus-behavior).
+* Interactive closing actions (i.e. backdrop clicks and escape key) can now be disabled via [`interactiveClose`](https://github.com/ncstate-sat/popover/blob/master/README.md#interactive-closing). You can still use the `(backdropClicked)` and `(overlayKeydown)` outputs to catch those events.
+
+### Fixes
+* Popover directionality now works with `dir` set on elements other than `<body>`.
+
+### Other
+* In preparation of support for popovers being anchored and opened via a service, the overlay
+logic has been refactored out of the anchor directive and into another service. This should have
+no impact on the usage of the popover.
+
+
 # 1.0.0-beta.4 rezoned-rhombus
 
 ### Breaking Changes
