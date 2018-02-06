@@ -649,6 +649,16 @@ describe('SatPopover', () => {
       expect(aliasComp.popover.verticalAlign).toBe('end');
     });
 
+    it('should only generate one position when force aligned', () => {
+      comp.forceAlignment = true;
+      fixture.detectChanges();
+
+      comp.popover.open();
+      const overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      const strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      expect(strategy.positions.length).toBe(1, 'only one position');
+    });
+
   });
 
   describe('scrolling', () => {
@@ -847,7 +857,10 @@ export class FocusPopoverTestComponent {
 @Component({
   template: `
     <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p [horizontalAlign]="hAlign" [verticalAlign]="vAlign">
+    <sat-popover #p
+        [horizontalAlign]="hAlign"
+        [verticalAlign]="vAlign"
+        [forceAlignment]="forceAlignment">
       Popover
     </sat-popover>
   `
@@ -857,6 +870,7 @@ export class PositioningTestComponent {
   @ViewChild(SatPopover) popover: SatPopover;
   hAlign = 'center';
   vAlign = 'center';
+  forceAlignment = false;
 }
 
 /** This component is for testing position aliases. */
