@@ -40,6 +40,10 @@ import { Component } from '@angular/core';
           <mat-checkbox [(ngModel)]="forceAlignment">
             forceAlignment
           </mat-checkbox>
+
+          <mat-checkbox [(ngModel)]="lockAlignment">
+            lockAlignment
+          </mat-checkbox>
         </div>
 
         <button mat-raised-button
@@ -55,7 +59,8 @@ import { Component } from '@angular/core';
       <sat-popover #p hasBackdrop
           [horizontalAlign]="horizontalAlign"
           [verticalAlign]="verticalAlign"
-          [forceAlignment]="forceAlignment">
+          [forceAlignment]="forceAlignment"
+          [lockAlignment]="lockAlignment">
         <div class="popover mat-body-2">
           Nifty
         </div>
@@ -70,5 +75,6 @@ export class PositioningDemo {
   verticalAlign = 'center';
   margin = 0;
   forceAlignment = false;
+  lockAlignment = false;
 
 }

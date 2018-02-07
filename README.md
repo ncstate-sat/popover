@@ -107,7 +107,18 @@ with the alignment you've specified.
 
 ```html
 <sat-popover #contactPopover verticalAlign="below" forceAlignment>
-  <!-- ... -->
+  <!-- This will always open below the anchor, even if it falls outside the viewport. -->
+</sat-popover>
+```
+
+Also by default, as the user scrolls or changes the viewport size, the popover will attempt
+to stay within the viewport by using a fallback position (provided `forceAlignment` is not
+set). You can use `lockAlignment` to ensure the popover does not change its alignment once
+opened.
+
+```html
+<sat-popover #contactPopover lockAlignment>
+  <!-- This will open as normal, but not change alignment while open. -->
 </sat-popover>
 ```
 

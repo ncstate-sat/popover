@@ -659,6 +659,24 @@ describe('SatPopover', () => {
       expect(strategy.positions.length).toBe(1, 'only one position');
     });
 
+    it('should lock the position when alignment is locked', fakeAsync(() => {
+      comp.lockAlignment = true;
+      fixture.detectChanges();
+
+      // Open the popover to get a spy on its position strategy
+      comp.popover.open();
+      tick();
+      const overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      const strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      const spy = spyOn(strategy, 'recalculateLastPosition');
+
+      // Emulate scrolling/viewport change by calling apply. Assert the last position
+      // is used whenn doing so.
+      expect(spy).not.toHaveBeenCalled();
+      strategy.apply();
+      expect(spy).toHaveBeenCalled();
+    }));
+
   });
 
   describe('scrolling', () => {
@@ -860,7 +878,8 @@ export class FocusPopoverTestComponent {
     <sat-popover #p
         [horizontalAlign]="hAlign"
         [verticalAlign]="vAlign"
-        [forceAlignment]="forceAlignment">
+        [forceAlignment]="forceAlignment"
+        [lockAlignment]="lockAlignment">
       Popover
     </sat-popover>
   `
@@ -871,6 +890,7 @@ export class PositioningTestComponent {
   hAlign = 'center';
   vAlign = 'center';
   forceAlignment = false;
+  lockAlignment = false;
 }
 
 /** This component is for testing position aliases. */

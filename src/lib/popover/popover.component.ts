@@ -99,6 +99,22 @@ export class SatPopover implements OnInit, OnDestroy {
   }
   private _forceAlignment = false;
 
+  /**
+   * Whether the popover's alignment is locked after opening. This prevents
+   * the popover from changing its alignement when scrolling or changing the
+   * size of the viewport.
+   */
+  @Input()
+  get lockAlignment() { return this._lockAlignment; }
+  set lockAlignment(val: boolean) {
+    const coercedVal = coerceBooleanProperty(val);
+    if (this._lockAlignment !== coercedVal) {
+      this._lockAlignment = coerceBooleanProperty(val);
+      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
+    }
+  }
+  private _lockAlignment = false;
+
   /** Whether the first focusable element should be focused on open. */
   @Input()
   get autoFocus() { return this._autoFocus; }
