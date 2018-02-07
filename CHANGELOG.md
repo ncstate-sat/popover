@@ -1,3 +1,18 @@
+# 1.0.0 popover-panda
+
+The API seems pretty stable, so 1.0.0 it is!
+
+### Features
+* By default, the popover will spin through a couple fallback alignments when the specified one
+does not fit within the viewport. This can be troublesome if your popover requires some cardinal
+relationship with your anchor (e.g. tooltip caret). You can now use `forceAlignment` to ensure
+the alignment you've chosen is the one used.
+* By default, when the user scrolls (or changes the viewport size), the popover will continue
+to use the fallbacks to remain within the viewport. This is potentially distracting, so you can
+now use `lockAlignment` to ensure the popover maintains the same alignment as long as it is open.
+It will be recalculated the next time the popover is opened.
+
+
 # 1.0.0-beta.5 cryptographic-cereal
 
 ### Features
