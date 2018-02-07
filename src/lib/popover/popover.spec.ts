@@ -690,7 +690,7 @@ describe('SatPopover', () => {
       const secondSpy = spyOn(secondStrategy, 'recalculateLastPosition');
 
       // Assert that the strategy is new
-      expect(firstStrategy).not.toBe(secondSpy);
+      expect(firstStrategy).not.toBe(secondStrategy);
 
       // Emulate scrolling agin. Assert the last position is used.
       expect(secondSpy).not.toHaveBeenCalled();
