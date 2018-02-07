@@ -660,21 +660,42 @@ describe('SatPopover', () => {
     });
 
     it('should lock the position when alignment is locked', fakeAsync(() => {
+      fixture.detectChanges();
+
+      // Open the popover to get a spy on its position strategy
+      comp.popover.open();
+      tick();
+      const firstOverlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      const firstStrategy = firstOverlayConfig.positionStrategy as ConnectedPositionStrategy;
+      const firstSpy = spyOn(firstStrategy, 'recalculateLastPosition');
+
+      // Emulate scrolling by calling apply. Assert the last position is not used when doing so.
+      expect(firstSpy).not.toHaveBeenCalled();
+      firstStrategy.apply();
+      expect(firstSpy).not.toHaveBeenCalled();
+
+      // Close the popover and try again with `lockAlignment`
+      comp.popover.close();
+      fixture.detectChanges();
+      tick();
+
       comp.lockAlignment = true;
       fixture.detectChanges();
 
       // Open the popover to get a spy on its position strategy
       comp.popover.open();
       tick();
-      const overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
-      const strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
-      const spy = spyOn(strategy, 'recalculateLastPosition');
+      const secondOverlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      const secondStrategy = secondOverlayConfig.positionStrategy as ConnectedPositionStrategy;
+      const secondSpy = spyOn(secondStrategy, 'recalculateLastPosition');
 
-      // Emulate scrolling/viewport change by calling apply. Assert the last position
-      // is used whenn doing so.
-      expect(spy).not.toHaveBeenCalled();
-      strategy.apply();
-      expect(spy).toHaveBeenCalled();
+      // Assert that the strategy is new
+      expect(firstStrategy).not.toBe(secondSpy);
+
+      // Emulate scrolling agin. Assert the last position is used.
+      expect(secondSpy).not.toHaveBeenCalled();
+      secondStrategy.apply();
+      expect(secondSpy).toHaveBeenCalled();
     }));
 
   });

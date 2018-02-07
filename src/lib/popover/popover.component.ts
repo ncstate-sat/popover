@@ -100,9 +100,8 @@ export class SatPopover implements OnInit, OnDestroy {
   private _forceAlignment = false;
 
   /**
-   * Whether the popover's alignment is locked after opening. This prevents
-   * the popover from changing its alignement when scrolling or changing the
-   * size of the viewport.
+   * Whether the popover's alignment is locked after opening. This prevents the popover
+   * from changing its alignement when scrolling or changing the size of the viewport.
    */
   @Input()
   get lockAlignment() { return this._lockAlignment; }
