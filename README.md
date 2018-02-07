@@ -101,6 +101,16 @@ You can use the following to align the popover around the anchor:
 For convenience, you can also use `xAlign` and `yAlign` as shorthand for `horizontalAlign`
 and `verticalAlign`, respectively.
 
+By default, if the popover cannot fully fit within the viewport, it will use a fallback
+alignment. You can use `forceAlignment` to ensure that the popover always displays
+with the alignment you've specified.
+
+```html
+<sat-popover #contactPopover verticalAlign="below" forceAlignment>
+  <!-- ... -->
+</sat-popover>
+```
+
 ### Opening and closing
 
 You are in full control of when the popover opens and closes. You can hook into any event or

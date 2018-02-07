@@ -87,6 +87,18 @@ export class SatPopover implements OnInit, OnDestroy {
   get yAlign() { return this.verticalAlign; }
   set yAlign(val: SatPopoverVerticalAlign) { this.verticalAlign = val; }
 
+  /** Whether the popover always opens with the specified alignment. */
+  @Input()
+  get forceAlignment() { return this._forceAlignment; }
+  set forceAlignment(val: boolean) {
+    const coercedVal = coerceBooleanProperty(val);
+    if (this._forceAlignment !== coercedVal) {
+      this._forceAlignment = coercedVal;
+      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
+    }
+  }
+  private _forceAlignment = false;
+
   /** Whether the first focusable element should be focused on open. */
   @Input()
   get autoFocus() { return this._autoFocus; }

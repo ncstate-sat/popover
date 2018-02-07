@@ -43,6 +43,7 @@ interface PopoverConfig {
   hasBackdrop: boolean;
   backdropClass: string;
   scrollStrategy: SatPopoverScrollStrategy;
+  forceAlignment: boolean;
 }
 
 @Injectable()
@@ -166,6 +167,7 @@ export class PopoverAnchoringService implements OnDestroy {
         hasBackdrop: this._popover.hasBackdrop,
         backdropClass: this._popover.backdropClass,
         scrollStrategy: this._popover.scrollStrategy,
+        forceAlignment: this._popover.forceAlignment,
       };
 
       const overlayConfig = this._getOverlayConfig(popoverConfig, this._anchor);
@@ -300,6 +302,7 @@ export class PopoverAnchoringService implements OnDestroy {
       positionStrategy: this._getPositionStrategy(
         config.horizontalAlign,
         config.verticalAlign,
+        config.forceAlignment,
         anchor,
       ),
       hasBackdrop: config.hasBackdrop,
@@ -350,7 +353,8 @@ export class PopoverAnchoringService implements OnDestroy {
   private _getPositionStrategy(
     horizontalTarget: SatPopoverHorizontalAlign,
     verticalTarget: SatPopoverVerticalAlign,
-    anchor: ElementRef
+    forceAlignment: boolean,
+    anchor: ElementRef,
   ): ConnectedPositionStrategy {
     // Attach the overlay at the preferred position
     const {originX, overlayX} = getHorizontalConnectionPosPair(horizontalTarget);
@@ -359,8 +363,10 @@ export class PopoverAnchoringService implements OnDestroy {
       .connectedTo(anchor, {originX, originY}, {overlayX, overlayY})
       .withDirection(this._getDirection());
 
-    // Add fallbacks based on the preferred positions
-    this._addFallbacks(strategy, horizontalTarget, verticalTarget);
+    // Unless the alignment is forced, add fallbacks based on the preferred positions
+    if (!forceAlignment) {
+      this._addFallbacks(strategy, horizontalTarget, verticalTarget);
+    }
 
     return strategy;
   }
