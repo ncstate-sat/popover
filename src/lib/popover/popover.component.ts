@@ -18,7 +18,6 @@ import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subject } from 'rxjs';
 
-import { transformPopover } from './popover.animations';
 import {
   NotificationAction,
   PopoverNotification,
@@ -47,7 +46,6 @@ const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 @Component({
   selector: 'sat-popover',
   encapsulation: ViewEncapsulation.None,
-  animations: [transformPopover],
   styleUrls: ['./popover.component.scss'],
   templateUrl: './popover.component.html',
 })

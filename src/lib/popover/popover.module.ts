@@ -6,6 +6,7 @@ import { BidiModule } from '@angular/cdk/bidi';
 
 import { SatPopover } from './popover.component';
 import { SatPopoverAnchor } from './popover-anchor.directive';
+import { TransformSurfaceDirective } from './transform.directive';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { SatPopoverAnchor } from './popover-anchor.directive';
   declarations: [
     SatPopover,
     SatPopoverAnchor,
+    TransformSurfaceDirective,
   ],
   exports: [
     SatPopover,

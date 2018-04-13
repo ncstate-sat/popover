@@ -2,8 +2,8 @@
   <div class="sat-popover-container"
       #focusTrapElement
       [ngClass]="_classList"
-      [@transformPopover]="_getAnimation()"
-      (@transformPopover.done)="_onAnimationDone($event)">
+      [transformSurface]="_getAnimation()"
+      (tranformSurface.done)="_onAnimationDone($event)">
     <ng-content></ng-content>
   </div>
 </ng-template>
