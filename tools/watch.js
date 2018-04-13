@@ -1,4 +1,5 @@
-const { Observable } = require('rxjs');
+const { forkJoin } = require('rxjs');
+const { debounceTime, tap, switchMap } = require('rxjs/operators');
 const chalk = require('chalk');
 const spawn$ = require('./utils/rx-spawn');
 const watch$ = require('./utils/rx-watch');
@@ -7,7 +8,9 @@ const watch$ = require('./utils/rx-watch');
 const log = string => console.log(chalk.blueBright('[watch]: ') + string);
 
 watch$('src/lib', { usePolling: true })
-  .debounceTime(300)
-  .do(() => log('Building lib'))
-  .switchMap(() => Observable.forkJoin(spawn$('node', ['tools/build.js'])))
+  .pipe(
+    debounceTime(300),
+    tap(() => log('Building lib')),
+    switchMap(() => forkJoin(spawn$('node', ['tools/build.js'])))
+  )
   .subscribe(() => log('Build complete'));

@@ -4,7 +4,8 @@
  */
 const { sync } = require('glob');
 const { rollup } = require('rollup');
-const { Observable } = require('rxjs');
+const { forkJoin, from: observableFrom } = require('rxjs');
+const { tap, switchMap } = require('rxjs/operators');
 const { readFileSync, writeFileSync } = require('fs-extra');
 const { join } = require('path');
 const resolve = require('rollup-plugin-node-resolve');
@@ -81,7 +82,7 @@ function rollup$(input, output, format) {
     sourcemap: true,
   };
 
-  return Observable.from(
+  return observableFrom(
     rollup(inputOptions)
       .then(bundle => bundle.write(outputOptions))
   );
@@ -90,55 +91,58 @@ function rollup$(input, output, format) {
 
 /** Build the library and copy over files. */
 function buildLibrary$(globals, versions) {
-  return Observable
-    // Compile to build folder for es2015 and es5
-    .forkJoin(
+  // Compile to build folder for es2015 and es5
+  return forkJoin(
       spawn$(NGC, NGC_ARGS),
       spawn$(NGC, NGC_ARGS_ES5),
     )
-    .do(() => {
-      // Copy styles and markup
-      ['es2015', 'es5']
-        .forEach(dir => copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, dir)));
+    .pipe(
+      tap(() => {
+        // Copy styles and markup
+        ['es2015', 'es5']
+          .forEach(dir => copyFiles(LIB_DIR, '**/*.+(scss|css|html)', join(BUILD_DIR, dir)));
 
-      // Compile sass in build directory
-      sync(join(BUILD_DIR, '**/*.scss')).forEach(path => {
-        const sassString = sass.renderSync({ file: path }).css.toString();
-        const newPath = path.slice(0, -4) + 'css';
-        writeFileSync(newPath, sassString, 'utf-8');
-      });
+        // Compile sass in build directory
+        sync(join(BUILD_DIR, '**/*.scss')).forEach(path => {
+          const sassString = sass.renderSync({ file: path }).css.toString();
+          const newPath = path.slice(0, -4) + 'css';
+          writeFileSync(newPath, sassString, 'utf-8');
+        });
 
-      // Inline resources
-      inlineResources(BUILD_DIR, LIB_DIR);
-    })
-    // Rollup
-    .switchMap(() => Observable.forkJoin(
-      rollup$(join(BUILD_DIR, 'es2015/popover.js'), join(DIST_DIR, '@ncstate/sat-popover.js'), 'es'),
-      rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, '@ncstate/sat-popover.es5.js'), 'es'),
-      rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, 'bundles/sat-popover.umd.js'), 'umd')
-    ))
-    .do(() => {
-      // Minify umd bundle
-      minifySources(
-        join(DIST_DIR, 'bundles/sat-popover.umd.js'),
-        join(DIST_DIR, 'bundles/sat-popover.umd.min.js')
-      );
+        // Inline resources
+        inlineResources(BUILD_DIR, LIB_DIR);
+      }),
+      // Rollup
+      switchMap(() => forkJoin(
+        rollup$(join(BUILD_DIR, 'es2015/popover.js'), join(DIST_DIR, '@ncstate/sat-popover.js'), 'es'),
+        rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, '@ncstate/sat-popover.es5.js'), 'es'),
+        rollup$(join(BUILD_DIR, 'es5/popover.js'), join(DIST_DIR, 'bundles/sat-popover.umd.js'), 'umd')
+      )),
+      tap(() => {
+        // Minify umd bundle
+        minifySources(
+          join(DIST_DIR, 'bundles/sat-popover.umd.js'),
+          join(DIST_DIR, 'bundles/sat-popover.umd.min.js')
+        );
 
-      // Copy typings/metadata/readme to dist directory
-      copyFiles(join(BUILD_DIR, 'es2015'), '**/*.+(d.ts|metadata.json)', DIST_DIR);
-      copyFiles(BASE_DIR, 'README.md', DIST_DIR);
-      copyFiles(LIB_DIR, 'package.json', DIST_DIR);
+        // Copy typings/metadata/readme to dist directory
+        copyFiles(join(BUILD_DIR, 'es2015'), '**/*.+(d.ts|metadata.json)', DIST_DIR);
+        copyFiles(BASE_DIR, 'README.md', DIST_DIR);
+        copyFiles(LIB_DIR, 'package.json', DIST_DIR);
 
-      // Replace package versions and copy to dist directory
-      replacePackageVersions(join(DIST_DIR, 'package.json'), versions);
-      replacePackageProperties(join(DIST_DIR, 'package.json'),
-          ['keywords', 'repository', 'bugs', 'homepage']);
-    });
+        // Replace package versions and copy to dist directory
+        replacePackageVersions(join(DIST_DIR, 'package.json'), versions);
+        replacePackageProperties(join(DIST_DIR, 'package.json'),
+            ['keywords', 'repository', 'bugs', 'homepage']);
+      })
+    );
 }
 
 // Kick it off
 buildLibrary$(GLOBALS, VERSIONS)
-  .switchMap(() => Observable.forkJoin(spawn$('npm', ['run', 'copylib'])))
+  .pipe(
+    switchMap(() => forkJoin(spawn$('npm', ['run', 'copylib'])))
+  )
   .subscribe(
     undefined,
     err => console.error('err', err),

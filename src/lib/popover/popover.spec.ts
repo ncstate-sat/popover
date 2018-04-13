@@ -8,7 +8,7 @@ import {
   BlockScrollStrategy,
 } from '@angular/cdk/overlay';
 import { ESCAPE, A } from '@angular/cdk/keycodes';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 import { SatPopoverModule } from './popover.module';
 import { SatPopover } from './popover.component';
@@ -660,6 +660,11 @@ describe('SatPopover', () => {
     });
 
     it('should lock the position when alignment is locked', fakeAsync(() => {
+      // Note: this test relies on the internal logic of the ConnectedPositionStrategy
+      // and is very brittle. At @angular/cdk@^6.0.0-rc.0, the ConnectedPositionStrategy
+      // internally offloads logic to FlexibleConnectedPositionStrategy. Thus, we use
+      // the `strategy._positionStrategy` to get its internal instance of the FCPS.
+
       fixture.detectChanges();
 
       // Open the popover to get a spy on its position strategy
@@ -667,7 +672,7 @@ describe('SatPopover', () => {
       tick();
       const firstOverlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
       const firstStrategy = firstOverlayConfig.positionStrategy as ConnectedPositionStrategy;
-      const firstSpy = spyOn(firstStrategy, 'recalculateLastPosition');
+      const firstSpy = spyOn(firstStrategy._positionStrategy, 'reapplyLastPosition');
 
       // Emulate scrolling by calling apply. Assert the last position is not used when doing so.
       expect(firstSpy).not.toHaveBeenCalled();
@@ -687,7 +692,7 @@ describe('SatPopover', () => {
       tick();
       const secondOverlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
       const secondStrategy = secondOverlayConfig.positionStrategy as ConnectedPositionStrategy;
-      const secondSpy = spyOn(secondStrategy, 'recalculateLastPosition');
+      const secondSpy = spyOn(secondStrategy._positionStrategy, 'reapplyLastPosition');
 
       // Assert that the strategy is new
       expect(firstStrategy).not.toBe(secondStrategy);

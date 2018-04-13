@@ -43,12 +43,14 @@ System.config({
   baseURL: 'base/.ng_build/spec',
   // Extend usual application package list with test folder
   packages: {
-    rxjs: { defaultExtension: 'js' },
+    'rxjs': {main: 'index'},
+    'rxjs/operators': {main: 'index'},
     '': { defaultExtension: 'js' },
   },
   // Map the angular umd bundles
   map: {
     'rxjs': 'npm:rxjs',
+    'tslib': 'npm:tslib/tslib.js',
     ...getAngularAndTestMappings(),
     ...getCdkMappings()
   }
@@ -80,8 +82,8 @@ function getAngularAndTestMappings() {
   const withTests = [
     'core',
     'common',
+    'common/http',
     'compiler',
-    'http',
     'forms',
     'platform-browser',
     'platform-browser-dynamic',
@@ -94,8 +96,8 @@ function getAngularAndTestMappings() {
   ];
 
   const mappingWithTests = withTests.reduce((mapping, pkg) => {
-    mapping[`@angular/${pkg}`] = `npm:@angular/${pkg}/bundles/${pkg}.umd.js`;
-    mapping[`@angular/${pkg}/testing`] = `npm:@angular/${pkg}/bundles/${pkg}-testing.umd.js`;
+    mapping[`@angular/${pkg}`] = `npm:@angular/${pkg.split('/')[0]}/bundles/${pkg.replace('/', '-')}.umd.js`;
+    mapping[`@angular/${pkg}/testing`] = `npm:@angular/${pkg.split('/')[0]}/bundles/${pkg.replace('/', '-')}-testing.umd.js`;
     return mapping;
   }, {});
 
@@ -111,6 +113,7 @@ function getAngularAndTestMappings() {
 function getCdkMappings() {
   const packages = [
     'a11y',
+    'accordion',
     'bidi',
     'coercion',
     'collections',
@@ -120,11 +123,12 @@ function getCdkMappings() {
     'overlay',
     'platform',
     'portal',
-    'rxjs',
     'scrolling',
     'stepper',
     'table',
     'testing',
+    'text-field',
+    'tree'
   ];
 
   return packages.reduce((mapping, pkg) => {

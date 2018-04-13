@@ -8,10 +8,8 @@ import {
   Output,
   ViewContainerRef
 } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { merge } from 'rxjs/observable/merge';
-import { tap } from 'rxjs/operators/tap';
-import { takeUntil } from 'rxjs/operators/takeUntil';
+import { Subject, merge } from 'rxjs';
+import { tap, takeUntil } from 'rxjs/operators';
 
 import { SatPopover } from './popover.component';
 import { getInvalidPopoverError } from './popover.errors';
