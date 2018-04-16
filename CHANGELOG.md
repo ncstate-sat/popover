@@ -1,3 +1,10 @@
+# 2.0.0-beta.0 unanimous-uniform
+
+### Breaking Changes
+Peer dependencies of `@angular/{core,common,cdk}` are now set to `>=6.0.0-rc.0 <7.0.0`. These will be
+updated to `^6.0.0` in the popover's `2.0.0` release.
+
+
 # 1.0.0 popover-panda
 
 The API seems pretty stable, so 1.0.0 it is!
