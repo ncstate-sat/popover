@@ -1,11 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SatPopover } from '@ncstate/sat-popover';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/observable/of';
+import { Subject, of } from 'rxjs';
+import { switchMap, takeUntil, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'demo-tooltip',
@@ -52,7 +48,9 @@ export class TooltipDemo implements AfterViewInit {
 
   ngAfterViewInit() {
     this.enter
-      .switchMap(() => Observable.of(null).delay(1000).takeUntil(this.leave))
+      .pipe(
+        switchMap(() => of(null).pipe(delay(1000), takeUntil(this.leave)))
+      )
       .subscribe(() => this.delayed.open());
 
     this.leave.subscribe(() => this.delayed.close());

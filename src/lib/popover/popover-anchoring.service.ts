@@ -18,12 +18,8 @@ import {
 import { Directionality, Direction} from '@angular/cdk/bidi';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
-import { takeUntil } from 'rxjs/operators/takeUntil';
-import { take } from 'rxjs/operators/take';
-import { filter } from 'rxjs/operators/filter';
-import { tap } from 'rxjs/operators/tap';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil, take, filter, tap } from 'rxjs/operators';
 
 import {
   SatPopover,

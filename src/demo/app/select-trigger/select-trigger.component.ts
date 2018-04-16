@@ -10,7 +10,7 @@ import { SatPopover } from '@ncstate/sat-popover';
       <mat-card-content>
         <mat-form-field [satPopoverAnchorFor]="p">
           <mat-select placeholder="Select 'Fancy'"
-              (change)="updateSelectValue($event.value)">
+              (selectionChange)="updateSelectValue($event.value)">
             <mat-option value="boring">Boring</mat-option>
             <mat-option value="standard">Standard</mat-option>
             <mat-option value="fancy">Fancy</mat-option>

@@ -1,10 +1,8 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { SatPopover } from '@ncstate/sat-popover';
-import { Subject } from 'rxjs/Subject';
-import { merge } from 'rxjs/observable/merge';
-import { filter } from 'rxjs/operators/filter';
-import { takeUntil } from 'rxjs/operators/takeUntil';
+import { Subject, merge } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'demo-interactive-close',
