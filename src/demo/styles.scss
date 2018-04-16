@@ -7,6 +7,8 @@ $ncstate-warn:    mat-palette($mat-deep-orange);
 
 $ncstate-theme: mat-light-theme($ncstate-primary, $ncstate-accent, $ncstate-warn);
 
+$gradient-opacity: 0.48;
+
 @include mat-core();
 @include angular-material-theme($ncstate-theme);
 
@@ -16,9 +18,17 @@ html, body {
 }
 
 .demo-background-rainbow {
-  background: linear-gradient(to right, orange , yellow, green, cyan, blue, violet);
+  background: linear-gradient(
+    to right,
+    rgba(255, 165, 0, $gradient-opacity),
+    rgba(255, 255, 0, $gradient-opacity),
+    rgba(0, 128, 0, $gradient-opacity),
+    rgba(0, 255, 255, $gradient-opacity),
+    rgba(0, 0, 255, $gradient-opacity),
+    rgba(238, 130, 238, $gradient-opacity)
+  );
 }
 
 .demo-background-dark {
-  background: black;
+  background: rgba(0, 0, 0, 0.6);
 }
