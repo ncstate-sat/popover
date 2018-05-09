@@ -1,3 +1,17 @@
+# 2.0.0 linchpin-luncheon
+
+### Breaking Changes
+Peer dependencies of `@angular/{core,common,cdk}` are now set to `^6.0.0`.
+
+### Fixes
+* RxJS and CDK rollup globals have been fixed for ng 6 update (thank you @aitboudad!)
+
+### Other
+* Internally use the FlexibleConnectedPositionStrategy for connected positioning. This uses the
+same logic as the ConnectedPositionStrategy did previously, so it should not break or change
+any behavior.
+
+
 # 2.0.0-beta.0 unanimous-uniform
 
 ### Breaking Changes
