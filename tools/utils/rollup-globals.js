@@ -6,6 +6,7 @@ const GLOBALS = {
   '@angular/platform-browser': 'ng.platformBrowser',
 
   // cdk globals
+  '@angular/cdk/bidi': 'ng.cdk.bidi',
   '@angular/cdk/a11y': 'ng.cdk.a11y',
   '@angular/cdk/coercion': 'ng.cdk.coercion',
   '@angular/cdk/keycodes': 'ng.cdk.keycodes',
@@ -13,14 +14,8 @@ const GLOBALS = {
   '@angular/cdk/portal': 'ng.cdk.portal',
 
   // rxjs globals
-  'rxjs/Subject': 'Rx',
-  'rxjs/Observable': 'Rx',
-  'rxjs/observable/merge': 'Rx.Observable',
-  'rxjs/operators/take': 'Rx.operators',
-  'rxjs/operators/tap': 'Rx.operators',
-  'rxjs/operators/filter': 'Rx.operators',
-  'rxjs/operators/takeUntil': 'Rx.operators',
-  'rxjs/operators/switchMap': 'Rx.operators',
+  'rxjs': 'Rx',
+  'rxjs/operators': 'Rx.operators',
 };
 
 module.exports = GLOBALS;
