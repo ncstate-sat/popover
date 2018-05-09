@@ -2,10 +2,12 @@ import { ElementRef, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  OverlayContainer,
-  ConnectedPositionStrategy,
-  RepositionScrollStrategy,
   BlockScrollStrategy,
+  FlexibleConnectedPositionStrategy,
+  OverlayConfig,
+  OverlayContainer,
+  RepositionScrollStrategy,
+  ScrollStrategy,
 } from '@angular/cdk/overlay';
 import { ESCAPE, A } from '@angular/cdk/keycodes';
 import { Subject } from 'rxjs';
@@ -575,14 +577,14 @@ describe('SatPopover', () => {
     }));
 
     it('should generate the correct number of positions', fakeAsync(() => {
-      let strategy;
-      let overlayConfig;
+      let strategy: FlexibleConnectedPositionStrategy;
+      let overlayConfig: OverlayConfig;
       fixture.detectChanges();
 
       // centered over anchor can be any of 5 x 5 positions
       comp.popover.open();
       overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
-      strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      strategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(25, 'overlapping');
 
       comp.popover.close();
@@ -596,7 +598,7 @@ describe('SatPopover', () => {
 
       comp.popover.open();
       overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
-      strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      strategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(4, 'non-overlapping');
 
       comp.popover.close();
@@ -610,7 +612,7 @@ describe('SatPopover', () => {
 
       comp.popover.open();
       overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
-      strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      strategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(10, 'overlapping in one dimension');
     }));
 
@@ -655,24 +657,22 @@ describe('SatPopover', () => {
 
       comp.popover.open();
       const overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
-      const strategy = overlayConfig.positionStrategy as ConnectedPositionStrategy;
+      const strategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(1, 'only one position');
     });
 
     it('should lock the position when alignment is locked', fakeAsync(() => {
-      // Note: this test relies on the internal logic of the ConnectedPositionStrategy
-      // and is very brittle. At @angular/cdk@^6.0.0-rc.0, the ConnectedPositionStrategy
-      // internally offloads logic to FlexibleConnectedPositionStrategy. Thus, we use
-      // the `strategy._positionStrategy` to get its internal instance of the FCPS.
-
+      // Note: this test relies on the internal logic of the FlexibleConnectedPositionStrategy
+      // and is very brittle.
       fixture.detectChanges();
 
       // Open the popover to get a spy on its position strategy
       comp.popover.open();
       tick();
       const firstOverlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
-      const firstStrategy = firstOverlayConfig.positionStrategy as ConnectedPositionStrategy;
-      const firstSpy = spyOn(firstStrategy._positionStrategy, 'reapplyLastPosition');
+      const firstStrategy =
+          firstOverlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
+      const firstSpy = spyOn(firstStrategy, 'reapplyLastPosition');
 
       // Emulate scrolling by calling apply. Assert the last position is not used when doing so.
       expect(firstSpy).not.toHaveBeenCalled();
@@ -691,8 +691,9 @@ describe('SatPopover', () => {
       comp.popover.open();
       tick();
       const secondOverlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
-      const secondStrategy = secondOverlayConfig.positionStrategy as ConnectedPositionStrategy;
-      const secondSpy = spyOn(secondStrategy._positionStrategy, 'reapplyLastPosition');
+      const secondStrategy =
+          secondOverlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
+      const secondSpy = spyOn(secondStrategy, 'reapplyLastPosition');
 
       // Assert that the strategy is new
       expect(firstStrategy).not.toBe(secondStrategy);
@@ -734,7 +735,7 @@ describe('SatPopover', () => {
     });
 
     it('should allow changing the strategy dynamically', fakeAsync(() => {
-      let strategy;
+      let strategy: ScrollStrategy;
       fixture.detectChanges();
       comp.popover.open();
 
@@ -754,7 +755,7 @@ describe('SatPopover', () => {
     }));
 
     it('should wait until the popover is closed to update the strategy', fakeAsync(() => {
-      let strategy;
+      let strategy: ScrollStrategy;
       fixture.detectChanges();
       comp.popover.open();
 

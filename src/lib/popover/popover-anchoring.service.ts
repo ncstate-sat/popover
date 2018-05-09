@@ -7,11 +7,12 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {
-  ConnectedPositionStrategy,
+  ConnectionPositionPair,
+  FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
   Overlay,
-  OverlayRef,
   OverlayConfig,
+  OverlayRef,
   ScrollStrategy,
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
@@ -170,7 +171,9 @@ export class PopoverAnchoringService implements OnDestroy {
 
       const overlayConfig = this._getOverlayConfig(popoverConfig, this._anchor);
 
-      this._subscribeToPositionChanges(overlayConfig.positionStrategy as ConnectedPositionStrategy);
+      this._subscribeToPositionChanges(
+        overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy
+      );
 
       this._overlayRef = this._overlay.create(overlayConfig);
     }
@@ -315,12 +318,12 @@ export class PopoverAnchoringService implements OnDestroy {
    * Listen to changes in the position of the overlay and set the correct alignment classes,
    * ensuring that the animation origin is correct, even with a fallback position.
    */
-  private _subscribeToPositionChanges(position: ConnectedPositionStrategy): void {
+  private _subscribeToPositionChanges(position: FlexibleConnectedPositionStrategy): void {
     if (this._positionChangeSubscription) {
       this._positionChangeSubscription.unsubscribe();
     }
 
-    this._positionChangeSubscription = position.onPositionChange
+    this._positionChangeSubscription = position.positionChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(change => {
         // Position changes may occur outside the Angular zone
@@ -355,66 +358,69 @@ export class PopoverAnchoringService implements OnDestroy {
     forceAlignment: boolean,
     lockAlignment: boolean,
     anchor: ElementRef,
-  ): ConnectedPositionStrategy {
+  ): FlexibleConnectedPositionStrategy {
     // Attach the overlay at the preferred position
-    const {originX, overlayX} = getHorizontalConnectionPosPair(horizontalTarget);
-    const {originY, overlayY} = getVerticalConnectionPosPair(verticalTarget);
+    const targetPosition = getPosition(horizontalTarget, verticalTarget);
+    const positions = [targetPosition];
+
     const strategy = this._overlay.position()
-      .connectedTo(anchor, {originX, originY}, {overlayX, overlayY})
-      .withDirection(this._getDirection())
+      .flexibleConnectedTo(anchor)
+      .withFlexibleDimensions(false)
+      .withPush(false)
+      .withViewportMargin(0)
       .withLockedPosition(lockAlignment);
 
     // Unless the alignment is forced, add fallbacks based on the preferred positions
     if (!forceAlignment) {
-      this._addFallbacks(strategy, horizontalTarget, verticalTarget);
+      const fallbacks = this._getFallbacks(horizontalTarget, verticalTarget);
+      positions.push(...fallbacks);
     }
 
-    return strategy;
+    return strategy.withPositions(positions);
   }
 
-  /** Add fallbacks to a given strategy based around target alignments. */
-  private _addFallbacks(
-    strategy: ConnectedPositionStrategy,
+  /** Get fallback positions based around target alignments. */
+  private _getFallbacks(
     hTarget: SatPopoverHorizontalAlign,
     vTarget: SatPopoverVerticalAlign
-  ): void {
+  ): ConnectionPositionPair[] {
     // Determine if the target alignments overlap the anchor
     const horizontalOverlapAllowed = hTarget !== 'before' && hTarget !== 'after';
     const verticalOverlapAllowed = vTarget !== 'above' && vTarget !== 'below';
 
     // If a target alignment doesn't cover the anchor, don't let any of the fallback alignments
     // cover the anchor
-    const possibleHorizontalAlignments = horizontalOverlapAllowed ?
-      ['before', 'start', 'center', 'end', 'after'] :
-      ['before', 'after'];
-    const possibleVerticalAlignments = verticalOverlapAllowed ?
-      ['above', 'start', 'center', 'end', 'below'] :
-      ['above', 'below'];
+    const possibleHorizontalAlignments: SatPopoverHorizontalAlign[] =
+      horizontalOverlapAllowed ?
+        ['before', 'start', 'center', 'end', 'after'] :
+        ['before', 'after'];
+    const possibleVerticalAlignments: SatPopoverVerticalAlign[] =
+      verticalOverlapAllowed ?
+        ['above', 'start', 'center', 'end', 'below'] :
+        ['above', 'below'];
 
     // Create fallbacks for each allowed prioritized fallback alignment combo
-    const fallbacks = [];
+    const fallbacks: ConnectionPositionPair[] = [];
     prioritizeAroundTarget(hTarget, possibleHorizontalAlignments).forEach(h => {
       prioritizeAroundTarget(vTarget, possibleVerticalAlignments).forEach(v => {
-        fallbacks.push({h, v});
+        fallbacks.push(getPosition(h, v));
       });
     });
 
-    // Remove the first fallback since it will be the target alignment that is already applied
-    fallbacks.slice(1, fallbacks.length)
-      .forEach(({h, v}) => this._applyFallback(strategy, h, v));
+    // Remove the first item since it will be the target alignment and isn't considered a fallback
+    return fallbacks.slice(1, fallbacks.length);
   }
 
-  /**
-  * Convert a specific horizontal and vertical alignment into a fallback and apply it to
-  * the strategy.
-  */
-  private _applyFallback(strategy, horizontalAlign, verticalAlign): void {
-    const {originX, overlayX} = getHorizontalConnectionPosPair(horizontalAlign);
-    const {originY, overlayY} = getVerticalConnectionPosPair(verticalAlign);
-    strategy.withFallbackPosition({originX, originY}, {overlayX, overlayY});
-  }
+}
 
-
+/** Helper function to get a cdk position pair from SatPopover alignments. */
+function getPosition(
+  h: SatPopoverHorizontalAlign,
+  v: SatPopoverVerticalAlign,
+): ConnectionPositionPair {
+  const {originX, overlayX} = getHorizontalConnectionPosPair(h);
+  const {originY, overlayY} = getVerticalConnectionPosPair(v);
+  return new ConnectionPositionPair({originX, originY}, {overlayX, overlayY});
 }
 
 /** Helper function to convert an overlay connection position to equivalent popover alignment. */
