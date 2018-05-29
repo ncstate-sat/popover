@@ -201,7 +201,7 @@ If used, the default backdrop will be transparent. You can add any custom backdr
 keep in mind that a backdrop will block pointer events once it is open, immediately triggering
 a `mouseleave` event.
 
-### Interactive Closing
+### Interactive closing
 
 If your popover has a backdrop, it will automatically close when clicked. The popover will also
 automatically close when <kbd>esc</kbd> is pressed. These two behaviors are wrapped in the

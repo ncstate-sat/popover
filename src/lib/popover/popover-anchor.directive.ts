@@ -13,12 +13,12 @@ import { tap, takeUntil } from 'rxjs/operators';
 
 import { SatPopover } from './popover.component';
 import { getInvalidPopoverError } from './popover.errors';
-import { PopoverAnchoringService } from './popover-anchoring.service';
+import { SatPopoverAnchoringService } from './popover-anchoring.service';
 
 @Directive({
   selector: '[satPopoverAnchorFor]',
   exportAs: 'satPopoverAnchor',
-  providers: [PopoverAnchoringService],
+  providers: [SatPopoverAnchoringService],
 })
 export class SatPopoverAnchor implements OnInit, OnDestroy {
 
@@ -50,7 +50,7 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   constructor(
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef,
-    public _anchoring: PopoverAnchoringService,
+    public _anchoring: SatPopoverAnchoringService,
   ) { }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import { ElementRef, Component, ViewChild } from '@angular/core';
+import { ElementRef, Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { SatPopoverModule } from './popover.module';
 import { SatPopover } from './popover.component';
 import { SatPopoverAnchor } from './popover-anchor.directive';
+import { SatPopoverAnchoringService } from './popover-anchoring.service';
 import {
   getInvalidPopoverError,
   getUnanchoredPopoverError,
@@ -797,6 +798,63 @@ describe('SatPopover', () => {
     });
   });
 
+  describe('anchoring service', () => {
+    let fixture: ComponentFixture<ServiceTestComponent>;
+    let comp:    ServiceTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SatPopoverModule,
+          NoopAnimationsModule,
+        ],
+        declarations: [ServiceTestComponent],
+        providers: [
+          {provide: OverlayContainer, useFactory: overlayContainerFactory}
+        ]
+      });
+
+      fixture = TestBed.createComponent(ServiceTestComponent);
+      comp = fixture.componentInstance;
+
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+        .getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    it('should throw an error if never anchored', () => {
+      // should not throw just by initializing
+      expect(() => {
+        fixture.detectChanges();
+      }).not.toThrowError();
+
+      // should throw if trying to open
+      expect(() => {
+        comp.popover.open();
+      }).toThrow(getUnanchoredPopoverError());
+    });
+
+    it('should open via popover api after being anchored', () => {
+      comp.anchoring.anchor(comp.popover, comp.container, comp.customAnchor);
+      fixture.detectChanges();
+      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
+      comp.popover.open();
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
+    });
+
+    it('should open via service api after being anchored', () => {
+      comp.anchoring.anchor(comp.popover, comp.container, comp.customAnchor);
+      fixture.detectChanges();
+      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
+      comp.anchoring.openPopover();
+      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
+    });
+  });
+
 });
 
 /**
@@ -949,6 +1007,24 @@ export class ScrollingTestComponent {
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
   @ViewChild(SatPopover) popover: SatPopover;
   strategy = 'reposition';
+}
+
+/** This component is for testing the isolated anchoring service. */
+@Component({
+  template: `
+    <div #customAnchor>Anchor</div>
+    <sat-popover #p>Popover</sat-popover>
+  `,
+  providers: [SatPopoverAnchoringService]
+})
+export class ServiceTestComponent {
+  @ViewChild('customAnchor') customAnchor: ElementRef;
+  @ViewChild(SatPopover) popover: SatPopover;
+
+  constructor(
+    public anchoring: SatPopoverAnchoringService,
+    public container: ViewContainerRef,
+  ) {}
 }
 
 /** This factory function provides an overlay container under test control. */
