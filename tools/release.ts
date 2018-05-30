@@ -5,6 +5,8 @@
 // 4. `git checkout master && git pull origin master``
 // 5. Make sure everything is 👌
 // 6. Run this script via `npm run release`
+// 7. Build and publish the demo app `npm run build:demo && npm run gh-pages`
+// 8. Update all the official StackBlitz demos
 
 import * as childProcess from 'child_process';
 import * as util from 'util';
