@@ -1,5 +1,5 @@
 // relative from the .ng_bulid temp directory
-@import '../../../node_modules/@angular/material/theming';
+@import '~@angular/cdk/_overlay';
 
 // Include overlay styles
 @include cdk-overlay();

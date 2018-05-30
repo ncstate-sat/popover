@@ -1,31 +1,68 @@
 {
-  "$schema": "./node_modules/@angular-devkit/core/src/workspace/workspace-schema.json",
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
+  "defaultProject": "popover",
   "projects": {
-    "sat-popover": {
-      "root": "",
+    "popover": {
+      "root": "src/lib",
+      "sourceRoot": "src/lib/popover",
+      "projectType": "library",
+      "prefix": "sat",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "src/lib/tsconfig.lib.json",
+            "project": "src/lib/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "src/lib/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/lib/test.ts",
+            "tsConfig": "src/lib/tsconfig.spec.json",
+            "karmaConfig": "src/lib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/lib/tsconfig.lib.json",
+              "src/lib/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "**/*.spec.ts"
+            ]
+          }
+        }
+      }
+    },
+    "demo": {
+      "root": "src/demo",
+      "sourceRoot": "src/demo",
       "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/app",
+            "outputPath": "dist/demo",
             "index": "src/demo/index.html",
             "main": "src/demo/main.ts",
-            "tsConfig": "src/demo/tsconfig.app.json",
             "polyfills": "src/demo/polyfills.ts",
+            "tsConfig": "src/demo/tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/demo/assets",
-                "output": "/assets"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src/demo",
-                "output": "/"
-              }
+              "src/demo/favicon.ico",
+              "src/demo/assets"
             ],
             "styles": [
               "src/demo/styles.scss"
@@ -34,6 +71,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/demo/environments/environment.ts",
+                  "with": "src/demo/environments/environment.prod.ts"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -42,55 +85,41 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/demo/environments/environment.ts",
-                  "with": "src/demo/environments/environment.prod.ts"
-                }
-              ]
+              "buildOptimizer": true
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "sat-popover:build"
+            "browserTarget": "demo:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "sat-popover:build:production"
+              "browserTarget": "demo:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sat-popover:build"
+            "browserTarget": "demo:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/demo/test.ts",
-            "karmaConfig": "./karma.conf.js",
             "polyfills": "src/demo/polyfills.ts",
             "tsConfig": "src/demo/tsconfig.spec.json",
-            "scripts": [],
+            "karmaConfig": "src/demo/karma.conf.js",
             "styles": [
-              "src/demo/styles.scss"
+              "styles.scss"
             ],
+            "scripts": [],
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/demo/assets",
-                "output": "/assets"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src/demo",
-                "output": "/"
-              }
+              "src/demo/favicon.ico",
+              "src/demo/assets"
             ]
           }
         },
@@ -99,22 +128,14 @@
           "options": {
             "tsConfig": [
               "src/demo/tsconfig.app.json",
-              "./tsconfig.json"
+              "src/demo/tsconfig.spec.json"
             ],
-            "exclude": []
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
-    }
-  },
-  "cli": {},
-  "schematics": {
-    "@schematics/angular:component": {
-      "prefix": "demo",
-      "styleext": "scss"
-    },
-    "@schematics/angular:directive": {
-      "prefix": "demo"
     }
   }
 }

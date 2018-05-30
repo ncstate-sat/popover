@@ -39,11 +39,6 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   /** Emits when the popover is closed. */
   @Output() popoverClosed = new EventEmitter<any>();
 
-  /** Gets whether the popover is presently open. */
-  isPopoverOpen(): boolean {
-    return this._anchoring.isPopoverOpen();
-  }
-
   /** Emits when the directive is destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -65,6 +60,11 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
+  }
+
+  /** Gets whether the popover is presently open. */
+  isPopoverOpen(): boolean {
+    return this._anchoring.isPopoverOpen();
   }
 
   /** Toggles the popover between the open and closed states. */
