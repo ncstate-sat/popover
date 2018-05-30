@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'sat-demo',
+  selector: 'demo-root',
   styleUrls: ['./demo.component.scss'],
   host: { 'class': 'mat-app-background' },
   template: `
