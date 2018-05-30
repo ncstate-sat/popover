@@ -1,10 +1,12 @@
 import chalk from 'chalk';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, copyFileSync } from 'fs';
 import {
   DIST_PACKAGE_PATH,
   SOURCE_PACKAGE_PATH,
   PEER_DEPENDENCIES,
-  PACKAGE_PROPERTIES
+  PACKAGE_PROPERTIES,
+  DIST_README_PATH,
+  SOURCE_README_PATH
 } from './constants';
 
 interface PackageData {
@@ -39,10 +41,21 @@ function replaceDistData(properties: { [key: string]: any }): void {
 }
 
 /** Replace values from the src package to the dist. */
-function replace(): void {
-  console.log(chalk.cyan('Overwriting package.json properties'));
-  const { version, dependencies, properties } = getSourceData(PEER_DEPENDENCIES, PACKAGE_PROPERTIES);
-  return replaceDistData({ version, peerDependencies: dependencies, ...properties });
+function replacePackageValues(): void {
+  console.log(chalk.cyan('Overwriting package.json properties in dist'));
+  const src = getSourceData(PEER_DEPENDENCIES, PACKAGE_PROPERTIES);
+  return replaceDistData({
+    version: src.version,
+    peerDependencies: src.dependencies,
+    ...src.properties
+  });
 }
 
-replace();
+/** Copy README to dist. */
+function copyReadme(): void {
+  console.log(chalk.cyan('Copying README.md to dist package'));
+  return copyFileSync(SOURCE_README_PATH, DIST_README_PATH);
+}
+
+replacePackageValues();
+copyReadme();

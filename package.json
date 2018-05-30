@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "demo": "ng serve demo",
-    "build": "ng build popover && ts-node tools/copy-package.ts",
+    "build": "ng build popover && ts-node tools/prepare-package.ts",
     "build:demo": "ng build demo --prod --base-href=\"/popover/\"",
     "gh-pages": "ngh --dir dist/demo",
     "lint": "ng lint popover --type-check",
