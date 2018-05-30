@@ -1,3 +1,10 @@
+# 2.1.1 daybreak-cheesecake
+
+### Other
+* Copy README to published package so it shows up on npm
+* Add current version number to the demo/development app
+
+
 # 2.1.0 refactor-benefactor
 
 ### Features
