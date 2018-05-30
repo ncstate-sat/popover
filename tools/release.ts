@@ -7,6 +7,7 @@
 // 6. Run this script via `npm run release`
 // 7. Build and publish the demo app `npm run build:demo && npm run gh-pages`
 // 8. Update all the official StackBlitz demos
+// 9. Edit release on Github
 
 import * as childProcess from 'child_process';
 import * as util from 'util';
@@ -22,8 +23,13 @@ async function gitTags() {
   const { stdout: tag } = await exec(`git tag v${version}`);
   const { stdout: push } = await exec(`git push --tags`);
 
-  console.log(chalk.gray(tag));
-  console.log(chalk.gray(push));
+  if (tag) {
+    console.log(chalk.gray(tag));
+  }
+
+  if (push) {
+    console.log(chalk.gray(push));
+  }
 }
 
 async function libBuild() {
@@ -41,8 +47,8 @@ async function publish() {
 }
 
 async function release() {
-  await gitTags();
   await libBuild();
+  await gitTags();
   await publish();
 }
 
