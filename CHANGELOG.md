@@ -1,3 +1,16 @@
+# 2.1.0 refactor-benefactor
+
+### Features
+* `SatPopoverAnchoringService` is now exposed as part of the public api. This allows you to
+build your own directives and services to anchor popovers to any element. An easier-to-use
+service is forthcoming.
+
+### Other
+* Internally use the `@angular/cli` for the build/test toolchain. This thankfully gets rid of
+a bunch of the hokey build scripts and will ease future development. There should be no
+change from the end-user's perspective.
+
+
 # 2.0.0 linchpin-luncheon
 
 ### Breaking Changes
