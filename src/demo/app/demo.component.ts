@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'demo-root',
@@ -7,7 +8,7 @@ import { Component } from '@angular/core';
   template: `
     <mat-toolbar color="primary" class="mat-elevation-z2">
       <a class="repo-link mat-title" href="https://github.com/ncstate-sat/popover">
-        @ncstate/sat-popover
+        @ncstate/sat-popover <span class="version mat-body-2">{{ version }}</span>
       </a>
       <button mat-button
           title="Toggle all content"
@@ -38,4 +39,5 @@ import { Component } from '@angular/core';
 export class DemoComponent {
   direction = 'ltr';
   showContent = true;
+  version = environment.version;
 }
