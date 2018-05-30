@@ -22,12 +22,13 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil, take, filter, tap } from 'rxjs/operators';
 
+import { SatPopover } from './popover.component';
 import {
-  SatPopover,
   SatPopoverHorizontalAlign,
   SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
-} from './popover.component';
+} from './types';
+
 import { PopoverNotificationService, NotificationAction } from './notification.service';
 
 /**

@@ -1,4 +1,4 @@
-import { VALID_HORIZ_ALIGN, VALID_VERT_ALIGN, VALID_SCROLL } from './popover.component';
+import { VALID_HORIZ_ALIGN, VALID_VERT_ALIGN, VALID_SCROLL } from './types';
 
 export function getInvalidPopoverError(): Error {
   return Error('SatPopoverAnchor must be provided an SatPopover component instance.');
