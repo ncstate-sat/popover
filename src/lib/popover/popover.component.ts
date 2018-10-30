@@ -16,7 +16,6 @@ import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Subject } from 'rxjs';
 
 import { transformPopover } from './popover.animations';
 import {
