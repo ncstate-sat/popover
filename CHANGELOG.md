@@ -1,3 +1,12 @@
+# 3.0.0 reliance-compliance
+
+### Breaking Changes
+Peer dependencies of `@angular/{core,common,cdk}` are now set to `^7.0.0`.
+
+### Other
+* Build library before tagging release
+
+
 # 2.1.1 daybreak-cheesecake
 
 ### Other
