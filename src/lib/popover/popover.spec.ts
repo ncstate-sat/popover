@@ -10,7 +10,6 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import { ESCAPE, A } from '@angular/cdk/keycodes';
-import { Subject } from 'rxjs';
 
 import { SatPopoverModule } from './popover.module';
 import { SatPopover } from './popover.component';
