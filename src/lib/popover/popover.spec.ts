@@ -258,6 +258,11 @@ describe('SatPopover', () => {
       expect(comp.popover.isOpen()).toBe(false, 'Finally closed - popover');
     }));
 
+    it('should provide a reference to the anchor element', fakeAsync(() => {
+      fixture.detectChanges();
+      expect(comp.anchor.getElement()).toEqual(comp.anchorElement);
+    }));
+
   });
 
   describe('backdrop', () => {
@@ -852,6 +857,11 @@ describe('SatPopover', () => {
       comp.anchoring.openPopover();
       expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
     });
+
+    it('should get the anchor elementRef', () => {
+      comp.anchoring.anchor(comp.popover, comp.container, comp.customAnchor);
+      expect(comp.anchoring.getAnchorElement()).toEqual(comp.customAnchor);
+    });
   });
 
 });
@@ -888,11 +898,12 @@ class AnchorlessPopoverTestComponent {
  */
 @Component({
   template: `
-    <div [satPopoverAnchorFor]="p">Anchor</div>
+    <div #anchorEl [satPopoverAnchorFor]="p">Anchor</div>
     <sat-popover #p>Popover</sat-popover>
   `
 })
 class SimplePopoverTestComponent {
+  @ViewChild('anchorEl') anchorElement: ElementRef;
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
   @ViewChild(SatPopover) popover: SatPopover;
 }
