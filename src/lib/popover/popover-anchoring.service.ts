@@ -154,6 +154,11 @@ export class SatPopoverAnchoringService implements OnDestroy {
     }
   }
 
+  /** Get a reference to the anchor element. */
+  getAnchorElement(): ElementRef {
+    return this._anchor;
+  }
+
   /** Create an overlay to be attached to the portal. */
   private _createOverlay(): OverlayRef {
     // Create overlay if it doesn't yet exist
