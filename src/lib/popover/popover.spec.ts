@@ -729,17 +729,17 @@ describe('SatPopover', () => {
       );
 
       // Expect popover to be centered over anchor
-      expect(centerOfAnchor()).toBe(centerOfPopover());
+      expect(centerOfAnchor()).toBe(centerOfPopover(), 'Centered over anchor');
 
       // Move anchor and expect center of popover to no longer be center of anchor
       anchorEl.style.left = '100px';
       fixture.detectChanges();
-      expect(centerOfAnchor()).toBe(centerOfPopover() + 50);
+      expect(centerOfAnchor()).toBe(centerOfPopover() + 50, 'No longer centered over anchor');
 
       // Realign popover and expect center of popover to now be center of anchor
       comp.popover.realign();
       fixture.detectChanges();
-      expect(centerOfAnchor()).toBe(centerOfPopover());
+      expect(centerOfAnchor()).toBe(centerOfPopover(), 'Centered again after realign');
     }));
   });
 

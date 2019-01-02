@@ -155,7 +155,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Realign the popover to the anchor. */
-  realignToAnchor(): void {
+  realignPopoverToAnchor(): void {
     if (this._overlayRef) {
       const config = this._overlayRef.getConfig();
       const strategy = config.positionStrategy as FlexibleConnectedPositionStrategy;
@@ -249,7 +249,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
             this._destroyPopoverOnceClosed();
             break;
           case NotificationAction.REALIGN:
-            this.realignToAnchor();
+            this.realignPopoverToAnchor();
             break;
         }
       });
