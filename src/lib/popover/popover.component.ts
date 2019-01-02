@@ -36,6 +36,7 @@ import {
   VALID_SCROLL,
   VALID_HORIZ_ALIGN,
   VALID_VERT_ALIGN,
+  SatPopoverOpenOptions,
 } from './types';
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
@@ -118,6 +119,15 @@ export class SatPopover implements OnInit, OnDestroy {
     this._autoFocus = coerceBooleanProperty(val);
   }
   private _autoFocus = true;
+
+ /** Whether the popover should return focus to the previously focused element after closing. */
+ @Input()
+  get restoreFocus() { return this._restoreFocus && this._restoreFocusOverride; }
+  set restoreFocus(val: boolean) {
+    this._restoreFocus = coerceBooleanProperty(val);
+  }
+  private _restoreFocus = true;
+  _restoreFocusOverride = true;
 
   /** How the popover should handle scrolling. */
   @Input()
@@ -226,8 +236,8 @@ export class SatPopover implements OnInit, OnDestroy {
   }
 
   /** Open this popover. */
-  open(): void {
-    const notification = new PopoverNotification(NotificationAction.OPEN);
+  open(options: SatPopoverOpenOptions = {}): void {
+    const notification = new PopoverNotification(NotificationAction.OPEN, options);
     this._dispatchActionNotification(notification);
   }
 
@@ -268,7 +278,7 @@ export class SatPopover implements OnInit, OnDestroy {
       this._trapFocus();
       this.afterOpen.emit();
     } else if (event.toState === 'void') {
-      this._restoreFocus();
+      this._restoreFocusAndDestroyTrap();
       this.afterClose.emit();
     }
   }
@@ -303,11 +313,11 @@ export class SatPopover implements OnInit, OnDestroy {
   }
 
   /** Restore focus to the element focused before the popover opened. Also destroy trap. */
-  private _restoreFocus(): void {
+  private _restoreFocusAndDestroyTrap(): void {
     const toFocus = this._previouslyFocusedElement;
 
     // Must check active element is focusable for IE sake
-    if (toFocus && 'focus' in toFocus) {
+    if (toFocus && 'focus' in toFocus && this.restoreFocus) {
       this._previouslyFocusedElement.focus();
     }
 

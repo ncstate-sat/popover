@@ -27,6 +27,7 @@ import {
   SatPopoverHorizontalAlign,
   SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
+  SatPopoverOpenOptions,
 } from './types';
 
 import { PopoverNotificationService, NotificationAction } from './notification.service';
@@ -136,8 +137,9 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Opens the popover. */
-  openPopover(): void {
+  openPopover(options: SatPopoverOpenOptions = {}): void {
     if (!this._popoverOpen) {
+      this._applyOpenOptions(options);
       this._createOverlay();
       this._subscribeToBackdrop();
       this._subscribeToEscape();
@@ -166,6 +168,13 @@ export class SatPopoverAnchoringService implements OnDestroy {
   /** Get a reference to the anchor element. */
   getAnchorElement(): ElementRef {
     return this._anchor;
+  }
+
+  /** Apply behavior properties on the popover based on the open options. */
+  private _applyOpenOptions(options: SatPopoverOpenOptions): void {
+    // Only override restoreFocus as `false` if the option is explicitly `false`
+    const restoreFocus = options.restoreFocus !== false;
+    this._popover._restoreFocusOverride = restoreFocus;
   }
 
   /** Create an overlay to be attached to the portal. */
@@ -235,7 +244,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
       .subscribe(event => {
         switch (event.action) {
           case NotificationAction.OPEN:
-            this.openPopover();
+            this.openPopover(event.value);
             break;
           case NotificationAction.CLOSE:
             this.closePopover(event.value);

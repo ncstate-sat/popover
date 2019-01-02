@@ -179,6 +179,23 @@ to `false`.
 </sat-popover>
 ```
 
+Once the popover is closed, focus will return to the most recently focused element prior to
+opening the popover. To disable this, you can set the `restoreFocus` property to `false`.
+
+```html
+<sat-popover [restoreFocus]="false">
+  <!-- ... -->
+</sat-popover>
+```
+
+Alternatively the `open` method supports a `restoreFocus` option.
+
+```html
+<button [satPopoverAnchorFor]="myPopover" (click)="myPopover.open({ restoreFocus: false })">
+  Open
+</button>
+```
+
 ### Backdrop
 
 You can add a fullscreen backdrop that appears behind the popover when it is open. It prevents
