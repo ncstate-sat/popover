@@ -154,6 +154,15 @@ export class SatPopoverAnchoringService implements OnDestroy {
     }
   }
 
+  /** Realign the popover to the anchor. */
+  realignToAnchor(): void {
+    if (this._overlayRef) {
+      const config = this._overlayRef.getConfig();
+      const strategy = config.positionStrategy as FlexibleConnectedPositionStrategy;
+      strategy.reapplyLastPosition();
+    }
+  }
+
   /** Get a reference to the anchor element. */
   getAnchorElement(): ElementRef {
     return this._anchor;
@@ -238,6 +247,9 @@ export class SatPopoverAnchoringService implements OnDestroy {
             // TODO: When the overlay's position can be dynamically changed, do not destroy
           case NotificationAction.UPDATE_CONFIG:
             this._destroyPopoverOnceClosed();
+            break;
+          case NotificationAction.REALIGN:
+            this.realignToAnchor();
             break;
         }
       });

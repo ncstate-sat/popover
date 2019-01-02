@@ -82,6 +82,11 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
     this._anchoring.closePopover(value);
   }
 
+  /** Realign the popover to the anchor. */
+  realignPopover(): void {
+    this._anchoring.realignToAnchor();
+  }
+
   /** Get a reference to the anchor element. */
   getElement(): ElementRef {
     return this._elementRef;
