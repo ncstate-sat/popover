@@ -13,9 +13,11 @@ export enum NotificationAction {
   REPOSITION,
   /** Popover needs new configuration. */
   UPDATE_CONFIG,
+  /** Popover should realign itself to the anchor.  */
+  REALIGN,
 }
 
-/** Event object for dispatching to anchor. */
+/** Event object for dispatching to anchoring service. */
 export class PopoverNotification {
   constructor(
     /** Action to perform. */

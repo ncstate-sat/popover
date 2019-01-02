@@ -709,6 +709,38 @@ describe('SatPopover', () => {
       expect(secondSpy).toHaveBeenCalled();
     }));
 
+    it('should realign when the anchor moves', fakeAsync(() => {
+      // Move the anchor off the left edge of the page
+      const anchorEl = comp.anchor.getElement().nativeElement;
+      anchorEl.style.display = 'inline-block';
+      anchorEl.style.position = 'relative';
+      anchorEl.style.left = '50px';
+
+      fixture.detectChanges();
+
+      comp.popover.open();
+      fixture.detectChanges();
+
+      const getCenter = clientRect => clientRect.x + clientRect.width / 2;
+      const centerOfAnchor = () => getCenter(anchorEl.getBoundingClientRect());
+      const centerOfPopover = () => getCenter(overlayContainerElement
+        .querySelector('.sat-popover-container')
+        .getBoundingClientRect()
+      );
+
+      // Expect popover to be centered over anchor
+      expect(centerOfAnchor()).toBe(centerOfPopover(), 'Centered over anchor');
+
+      // Move anchor and expect center of popover to no longer be center of anchor
+      anchorEl.style.left = '100px';
+      fixture.detectChanges();
+      expect(centerOfAnchor()).toBe(centerOfPopover() + 50, 'No longer centered over anchor');
+
+      // Realign popover and expect center of popover to now be center of anchor
+      comp.popover.realign();
+      fixture.detectChanges();
+      expect(centerOfAnchor()).toBe(centerOfPopover(), 'Centered again after realign');
+    }));
   });
 
   describe('scrolling', () => {

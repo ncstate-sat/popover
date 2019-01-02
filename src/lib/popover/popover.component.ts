@@ -243,6 +243,12 @@ export class SatPopover implements OnInit, OnDestroy {
     this._dispatchActionNotification(notification);
   }
 
+  /** Realign the popover to the anchor. */
+  realign(): void {
+    const notification = new PopoverNotification(NotificationAction.REALIGN);
+    this._dispatchActionNotification(notification);
+  }
+
   /** Gets whether the popover is presently open. */
   isOpen(): boolean {
     return this._open;
