@@ -129,12 +129,13 @@ trigger that fits your application's needs.
 
 #### `SatPopover` has the following methods and outputs
 
-| Method | Description                                  |
-|--------|----------------------------------------------|
-| open   | Open the popover.                            |
-| close  | Close the popover. Optionally takes a value. |
-| toggle | Toggle the popover open or closed.           |
-| isOpen | Get whether the popover is presently open.   |
+| Method  | Description                                  |
+|---------|----------------------------------------------|
+| open    | Open the popover.                            |
+| close   | Close the popover. Optionally takes a value. |
+| toggle  | Toggle the popover open or closed.           |
+| isOpen  | Get whether the popover is presently open.   |
+| realign | Realign the popover to the anchor.           |
 
 | Output          | Description                                                       |
 |-----------------|-------------------------------------------------------------------|
@@ -147,12 +148,14 @@ trigger that fits your application's needs.
 
 #### `SatPopoverAnchor` has the following methods and outputs
 
-| Method        | Description                                  |
-|---------------|----------------------------------------------|
-| openPopover   | Open the popover.                            |
-| closePopover  | Close the popover. Optionally takes a value. |
-| togglePopover | Toggle the popover open or closed.           |
-| isPopoverOpen | Get whether the popover is presently open.   |
+| Method         | Description                                  |
+|----------------|----------------------------------------------|
+| openPopover    | Open the popover.                            |
+| closePopover   | Close the popover. Optionally takes a value. |
+| togglePopover  | Toggle the popover open or closed.           |
+| isPopoverOpen  | Get whether the popover is presently open.   |
+| realignPopover | Realign the popover to the anchor.           |
+| getElement     | Get a reference to the anchor element.       |
 
 | Output        | Description                       |
 |---------------|-----------------------------------|
