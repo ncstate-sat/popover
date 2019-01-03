@@ -513,8 +513,8 @@ describe('SatPopover', () => {
 
     it('should focus the initial element by default', fakeAsync(() => {
       fixture.detectChanges();
-      comp.defaultPopoverAnchor.nativeElement.focus();
-      comp.defaultPopoverAnchor.nativeElement.click();
+      comp.button1.nativeElement.focus();
+      comp.button1.nativeElement.click();
 
       fixture.detectChanges();
       tick();
@@ -523,73 +523,86 @@ describe('SatPopover', () => {
     }));
 
     it('should not focus the initial element if autoFocus is false', fakeAsync(() => {
+      comp.autoFocus = false;
       fixture.detectChanges();
-      comp.defaultPopoverAnchor.nativeElement.focus();
-      comp.notAutoFocusedPopoverAnchor.nativeElement.click();
+
+      comp.button1.nativeElement.focus();
+      comp.button1.nativeElement.click();
 
       fixture.detectChanges();
       tick();
 
-      expect(document.activeElement).toEqual(comp.defaultPopoverAnchor.nativeElement);
+      expect(document.activeElement).toEqual(comp.button1.nativeElement);
     }));
 
-    it('should restore focus', fakeAsync(() => {
+    it('should not focus the initial element with autoFocus option as false', fakeAsync(() => {
       fixture.detectChanges();
-      comp.defaultPopoverAnchor.nativeElement.focus();
-      expect(document.activeElement.textContent).toBe('Anchor 1', 'Anchor 1 focus');
-      comp.defaultPopover.open();
+      comp.button1.nativeElement.focus();
+      comp.popover.open({ autoFocus: false });
+
+      fixture.detectChanges();
+      tick();
+
+      expect(document.activeElement).toEqual(comp.button1.nativeElement);
+    }));
+
+    it('should restore focus by default', fakeAsync(() => {
+      fixture.detectChanges();
+      comp.button1.nativeElement.focus();
+      expect(document.activeElement.textContent).toBe('Button 1', 'Button 1 focus');
+      comp.popover.open();
 
       fixture.detectChanges();
       tick();
       expect(document.activeElement.classList).toContain('input', 'Popover input is focused');
 
-      comp.notAutoFocusedPopoverAnchor.nativeElement.focus();
-      expect(document.activeElement.textContent).toBe('Anchor 2', 'Anchor 2 focused while open');
+      comp.button2.nativeElement.focus();
+      expect(document.activeElement.textContent).toBe('Button 2', 'Button 2 focused while open');
 
-      comp.defaultPopover.close();
+      comp.popover.close();
       fixture.detectChanges();
       tick();
-      expect(document.activeElement.textContent).toBe('Anchor 1', 'Anchor 1 focus restored');
+      expect(document.activeElement.textContent).toBe('Button 1', 'Button 1 focus restored');
     }));
 
     it('should not restore focus if restoreFocus as false', fakeAsync(() => {
       comp.restoreFocus = false;
 
       fixture.detectChanges();
-      comp.defaultPopoverAnchor.nativeElement.focus();
-      expect(document.activeElement.textContent).toBe('Anchor 1', 'Anchor 1 focus');
-      comp.defaultPopover.open();
+      comp.button1.nativeElement.focus();
+      expect(document.activeElement.textContent).toBe('Button 1', 'Button 1 focus');
+      comp.popover.open();
 
       fixture.detectChanges();
       tick();
       expect(document.activeElement.classList).toContain('input', 'Popover input is focused');
 
-      comp.notAutoFocusedPopoverAnchor.nativeElement.focus();
-      expect(document.activeElement.textContent).toBe('Anchor 2', 'Anchor 2 focused while open');
+      comp.button2.nativeElement.focus();
+      expect(document.activeElement.textContent).toBe('Button 2', 'Button 2 focused while open');
 
-      comp.defaultPopover.close();
+      comp.popover.close();
       fixture.detectChanges();
       tick();
-      expect(document.activeElement.textContent).toBe('Anchor 2', 'Anchor 2 remains focused');
+      expect(document.activeElement.textContent).toBe('Button 2', 'Button 2 remains focused');
     }));
 
     it('should not restore focus when opened with restoreFocus option as false', fakeAsync(() => {
       fixture.detectChanges();
-      comp.defaultPopoverAnchor.nativeElement.focus();
-      expect(document.activeElement.textContent).toBe('Anchor 1', 'Anchor 1 focus');
-      comp.defaultPopover.open({ restoreFocus: false });
+      comp.button1.nativeElement.focus();
+      expect(document.activeElement.textContent).toBe('Button 1', 'Button 1 focus');
+      comp.popover.open({ restoreFocus: false });
 
       fixture.detectChanges();
       tick();
       expect(document.activeElement.classList).toContain('input', 'Popover input is focused');
 
-      comp.notAutoFocusedPopoverAnchor.nativeElement.focus();
-      expect(document.activeElement.textContent).toBe('Anchor 2', 'Anchor 2 focused while open');
+      comp.button2.nativeElement.focus();
+      expect(document.activeElement.textContent).toBe('Button 2', 'Button 2 focused while open');
 
-      comp.defaultPopover.close();
+      comp.popover.close();
       fixture.detectChanges();
       tick();
-      expect(document.activeElement.textContent).toBe('Anchor 2', 'Anchor 2 remains focused');
+      expect(document.activeElement.textContent).toBe('Button 2', 'Button 2 remains focused');
     }));
 
   });
@@ -1069,21 +1082,23 @@ export class KeyboardPopoverTestComponent {
  */
 @Component({
   template: `
-    <button #b1 [satPopoverAnchorFor]="p1" (click)="p1.open()">Anchor 1</button>
-    <button #b2 [satPopoverAnchorFor]="p2" (click)="p2.open()">Anchor 2</button>
+    <button #b1 [satPopoverAnchorFor]="p" (click)="p.open()">Button 1</button>
+    <button #b2>Button 2</button>
 
-    <sat-popover #p1 [restoreFocus]="restoreFocus"><input type="text" class="input"></sat-popover>
-    <sat-popover #p2 autoFocus="false"><input type="text" class="input"></sat-popover>
+    <sat-popover #p
+      [autoFocus]="autoFocus"
+      [restoreFocus]="restoreFocus">
+      <input type="text" class="input">
+    </sat-popover>
   `
 })
 export class FocusPopoverTestComponent {
   restoreFocus = true;
+  autoFocus = true;
 
-  @ViewChild('b1') defaultPopoverAnchor: ElementRef;
-  @ViewChild('p1') defaultPopover: SatPopover;
-
-  @ViewChild('b2') notAutoFocusedPopoverAnchor: ElementRef;
-  @ViewChild('p2') notAutoFocusedPopover: SatPopover;
+  @ViewChild('b1') button1: ElementRef;
+  @ViewChild('b2') button2: ElementRef;
+  @ViewChild('p') popover: SatPopover;
 }
 
 /** This component is for testing dynamic positioning behavior. */

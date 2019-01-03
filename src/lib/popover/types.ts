@@ -25,6 +25,12 @@ export const VALID_VERT_ALIGN: SatPopoverVerticalAlign[] = [
 ];
 
 export interface SatPopoverOpenOptions {
-  /** Whether the popover should return focus to the previously focused element after closing. */
+  /**
+   * Whether the popover should return focus to the previously focused element after
+   * closing. Defaults to true.
+   */
   restoreFocus?: boolean;
+
+  /** Whether the first focusable element should be focused on open. Defaults to true. */
+  autoFocus?: boolean;
 }

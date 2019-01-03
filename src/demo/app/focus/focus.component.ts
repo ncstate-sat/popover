@@ -10,6 +10,7 @@ import { SatPopover } from '@ncstate/sat-popover';
       <mat-card-title>Focus Behavior</mat-card-title>
       <mat-card-content>
         <div class="options">
+          <mat-checkbox [(ngModel)]="autoFocus">Auto Focus</mat-checkbox>
           <mat-checkbox [(ngModel)]="restoreFocus">Restore Focus</mat-checkbox>
         </div>
         <div class="results mat-body-1" [satPopoverAnchorFor]="p">
@@ -21,7 +22,11 @@ import { SatPopover } from '@ncstate/sat-popover';
           <p><b>Birth Date</b>: {{ form.value.birthDate | date }}</p>
         </div>
 
-        <sat-popover #p hasBackdrop horizontalAlign="after" [restoreFocus]="restoreFocus">
+        <sat-popover #p
+          hasBackdrop
+          horizontalAlign="after"
+          [autoFocus]="autoFocus"
+          [restoreFocus]="restoreFocus">
           <div class="form" [formGroup]="form">
             <mat-form-field>
               <input matInput (keydown)="closeOnEnter($event)"
@@ -50,6 +55,7 @@ import { SatPopover } from '@ncstate/sat-popover';
 })
 export class FocusDemo {
   @ViewChild(SatPopover) popover: SatPopover;
+  autoFocus = true;
   restoreFocus = true;
   form: FormGroup;
 

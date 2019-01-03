@@ -175,6 +175,10 @@ export class SatPopoverAnchoringService implements OnDestroy {
     // Only override restoreFocus as `false` if the option is explicitly `false`
     const restoreFocus = options.restoreFocus !== false;
     this._popover._restoreFocusOverride = restoreFocus;
+
+    // Only override autoFocus as `false` if the option is explicitly `false`
+    const autoFocus = options.autoFocus !== false;
+    this._popover._autoFocusOverride = autoFocus;
   }
 
   /** Create an overlay to be attached to the portal. */
