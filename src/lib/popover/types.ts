@@ -23,3 +23,8 @@ export const VALID_VERT_ALIGN: SatPopoverVerticalAlign[] = [
   'end',
   'below'
 ];
+
+export interface SatPopoverOpenOptions {
+  /** Whether the popover should return focus to the previously focused element after closing. */
+  restoreFocus?: boolean;
+}

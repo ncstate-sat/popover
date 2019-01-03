@@ -14,6 +14,7 @@ import { tap, takeUntil } from 'rxjs/operators';
 import { SatPopover } from './popover.component';
 import { getInvalidPopoverError } from './popover.errors';
 import { SatPopoverAnchoringService } from './popover-anchoring.service';
+import { SatPopoverOpenOptions } from './types';
 
 @Directive({
   selector: '[satPopoverAnchorFor]',
@@ -73,8 +74,8 @@ export class SatPopoverAnchor implements OnInit, OnDestroy {
   }
 
   /** Opens the popover. */
-  openPopover(): void {
-    this._anchoring.openPopover();
+  openPopover(options: SatPopoverOpenOptions = {}): void {
+    this._anchoring.openPopover(options);
   }
 
   /** Closes the popover. */

@@ -6,4 +6,5 @@ export {
   SatPopoverHorizontalAlign,
   SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
+  SatPopoverOpenOptions,
 } from './popover/types';
