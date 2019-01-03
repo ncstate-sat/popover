@@ -114,11 +114,12 @@ export class SatPopover implements OnInit, OnDestroy {
 
   /** Whether the first focusable element should be focused on open. */
   @Input()
-  get autoFocus() { return this._autoFocus; }
+  get autoFocus() { return this._autoFocus && this._autoFocusOverride; }
   set autoFocus(val: boolean) {
     this._autoFocus = coerceBooleanProperty(val);
   }
   private _autoFocus = true;
+  _autoFocusOverride = true;
 
  /** Whether the popover should return focus to the previously focused element after closing. */
  @Input()
