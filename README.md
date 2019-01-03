@@ -188,7 +188,11 @@ opening the popover. To disable this, you can set the `restoreFocus` property to
 </sat-popover>
 ```
 
-Alternatively the `open` method supports a `restoreFocus` option.
+Alternatively the `open` and `openPopover` methods support an optional `SatPopoverOpenOptions`
+object where `autoFocus` and `restoreFocus` options can be set while opening the popover. Note
+that these options do no take precendence over the component inputs. For example, if `restoreFocus`
+is set to `false` either in the open options or via the component input, focus will not be
+restored.
 
 ```html
 <button [satPopoverAnchorFor]="myPopover" (click)="myPopover.open({ restoreFocus: false })">

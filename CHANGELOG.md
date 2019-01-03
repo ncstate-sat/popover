@@ -1,3 +1,17 @@
+# 3.1.0 cactus-malpractice
+
+### Features
+* Focus restoration can now be disabled via the [`restoreFocus`](https://github.com/ncstate-sat/popover/blob/master/README.md#focus-behavior)
+property.
+* The popover/anchor now have `realign`/`realignPopover` methods to realign the popover to
+the anchor in case the anchor's size or position changes.
+* The anchor now has a `getElement` method for getting the anchor's `elementRef`.
+* The `open` and `openPopover` methods now support an optional `SatPopoverOpenOptions` object where
+`autoFocus` and `restoreFocus` options can be set while opening the popover. Note that these
+options do no take precendence over the component inputs. For example, if `restoreFocus`
+is set to `false` either in the open options or via the component input, focus will not be restored.
+
+
 # 3.0.0 reliance-compliance
 
 ### Breaking Changes
