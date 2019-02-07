@@ -1,3 +1,9 @@
+# 3.2.0 yttrium-atrium
+
+### Features
+* Add the `SatPopoverHoverDirective` which provides built in hover and delay mechanics (thank you @Abrissirba!)
+
+
 # 3.1.0 cactus-malpractice
 
 ### Features
