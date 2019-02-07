@@ -289,3 +289,21 @@ You can modify these animation curves using `openTransition` and `closeTransitio
 The `<sat-popover>` component only provides styles to affect its own transform origin. It is
 the responsibility of the elements you project inside the popover to style themselves. This
 includes background color, box shadows, margin offsets, etc.
+
+## Add-on behaviors
+
+### Hover
+The `SatPopoverHoverDirective` is available as a way to automatically add hover logic to your
+anchor with an optional delay.
+
+```html
+<div [satPopoverAnchorFor]="p" [satPopoverHover]="1000">
+  Hover to show tooltip after 1 second
+</div>
+```
+
+```html
+<div [satPopoverAnchorFor]="p">
+  Hover <span satPopoverHover>this text</span> to show tooltip immediately
+</div>
+```

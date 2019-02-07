@@ -28,3 +28,13 @@
 .seagreen {
   color: lightseagreen;
 }
+
+.hover-text {
+  display: inline-block;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background: rgb(152, 194, 223);
+  }
+}
