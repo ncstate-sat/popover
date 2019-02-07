@@ -1,7 +1,9 @@
 # 3.2.0 yttrium-atrium
 
 ### Features
-* Add the `SatPopoverHoverDirective` which provides built in hover and delay mechanics (thank you @Abrissirba!)
+* You can now use the [`SatPopoverHoverDirective`](https://github.com/ncstate-sat/popover/blob/master/README.md#hover)
+which provides built in hover and delay mechanics (thank you @Abrissirba!). Add the directive
+to any child element of the anchor and supply an optional delay.
 
 
 # 3.1.0 cactus-malpractice
