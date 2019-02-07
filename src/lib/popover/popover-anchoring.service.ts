@@ -82,7 +82,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   /** Whether the popover is presently open. */
   private _popoverOpen = false;
 
-  /** Emits when the directive is destroyed. */
+  /** Emits when the service is destroyed. */
   private _onDestroy = new Subject<void>();
 
   constructor(

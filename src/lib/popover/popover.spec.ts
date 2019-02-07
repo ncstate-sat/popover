@@ -992,6 +992,79 @@ describe('SatPopover', () => {
     });
   });
 
+  describe('hover directive', () => {
+    let fixture: ComponentFixture<HoverDirectiveTestComponent>;
+    let comp:    HoverDirectiveTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          SatPopoverModule,
+          NoopAnimationsModule,
+        ],
+        declarations: [
+          HoverDirectiveTestComponent,
+        ],
+        providers: [
+          {provide: OverlayContainer, useFactory: overlayContainerFactory}
+        ]
+      });
+
+      fixture = TestBed.createComponent(HoverDirectiveTestComponent);
+      comp = fixture.componentInstance;
+
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+        .getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    it('should open the popover when the anchor is hovered', fakeAsync(() => {
+      fixture.detectChanges();
+
+      comp.anchorEl.nativeElement.dispatchEvent(createMouseEvent('mouseenter'));
+      tick(1);
+      expect(comp.popover.isOpen()).toBe(true);
+
+      comp.anchorEl.nativeElement.dispatchEvent(createMouseEvent('mouseleave'));
+      tick(1);
+      expect(comp.popover.isOpen()).toBe(false);
+    }));
+
+    it('should open the popover after a delay', fakeAsync(() => {
+      comp.delay = 500;
+      fixture.detectChanges();
+
+      comp.anchorEl.nativeElement.dispatchEvent(createMouseEvent('mouseenter'));
+      tick(499);
+      expect(comp.popover.isOpen()).toBe(false);
+      tick(1);
+      expect(comp.popover.isOpen()).toBe(true);
+
+      comp.anchorEl.nativeElement.dispatchEvent(createMouseEvent('mouseleave'));
+      expect(comp.popover.isOpen()).toBe(false);
+    }));
+
+    it('should not open the popover if mouseleave event during delay', fakeAsync(() => {
+      comp.delay = 500;
+      fixture.detectChanges();
+
+      comp.anchorEl.nativeElement.dispatchEvent(createMouseEvent('mouseenter'));
+      tick(100);
+      expect(comp.popover.isOpen()).toBe(false);
+
+      comp.anchorEl.nativeElement.dispatchEvent(createMouseEvent('mouseleave'));
+      expect(comp.popover.isOpen()).toBe(false);
+
+      tick(400);
+      expect(comp.popover.isOpen()).toBe(false);
+    }));
+
+  });
+
 });
 
 /**
@@ -1172,6 +1245,19 @@ export class ServiceTestComponent {
   ) {}
 }
 
+/** This component is for testing the hover directive behavior. */
+@Component({
+  template: `
+    <div #anchorEl [satPopoverAnchorFor]="p" [satPopoverHover]="delay">Anchor</div>
+    <sat-popover #p>Popover</sat-popover>
+  `
+})
+export class HoverDirectiveTestComponent {
+  @ViewChild('anchorEl') anchorEl: ElementRef;
+  @ViewChild(SatPopover) popover: SatPopover;
+  delay = 0;
+}
+
 /** This factory function provides an overlay container under test control. */
 const overlayContainerFactory = () => {
   const element = document.createElement('div');
@@ -1209,5 +1295,27 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
     return originalPreventDefault.apply(this, arguments);
   };
 
+  return event;
+}
+
+export function createMouseEvent(type: string) {
+  const event = document.createEvent('MouseEvent');
+  event.initMouseEvent(
+    type,
+    true, // canBubble
+    false, // cancelable
+    window, // view
+    0, // detail
+    0, // screenX
+    0, // screenY
+    0, // clientX
+    0, // clientY
+    false, // ctrlKey
+    false, // altKey
+    false, // shiftKey
+    false, // metaKey
+    0, // button
+    null // relatedTarget
+  );
   return event;
 }

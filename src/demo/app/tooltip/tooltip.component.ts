@@ -16,7 +16,6 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
             (mouseleave)="instant.close()">
           Hover Me (instant)
         </div>
-
         <sat-popover #instant horizontalAlign="after">
           <div class="tooltip-wrapper mat-body-1">
             Multi-line <br>
@@ -30,12 +29,24 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
             (mouseleave)="leave.next()">
           Hover Me (1000ms delay)
         </div>
-
         <sat-popover #delayed horizontalAlign="after">
           <div class="tooltip-wrapper mat-body-1">
             A tooltip that's slow to open
           </div>
         </sat-popover>
+
+
+        <div class="anchor" [satPopoverAnchorFor]="hoverDirective">
+          Hover
+            <span class="hover-text" [satPopoverHover]="500">this text</span>
+          for 500ms
+        </div>
+        <sat-popover #hoverDirective horizontalAlign="after">
+          <div class="tooltip-wrapper mat-body-1">
+            This tooltip uses the <code>SatPopoverHoverDirective</code>
+          </div>
+        </sat-popover>
+
       </mat-card-content>
     </mat-card>
   `
