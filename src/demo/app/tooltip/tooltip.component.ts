@@ -10,6 +10,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
     <mat-card>
       <mat-card-title>Tooltip</mat-card-title>
       <mat-card-content>
+        <!-- Basic tooltip -->
         <div class="anchor"
             [satPopoverAnchorFor]="instant"
             (mouseenter)="instant.open()"
@@ -23,6 +24,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
           </div>
         </sat-popover>
 
+        <!-- Tooltip with delay -->
         <div class="anchor"
             [satPopoverAnchorFor]="delayed"
             (mouseenter)="enter.next()"
@@ -35,7 +37,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
           </div>
         </sat-popover>
 
-
+        <!-- Tooltip using hover directive -->
         <div class="anchor" [satPopoverAnchorFor]="hoverDirective">
           Hover
             <span class="hover-text" [satPopoverHover]="500">this text</span>

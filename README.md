@@ -298,6 +298,12 @@ anchor with an optional delay.
 
 ```html
 <div [satPopoverAnchorFor]="p" [satPopoverHover]="1000">
-  Hover to show tooltip
+  Hover to show tooltip after 1 second
+</div>
+```
+
+```html
+<div [satPopoverAnchorFor]="p">
+  Hover <span satPopoverHover>this text</span> to show tooltip immediately
 </div>
 ```
