@@ -1112,7 +1112,7 @@ describe('SatPopover', () => {
  * typings.
  */
 // @ts-ignore typescript doesn't like that we made prop private -> public
-export class OpenAPISatPopover extends SatPopover {
+declare class OpenAPISatPopover extends SatPopover {
   _anchoringService: SatPopoverAnchoringService;
 }
 
