@@ -3,7 +3,7 @@ import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { of, Subject } from 'rxjs';
 import { delay, switchMap, takeUntil } from 'rxjs/operators';
 
-import { SatPopoverAnchor } from './popover-anchor.directive';
+import { SatPopoverAnchor } from './popover.component';
 
 @Directive({
   selector: '[satPopoverHover]'
@@ -45,7 +45,7 @@ export class SatPopoverHoverDirective implements AfterViewInit, OnDestroy {
         }),
         takeUntil(this._onDestroy),
       )
-      .subscribe(() => this.anchor.openPopover());
+      .subscribe(() => this.anchor.popover.open());
   }
 
   ngOnDestroy() {
@@ -61,6 +61,6 @@ export class SatPopoverHoverDirective implements AfterViewInit, OnDestroy {
   @HostListener('mouseleave')
   closePopover() {
     this._onMouseLeave.next();
-    this.anchor.closePopover();
+    this.anchor.popover.close();
   }
 }

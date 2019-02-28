@@ -30,8 +30,6 @@ import {
   SatPopoverOpenOptions,
 } from './types';
 
-import { PopoverNotificationService, NotificationAction } from './notification.service';
-
 /**
  * Configuration provided by the popover for the anchoring service
  * to build the correct overlay config.
@@ -65,13 +63,10 @@ export class SatPopoverAnchoringService implements OnDestroy {
   private _viewContainerRef: ViewContainerRef;
 
   /** Reference to the anchor element. */
-  private _anchor: ElementRef;
+  private _anchor: HTMLElement;
 
   /** Reference to a template portal where the overlay will be attached. */
   private _portal: TemplatePortal<any>;
-
-  /** Communications channel with the popover. */
-  private _notifications: PopoverNotificationService;
 
   /** Single subscription to notifications service events. */
   private _notificationsSubscription: Subscription;
@@ -111,19 +106,37 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Anchor a popover instance to a view and connection element. */
-  anchor(popover: SatPopover, viewContainerRef: ViewContainerRef, anchor: ElementRef): void {
+  anchor(
+    popover: SatPopover,
+    viewContainerRef: ViewContainerRef,
+    anchor: ElementRef | HTMLElement
+  ): void {
+    // If we're just changing the anchor element and the overlayRef already exists,
+    // simply update the existing _overlayRef's anchor.
+    if (
+      this._popover === popover &&
+      this._viewContainerRef === viewContainerRef &&
+      this._overlayRef
+    ) {
+      this._anchor = anchor instanceof ElementRef
+        ? anchor.nativeElement
+        : anchor;
+      const config = this._overlayRef.getConfig();
+      const strategy = config.positionStrategy as FlexibleConnectedPositionStrategy;
+      strategy.setOrigin(this._anchor);
+      this._overlayRef.updatePosition();
+      return;
+    }
+
     // Destroy any previous popovers
     this._destroyPopover();
 
     // Assign local refs
     this._popover = popover;
     this._viewContainerRef = viewContainerRef;
-    this._anchor = anchor;
-
-    // Provide notification service as a communication channel between popover and anchor.
-    // Then subscribe to notifications to take appropriate actions.
-    this._popover._notifications = this._notifications = new PopoverNotificationService();
-    this._subscribeToNotifications();
+    this._anchor = anchor instanceof ElementRef
+      ? anchor.nativeElement
+      : anchor;
   }
 
   /** Gets whether the popover is presently open. */
@@ -156,6 +169,16 @@ export class SatPopoverAnchoringService implements OnDestroy {
     }
   }
 
+  /** TODO: implement when the overlay's position can be dynamically changed */
+  repositionPopover(): void {
+    this.updatePopoverConfig();
+  }
+
+  /** TODO: when the overlay's position can be dynamically changed, do not destroy */
+  updatePopoverConfig(): void {
+    this._destroyPopoverOnceClosed();
+  }
+
   /** Realign the popover to the anchor. */
   realignPopoverToAnchor(): void {
     if (this._overlayRef) {
@@ -166,7 +189,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Get a reference to the anchor element. */
-  getAnchorElement(): ElementRef {
+  getAnchorElement(): HTMLElement {
     return this._anchor;
   }
 
@@ -235,39 +258,6 @@ export class SatPopoverAnchoringService implements OnDestroy {
     }
   }
 
-  /**
-   * Call appropriate anchor method when an event is dispatched through
-   * the notification service.
-   */
-  private _subscribeToNotifications(): void {
-    if (this._notificationsSubscription) {
-      this._notificationsSubscription.unsubscribe();
-    }
-
-    this._notificationsSubscription = this._notifications.events()
-      .subscribe(event => {
-        switch (event.action) {
-          case NotificationAction.OPEN:
-            this.openPopover(event.value);
-            break;
-          case NotificationAction.CLOSE:
-            this.closePopover(event.value);
-            break;
-          case NotificationAction.TOGGLE:
-            this.togglePopover();
-            break;
-          case NotificationAction.REPOSITION:
-            // TODO: When the overlay's position can be dynamically changed, do not destroy
-          case NotificationAction.UPDATE_CONFIG:
-            this._destroyPopoverOnceClosed();
-            break;
-          case NotificationAction.REALIGN:
-            this.realignPopoverToAnchor();
-            break;
-        }
-      });
-  }
-
   /** Close popover when backdrop is clicked. */
   private _subscribeToBackdrop(): void {
     this._overlayRef
@@ -329,7 +319,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Create and return a config for creating the overlay. */
-  private _getOverlayConfig(config: PopoverConfig, anchor: ElementRef): OverlayConfig {
+  private _getOverlayConfig(config: PopoverConfig, anchor: HTMLElement): OverlayConfig {
     return new OverlayConfig({
       positionStrategy: this._getPositionStrategy(
         config.horizontalAlign,
@@ -388,7 +378,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
     verticalTarget: SatPopoverVerticalAlign,
     forceAlignment: boolean,
     lockAlignment: boolean,
-    anchor: ElementRef,
+    anchor: HTMLElement,
   ): FlexibleConnectedPositionStrategy {
     // Attach the overlay at the preferred position
     const targetPosition = getPosition(horizontalTarget, verticalTarget);

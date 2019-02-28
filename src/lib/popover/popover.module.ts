@@ -4,8 +4,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
 import { BidiModule } from '@angular/cdk/bidi';
 
-import { SatPopover } from './popover.component';
-import { SatPopoverAnchor } from './popover-anchor.directive';
+import { SatPopover, SatPopoverAnchor } from './popover.component';
 import { SatPopoverHoverDirective } from './popover-hover.directive';
 
 @NgModule({
