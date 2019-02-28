@@ -26,6 +26,7 @@ import {
   getInvalidVerticalAlignError,
   getInvalidScrollStrategyError,
   getInvalidPopoverAnchorError,
+  getInvalidSatPopoverAnchorError,
 } from './popover.errors';
 import {
   SatPopoverScrollStrategy,
@@ -52,6 +53,12 @@ export class SatPopoverAnchor {
     public elementRef: ElementRef,
     public viewContainerRef: ViewContainerRef,
   ) {}
+
+  ngAfterViewInit() {
+    if (!this.popover) {
+      throw getInvalidSatPopoverAnchorError();
+    }
+  }
 }
 
 @Component({

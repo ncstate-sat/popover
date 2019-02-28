@@ -20,8 +20,8 @@ import {
   getInvalidVerticalAlignError,
   getInvalidScrollStrategyError,
   getInvalidPopoverAnchorError,
+  getInvalidSatPopoverAnchorError,
 } from './popover.errors';
-
 
 describe('SatPopover', () => {
 
@@ -36,6 +36,7 @@ describe('SatPopover', () => {
           SimpleDirectiveAnchorPopoverTestComponent,
           SimpleHTMLAnchorPopoverTestComponent,
           AnchorlessPopoverTestComponent,
+          InvalidAnchorTestComponent,
         ]
       });
 
@@ -99,6 +100,14 @@ describe('SatPopover', () => {
       expect(() => {
         fixture.componentInstance.popover.open();
       }).toThrow(getUnanchoredPopoverError());
+    });
+
+    it('should throw an error if an anchor is not associated with a popover', () => {
+      fixture = TestBed.createComponent(InvalidAnchorTestComponent);
+
+      expect(() => {
+        fixture.detectChanges();
+      }).toThrow(getInvalidSatPopoverAnchorError());
     });
 
   });
@@ -1106,6 +1115,17 @@ describe('SatPopover', () => {
 export class OpenAPISatPopover extends SatPopover {
   _anchoringService: SatPopoverAnchoringService;
 }
+
+/**
+ * This component is for testing that an anchor not associated with
+ * a popover will throw an error.
+ */
+@Component({
+  template: `
+    <div satPopoverAnchor></div>
+  `
+})
+class InvalidAnchorTestComponent { }
 
 /**
  * This component is for testing that passing an invalid anchor

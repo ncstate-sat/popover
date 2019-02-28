@@ -11,6 +11,14 @@ export function getInvalidPopoverAnchorError(): Error {
   );
 }
 
+export function getInvalidSatPopoverAnchorError(): Error {
+  return Error(
+    `SatPopoverAnchor must be handed to a SatPopover ` +
+    `component via that component's "anchor" input property. ` +
+    `Example: [anchor]="anchorTemplateVariable"`
+  );
+}
+
 export function getInvalidHorizontalAlignError(alignment): Error {
   return Error(generateGenericError('horizontalAlign/xAlign', alignment, VALID_HORIZ_ALIGN));
 }
