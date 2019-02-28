@@ -65,6 +65,28 @@ describe('SatPopover', () => {
       }).not.toThrowError();
     });
 
+    it('should update the anchor if a valid new anchor is provided', () => {
+      fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
+
+      fixture.detectChanges();
+
+      const comp = fixture.componentInstance as SimpleDirectiveAnchorPopoverTestComponent;
+
+      expect(comp.popover.anchor).toBe(comp.anchor);
+      expect(
+        (comp.popover._anchoringService as any)._anchor
+      ).toBe(comp.anchor.elementRef.nativeElement);
+
+      expect(() => {
+        comp.popover.anchor = comp.alternateAnchorElement;
+      }).not.toThrowError();
+
+      expect(comp.popover.anchor).toBe(comp.alternateAnchorElement);
+      expect(
+        (comp.popover._anchoringService as any)._anchor
+      ).toBe(comp.alternateAnchorElement.nativeElement);
+    });
+
     it('should throw an error if open is called on a popover with no anchor', () => {
       fixture = TestBed.createComponent(AnchorlessPopoverTestComponent);
 
@@ -1118,11 +1140,13 @@ class AnchorlessPopoverTestComponent {
 @Component({
   template: `
     <div #anchorEl satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
+    <div #anchorEl2>Alternate anchor</div>
     <sat-popover [anchor]='anchor'>Popover</sat-popover>
   `
 })
 class SimpleDirectiveAnchorPopoverTestComponent {
   @ViewChild('anchorEl') anchorElement: ElementRef;
+  @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
   @ViewChild(SatPopover) popover: OpenAPISatPopover;
 }

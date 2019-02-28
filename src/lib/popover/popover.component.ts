@@ -73,7 +73,7 @@ export class SatPopover implements OnInit {
       this._anchoringService.anchor(this, val.viewContainerRef, val.elementRef);
       this._anchor = val;
     }
-    else if (val instanceof SatPopoverAnchor || val instanceof HTMLElement) {
+    else if (val instanceof ElementRef || val instanceof HTMLElement) {
       this._anchoringService.anchor(this, this._viewContainerRef, val);
       this._anchor = val;
     }
