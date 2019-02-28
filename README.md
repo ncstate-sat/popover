@@ -66,14 +66,14 @@ Wrap any component you want to display in a popover with an `<sat-popover>` comp
 </sat-popover>
 ```
 
-Next, hook the popover to an anchor element.
+Next, supply an anchor element to the popover.
 
 ```html
-<button [satPopoverAnchorFor]="contactPopover" (click)="contactPopover.toggle()">
+<button #popoverAnchor (click)="popover.toggle()">
   See Contact Details
 </button>
 
-<sat-popover #contactPopover hasBackdrop>
+<sat-popover #popover [anchor]="popoverAnchor" hasBackdrop>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
 </sat-popover>
 ```
@@ -86,7 +86,7 @@ By default, the popover will appear centered over the anchor. If you instead wan
 to appear below the anchor:
 
 ```html
-<sat-popover #contactPopover verticalAlign="below">
+<sat-popover #popover verticalAlign="below">
   <!-- ... -->
 </sat-popover>
 ```
@@ -106,7 +106,7 @@ alignment. You can use `forceAlignment` to ensure that the popover always displa
 with the alignment you've specified.
 
 ```html
-<sat-popover #contactPopover verticalAlign="below" forceAlignment>
+<sat-popover #popover verticalAlign="below" forceAlignment>
   <!-- This will always open below the anchor, even if it falls outside the viewport. -->
 </sat-popover>
 ```
@@ -117,7 +117,7 @@ set). You can use `lockAlignment` to ensure the popover does not change its alig
 opened.
 
 ```html
-<sat-popover #contactPopover lockAlignment>
+<sat-popover #popover lockAlignment>
   <!-- This will open as normal, but not change alignment while open. -->
 </sat-popover>
 ```
@@ -146,21 +146,13 @@ trigger that fits your application's needs.
 | backdropClicked | Emits when the popover's backdrop (if enabled) is clicked.        |
 | overlayKeydown  | Emits when a keydown event is targeted to this popover's overlay. |
 
-#### `SatPopoverAnchor` has the following methods and outputs
+#### `SatPopoverAnchor` has the following properties
 
-| Method         | Description                                  |
-|----------------|----------------------------------------------|
-| openPopover    | Open the popover.                            |
-| closePopover   | Close the popover. Optionally takes a value. |
-| togglePopover  | Toggle the popover open or closed.           |
-| isPopoverOpen  | Get whether the popover is presently open.   |
-| realignPopover | Realign the popover to the anchor.           |
-| getElement     | Get a reference to the anchor element.       |
-
-| Output        | Description                       |
-|---------------|-----------------------------------|
-| popoverOpened | Emits when the popover is opened. |
-| popoverClosed | Emits when the popover is closed. |
+| Property         | Description                          |
+|------------------|--------------------------------------|
+| popover          | A handle to the associated popover.  |
+| elementRef       | The ElementRef for with the anchor.  |
+| viewContainerRef | The ViewContainerRef for the anchor. |
 
 ### Focus behavior
 
@@ -188,14 +180,14 @@ opening the popover. To disable this, you can set the `restoreFocus` property to
 </sat-popover>
 ```
 
-Alternatively the `open` and `openPopover` methods support an optional `SatPopoverOpenOptions`
+Alternatively the `open` method supports an optional `SatPopoverOpenOptions`
 object where `autoFocus` and `restoreFocus` options can be set while opening the popover. Note
 that these options do no take precendence over the component inputs. For example, if `restoreFocus`
 is set to `false` either in the open options or via the component input, focus will not be
 restored.
 
 ```html
-<button [satPopoverAnchorFor]="myPopover" (click)="myPopover.open({ restoreFocus: false })">
+<button satPopoverAnchor (click)="popover.open({ restoreFocus: false })">
   Open
 </button>
 ```
@@ -294,16 +286,17 @@ includes background color, box shadows, margin offsets, etc.
 
 ### Hover
 The `SatPopoverHoverDirective` is available as a way to automatically add hover logic to your
-anchor with an optional delay.
+anchor with an optional delay. The `SatPopoverHoverDirective` must be used in conjunction
+with `SatPopoverAnchor`.
 
 ```html
-<div [satPopoverAnchorFor]="p" [satPopoverHover]="1000">
+<div satPopoverAnchor [satPopoverHover]="1000">
   Hover to show tooltip after 1 second
 </div>
 ```
 
 ```html
-<div [satPopoverAnchorFor]="p">
+<div satPopoverAnchor>
   Hover <span satPopoverHover>this text</span> to show tooltip immediately
 </div>
 ```
