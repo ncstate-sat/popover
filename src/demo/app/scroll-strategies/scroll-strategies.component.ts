@@ -10,29 +10,24 @@ import { Component } from '@angular/core';
         <mat-form-field>
           <mat-select [(ngModel)]="strategy">
             <mat-option *ngFor="let option of scrollOptions" [value]="option.value">
-              {{ option.name }} (<code>{{ option.value }}</code>)
+              {{ option.name }} (<code>{{ option.value }}</code
+              >)
             </mat-option>
           </mat-select>
         </mat-form-field>
 
-        <button mat-raised-button
-            class="anchor"
-            color="primary"
-            [satPopoverAnchorFor]="p"
-            (click)="p.toggle()">
+        <button mat-raised-button class="anchor" color="primary" [satPopoverAnchorFor]="p" (click)="p.toggle()">
           TOGGLE
         </button>
 
         <sat-popover #p horizontalAlign="after" hasBackdrop [scrollStrategy]="strategy">
           <div class="popover mat-body-1">Scroll the page to observe behavior.</div>
         </sat-popover>
-
       </mat-card-content>
     </mat-card>
   `
 })
 export class ScrollStrategiesDemo {
-
   strategy = 'reposition';
 
   scrollOptions = [
@@ -40,6 +35,6 @@ export class ScrollStrategiesDemo {
     { value: 'block', name: 'Block scrolling' },
     { value: 'reposition', name: 'Reposition on scroll' },
     { value: 'close', name: 'Close on scroll' },
-    { value: 'rugrats', name: 'Invalid option' },
+    { value: 'rugrats', name: 'Invalid option' }
   ];
 }
