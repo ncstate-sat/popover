@@ -14,23 +14,24 @@ import { SatPopover } from '@ncstate/sat-popover';
           <mat-radio-button value="b">B</mat-radio-button>
         </mat-radio-group>
 
-        <br>
+        <br />
 
         <mat-slide-toggle [(ngModel)]="showAnchor">Show Anchor</mat-slide-toggle>
 
-        <br>
+        <br />
 
-        <button mat-button *ngIf="showAnchor"
-            [satPopoverAnchorFor]="getActivePopover()"
-            (click)="getActivePopover().toggle()">
+        <button
+          mat-button
+          *ngIf="showAnchor"
+          [satPopoverAnchorFor]="getActivePopover()"
+          (click)="getActivePopover().toggle()"
+        >
           Anchor
         </button>
 
         <sat-popover #a xAlign="after"><div class="wrapper">A</div></sat-popover>
         <sat-popover #b xAlign="after"><div class="wrapper">B</div></sat-popover>
-
       </mat-card-content>
-
     </mat-card>
   `
 })

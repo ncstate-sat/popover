@@ -14,7 +14,7 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
   MatRadioModule,
-  MatSlideToggleModule,
+  MatSlideToggleModule
 } from '@angular/material';
 import { BidiModule } from '@angular/cdk/bidi';
 
@@ -43,10 +43,10 @@ import { AnchorReuseComponent } from './anchor-reuse/anchor-reuse.component';
     MatNativeDateModule,
     MatRadioModule,
     MatSlideToggleModule,
-    BidiModule,
+    BidiModule
   ]
 })
-export class DemoMaterialModule { }
+export class DemoMaterialModule {}
 
 @NgModule({
   declarations: [
@@ -60,7 +60,7 @@ export class DemoMaterialModule { }
     TooltipDemo,
     SpeedDialDemo,
     InteractiveCloseDemo,
-    AnchorReuseComponent,
+    AnchorReuseComponent
   ],
   imports: [
     BrowserModule,
@@ -68,11 +68,9 @@ export class DemoMaterialModule { }
     DemoMaterialModule,
     SatPopoverModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [DemoComponent]
 })
-export class DemoModule { }
-
-
+export class DemoModule {}

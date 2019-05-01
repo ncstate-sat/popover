@@ -9,29 +9,31 @@ import { Component } from '@angular/core';
       <mat-card-content>
         <div class="controls">
           <mat-form-field>
-            <input matInput type="text" [(ngModel)]="openTransition">
+            <input matInput type="text" [(ngModel)]="openTransition" />
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="text" [(ngModel)]="closeTransition">
+            <input matInput type="text" [(ngModel)]="closeTransition" />
           </mat-form-field>
         </div>
 
         <div class="indicators">
-          <div class="indicator"
-              *ngFor="let indicator of callbackIndicators"
-              [class.active]="indicator.active">
+          <div class="indicator" *ngFor="let indicator of callbackIndicators" [class.active]="indicator.active">
             {{ indicator.name }}
           </div>
         </div>
 
         <div class="anchor" [satPopoverAnchorFor]="p" (click)="p.toggle()"></div>
-        <sat-popover #p xAlign="after" yAlign="below"
-            [openTransition]="openTransition"
-            [closeTransition]="closeTransition"
-            (opened)="showCallback('opened')"
-            (closed)="showCallback('closed')"
-            (afterOpen)="showCallback('afterOpen')"
-            (afterClose)="showCallback('afterClose')">
+        <sat-popover
+          #p
+          xAlign="after"
+          yAlign="below"
+          [openTransition]="openTransition"
+          [closeTransition]="closeTransition"
+          (opened)="showCallback('opened')"
+          (closed)="showCallback('closed')"
+          (afterOpen)="showCallback('afterOpen')"
+          (afterClose)="showCallback('afterClose')"
+        >
           <div class="popover mat-subtitle">Hello!</div>
         </sat-popover>
       </mat-card-content>
@@ -46,7 +48,7 @@ export class TransitionsDemo {
     { name: 'opened', active: false },
     { name: 'closed', active: false },
     { name: 'afterOpen', active: false },
-    { name: 'afterClose', active: false },
+    { name: 'afterClose', active: false }
   ];
 
   showCallback(name) {
@@ -54,6 +56,6 @@ export class TransitionsDemo {
 
     // Flash the callback indicator
     callback.active = true;
-    setTimeout(() => callback.active = false, 100);
+    setTimeout(() => (callback.active = false), 100);
   }
 }
