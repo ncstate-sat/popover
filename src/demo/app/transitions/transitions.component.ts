@@ -23,6 +23,7 @@ import { Component } from '@angular/core';
         </div>
 
         <div satPopoverAnchor #popoverAnchor=satPopoverAnchor class="anchor" (click)="p.toggle()"></div>
+
         <sat-popover
           #p
           xAlign="after"
