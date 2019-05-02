@@ -23,7 +23,8 @@ import { SatPopover } from '@ncstate/sat-popover';
         <button
           mat-button
           *ngIf="showAnchor"
-          [satPopoverAnchorFor]="getActivePopover()"
+          satPopoverAnchor
+          [satPopoverAnchorFor]='getActivePopover()'
           (click)="getActivePopover().toggle()"
         >
           Anchor

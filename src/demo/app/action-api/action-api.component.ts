@@ -7,8 +7,8 @@ import { Component } from '@angular/core';
     <mat-card>
       <mat-card-title>Action API</mat-card-title>
       <mat-card-content>
-        <div class="avatar" #a="satPopoverAnchor" [satPopoverAnchorFor]="p">W</div>
-        <sat-popover #p horizontalAlign="after" forceAlignment>
+        <div satPopoverAnchor #anchor=satPopoverAnchor class="avatar">W</div>
+        <sat-popover #p [anchor]='anchor' horizontalAlign="after" forceAlignment>
           <div class="info mat-caption">
             <div class="caret"></div>
             <div>Messages: 12</div>
@@ -20,9 +20,9 @@ import { Component } from '@angular/core';
         <button (click)="p.open()">popover#open()</button>
         <button (click)="p.close()">popover#close()</button>
         <button (click)="p.toggle()">popover#toggle()</button>
-        <button (click)="a.openPopover()">anchor#openPopover()</button>
-        <button (click)="a.closePopover()">anchor#closePopover()</button>
-        <button (click)="a.togglePopover()">anchor#togglePopover()</button>
+        <button (click)="anchor.popover.open()">anchor#openPopover()</button>
+        <button (click)="anchor.popover.close()">anchor#closePopover()</button>
+        <button (click)="anchor.popover.toggle()">anchor#togglePopover()</button>
       </mat-card-actions>
     </mat-card>
   `
