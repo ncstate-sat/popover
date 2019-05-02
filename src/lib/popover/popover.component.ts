@@ -259,6 +259,9 @@ export class SatPopover implements OnInit {
   /** Whether the popover is presently open. */
   _open = false;
 
+  /** @internal */
+  _anchoringService: SatPopoverAnchoringService;
+
   /** Reference to the element to build a focus trap around. */
   @ViewChild('focusTrapElement')
   private _focusTrapElement: ElementRef;
@@ -271,11 +274,14 @@ export class SatPopover implements OnInit {
 
   constructor(
     private _focusTrapFactory: FocusTrapFactory,
-    /** @internal */
-    public _anchoringService: SatPopoverAnchoringService,
+    _anchoringService: SatPopoverAnchoringService,
     private _viewContainerRef: ViewContainerRef,
     @Optional() @Inject(DOCUMENT) private _document: any
-  ) { }
+  ) {
+    // `@internal` stripping doesn't seem to work if the property is
+    // declared inside the constructor
+    this._anchoringService = _anchoringService;
+  }
 
   ngOnInit() {
     this._setAlignmentClasses();
