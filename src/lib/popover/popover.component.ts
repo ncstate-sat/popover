@@ -259,7 +259,8 @@ export class SatPopover implements OnInit {
 
   constructor(
     private _focusTrapFactory: FocusTrapFactory,
-    private _anchoringService: SatPopoverAnchoringService,
+    /** @internal */
+    public _anchoringService: SatPopoverAnchoringService,
     private _viewContainerRef: ViewContainerRef,
     @Optional() @Inject(DOCUMENT) private _document: any
   ) { }

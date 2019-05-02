@@ -1107,16 +1107,6 @@ describe('SatPopover', () => {
 });
 
 /**
- * This class is used to allow accessing private API from
- * within tests in a type safe manner. It is only used for
- * typings.
- */
-// @ts-ignore typescript doesn't like that we made prop private -> public
-declare class OpenAPISatPopover extends SatPopover {
-  _anchoringService: SatPopoverAnchoringService;
-}
-
-/**
  * This component is for testing that an anchor not associated with
  * a popover will throw an error.
  */
@@ -1149,7 +1139,7 @@ class InvalidPopoverTestComponent { }
   `
 })
 class AnchorlessPopoverTestComponent {
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
 }
 
 
@@ -1168,7 +1158,7 @@ class SimpleDirectiveAnchorPopoverTestComponent {
   @ViewChild('anchorEl') anchorElement: ElementRef;
   @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
 }
 
 /**
@@ -1183,7 +1173,7 @@ class SimpleDirectiveAnchorPopoverTestComponent {
 })
 class SimpleHTMLAnchorPopoverTestComponent {
   @ViewChild('anchorEl') anchorElement: ElementRef;
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
 }
 
 /**
@@ -1203,7 +1193,7 @@ class SimpleHTMLAnchorPopoverTestComponent {
   `
 })
 class BackdropPopoverTestComponent {
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
   backdrop = false;
   clicks = 0;
   klass: string;
@@ -1224,7 +1214,7 @@ class BackdropPopoverTestComponent {
   `
 })
 export class KeyboardPopoverTestComponent {
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
   lastKeyCode: number;
 }
 
@@ -1251,7 +1241,7 @@ export class FocusPopoverTestComponent {
 
   @ViewChild('b1') button1: ElementRef;
   @ViewChild('b2') button2: ElementRef;
-  @ViewChild('p') popover: OpenAPISatPopover;
+  @ViewChild('p') popover: SatPopover;
 }
 
 /** This component is for testing dynamic positioning behavior. */
@@ -1270,7 +1260,7 @@ export class FocusPopoverTestComponent {
 })
 export class PositioningTestComponent {
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
   hAlign = 'center';
   vAlign = 'center';
   forceAlignment = false;
@@ -1288,7 +1278,7 @@ export class PositioningTestComponent {
 })
 export class PositioningAliasTestComponent {
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
   xAlign = 'center';
   yAlign = 'center';
 }
@@ -1304,7 +1294,7 @@ export class PositioningAliasTestComponent {
 })
 export class ScrollingTestComponent {
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
   strategy = 'reposition';
 }
 
@@ -1335,7 +1325,7 @@ export class ServiceTestComponent {
 })
 export class HoverDirectiveTestComponent {
   @ViewChild('anchorEl') anchorEl: ElementRef;
-  @ViewChild(SatPopover) popover: OpenAPISatPopover;
+  @ViewChild(SatPopover) popover: SatPopover;
   delay = 0;
 }
 
