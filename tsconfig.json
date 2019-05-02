@@ -17,7 +17,14 @@
       "dom"
     ],
     "paths": {
-      "@ncstate/sat-popover": ["dist/popover"]
+      "@ncstate/sat-popover": ["dist/popover"],
+      "core-js/es7/reflect": [
+        "node_modules/core-js/proposals/reflect-metadata",
+        "node_modules/core-js/es/reflect"
+      ],
+      "core-js/es6/*": [
+        "node_modules/core-js/es"
+      ]
     }
   }
 }

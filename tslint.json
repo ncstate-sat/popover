@@ -2,6 +2,11 @@
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],
+  "linterOptions": {
+    "exclude": [
+      "dist", "node_modules"
+    ],
+  },
   "rules": {
     "arrow-return-shorthand": true,
     "callable-types": true,
@@ -29,7 +34,7 @@
     "label-position": true,
     "max-line-length": [
       true,
-      100
+      150
     ],
     "member-access": false,
     "member-ordering": [

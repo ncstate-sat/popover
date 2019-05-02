@@ -13,6 +13,7 @@ import { SatPopover } from '@ncstate/sat-popover';
           <mat-checkbox [(ngModel)]="autoFocus">Auto Focus</mat-checkbox>
           <mat-checkbox [(ngModel)]="restoreFocus">Restore Focus</mat-checkbox>
         </div>
+
         <div class="results mat-body-1" [satPopoverAnchorFor]="p">
           <button mat-icon-button class="edit" (click)="p.toggle()">
             <mat-icon>create</mat-icon>
@@ -22,33 +23,27 @@ import { SatPopover } from '@ncstate/sat-popover';
           <p><b>Birth Date</b>: {{ form.value.birthDate | date }}</p>
         </div>
 
-        <sat-popover #p
-          hasBackdrop
-          horizontalAlign="after"
-          [autoFocus]="autoFocus"
-          [restoreFocus]="restoreFocus">
+        <sat-popover #p hasBackdrop horizontalAlign="after" [autoFocus]="autoFocus" [restoreFocus]="restoreFocus">
           <div class="form" [formGroup]="form">
             <mat-form-field>
-              <input matInput (keydown)="closeOnEnter($event)"
-                  formControlName="first"
-                  placeholder="First Name">
+              <input matInput (keydown)="closeOnEnter($event)" formControlName="first" placeholder="First Name" />
             </mat-form-field>
             <mat-form-field>
-              <input matInput (keydown)="closeOnEnter($event)"
-                  formControlName="last"
-                  placeholder="Last Name">
+              <input matInput (keydown)="closeOnEnter($event)" formControlName="last" placeholder="Last Name" />
             </mat-form-field>
             <mat-form-field>
-              <input matInput (keydown)="closeOnEnter($event)"
-                  formControlName="birthDate"
-                  [matDatepicker]="picker"
-                  placeholder="Birth Date">
+              <input
+                matInput
+                (keydown)="closeOnEnter($event)"
+                formControlName="birthDate"
+                [matDatepicker]="picker"
+                placeholder="Birth Date"
+              />
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </div>
         </sat-popover>
-
       </mat-card-content>
     </mat-card>
   `
@@ -63,7 +58,7 @@ export class FocusDemo {
     this.form = fb.group({
       first: 'Monty',
       last: 'Python',
-      birthDate: new Date(1969, 9, 5),
+      birthDate: new Date(1969, 9, 5)
     });
   }
 

@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
     <mat-card>
       <mat-card-title>Positioning</mat-card-title>
       <mat-card-content>
-
         <div class="config">
           <mat-form-field>
             <mat-select [(ngModel)]="horizontalAlign" placeholder="horizontalAlign">
@@ -32,9 +31,7 @@ import { Component } from '@angular/core';
           </mat-form-field>
 
           <mat-form-field>
-            <input matInput type="number"
-              [(ngModel)]="margin"
-              placeholder="anchor's margin-left (px)">
+            <input matInput type="number" [(ngModel)]="margin" placeholder="anchor's margin-left (px)" />
           </mat-form-field>
 
           <mat-checkbox [(ngModel)]="forceAlignment">
@@ -46,35 +43,36 @@ import { Component } from '@angular/core';
           </mat-checkbox>
         </div>
 
-        <button mat-raised-button
-            color="accent"
-            [style.marginLeft]="margin + 'px'"
-            [satPopoverAnchorFor]="p"
-            (click)="p.toggle()">
+        <button
+          mat-raised-button
+          color="accent"
+          [style.marginLeft]="margin + 'px'"
+          [satPopoverAnchorFor]="p"
+          (click)="p.toggle()"
+        >
           CLICK TO TOGGLE
         </button>
-
       </mat-card-content>
 
-      <sat-popover #p hasBackdrop
-          [horizontalAlign]="horizontalAlign"
-          [verticalAlign]="verticalAlign"
-          [forceAlignment]="forceAlignment"
-          [lockAlignment]="lockAlignment">
+      <sat-popover
+        #p
+        hasBackdrop
+        [horizontalAlign]="horizontalAlign"
+        [verticalAlign]="verticalAlign"
+        [forceAlignment]="forceAlignment"
+        [lockAlignment]="lockAlignment"
+      >
         <div class="popover mat-body-2">
           Nifty
         </div>
       </sat-popover>
-
     </mat-card>
   `
 })
 export class PositioningDemo {
-
   horizontalAlign = 'after';
   verticalAlign = 'center';
   margin = 0;
   forceAlignment = false;
   lockAlignment = false;
-
 }
