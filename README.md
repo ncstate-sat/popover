@@ -69,16 +69,28 @@ Wrap any component you want to display in a popover with an `<sat-popover>` comp
 Next, supply an anchor element to the popover.
 
 ```html
-<button #popoverAnchor (click)="popover.toggle()">
+<button satPopoverAnchor #anchor=satPopoverAnchor (click)="anchor.popover.toggle()">
   See Contact Details
 </button>
 
-<sat-popover #popover [anchor]="popoverAnchor" hasBackdrop>
+<sat-popover [anchor]="anchor" hasBackdrop>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
 </sat-popover>
 ```
 
 > Note: `hasBackdrop` is explained below
+
+Alternatively, supply a popover element to the anchor.
+
+```html
+<button satPopoverAnchor [satPopoverAnchorFor]='p' #anchor=satPopoverAnchor (click)="anchor.popover.toggle()">
+  See Contact Details
+</button>
+
+<sat-popover #p hasBackdrop>
+  <app-contact-overview [contact]="myContact"></app-contact-overview>
+</sat-popover>
+```
 
 ### Alignment
 
@@ -86,7 +98,7 @@ By default, the popover will appear centered over the anchor. If you instead wan
 to appear below the anchor:
 
 ```html
-<sat-popover #popover verticalAlign="below">
+<sat-popover verticalAlign="below">
   <!-- ... -->
 </sat-popover>
 ```
@@ -106,7 +118,7 @@ alignment. You can use `forceAlignment` to ensure that the popover always displa
 with the alignment you've specified.
 
 ```html
-<sat-popover #popover verticalAlign="below" forceAlignment>
+<sat-popover verticalAlign="below" forceAlignment>
   <!-- This will always open below the anchor, even if it falls outside the viewport. -->
 </sat-popover>
 ```
@@ -117,7 +129,7 @@ set). You can use `lockAlignment` to ensure the popover does not change its alig
 opened.
 
 ```html
-<sat-popover #popover lockAlignment>
+<sat-popover lockAlignment>
   <!-- This will open as normal, but not change alignment while open. -->
 </sat-popover>
 ```
@@ -148,11 +160,12 @@ trigger that fits your application's needs.
 
 #### `SatPopoverAnchor` has the following properties
 
-| Property         | Description                          |
-|------------------|--------------------------------------|
-| popover          | A handle to the associated popover.  |
-| elementRef       | The ElementRef for with the anchor.  |
-| viewContainerRef | The ViewContainerRef for the anchor. |
+| Property                      | Description                                       |
+|-------------------------------|---------------------------------------------------|
+| popover                       | A handle to the associated popover.               |
+| satPopoverAnchorFor (setter)  | An `@Input()` for setting the associated popover. |
+| elementRef                    | The ElementRef for with the anchor.               |
+| viewContainerRef              | The ViewContainerRef for the anchor.              |
 
 ### Focus behavior
 
@@ -187,7 +200,7 @@ is set to `false` either in the open options or via the component input, focus w
 restored.
 
 ```html
-<button satPopoverAnchor (click)="popover.open({ restoreFocus: false })">
+<button (click)="popover.open({ restoreFocus: false })">
   Open
 </button>
 ```

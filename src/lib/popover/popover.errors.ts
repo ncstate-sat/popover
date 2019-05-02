@@ -11,11 +11,18 @@ export function getInvalidPopoverAnchorError(): Error {
   );
 }
 
+export function getInvalidPopoverError(): Error {
+  return Error(
+    'SatPopoverAnchor#satPopoverAnchorFor must be an instance of SatPopover.'
+  );
+}
+
 export function getInvalidSatPopoverAnchorError(): Error {
   return Error(
-    `SatPopoverAnchor must be handed to a SatPopover ` +
-    `component via that component's "anchor" input property. ` +
-    `Example: [anchor]="anchorTemplateVariable"`
+    `SatPopoverAnchor must be associated with a ` +
+    `SatPopover component. ` +
+    `Examples: <sat-popover [anchor]="satPopoverAnchorTemplateRef"> or ` +
+    `<button satPopoverAnchor [satPopoverAnchorFor]="satPopoverTemplateRef">`
   );
 }
 

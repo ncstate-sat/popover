@@ -27,6 +27,7 @@ import {
   getInvalidScrollStrategyError,
   getInvalidPopoverAnchorError,
   getInvalidSatPopoverAnchorError,
+  getInvalidPopoverError,
 } from './popover.errors';
 import {
   SatPopoverScrollStrategy,
@@ -48,7 +49,18 @@ const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 })
 export class SatPopoverAnchor {
   popover: SatPopover;
-  
+
+  /** Popover element setter. */
+  @Input()
+  set satPopoverAnchorFor(val: SatPopover) {
+    if (val instanceof SatPopover) {
+      val.anchor = this;
+    }
+    else {
+      throw getInvalidPopoverError();
+    }
+  }
+    
   constructor(
     public elementRef: ElementRef,
     public viewContainerRef: ViewContainerRef,

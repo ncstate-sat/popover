@@ -147,30 +147,12 @@ describe('SatPopover', () => {
       expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
     });
 
-    it('should open with openPopover()', () => {
-      fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
-      comp.anchor.popover.open();
-      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
-    });
-
     it('should close with close()', fakeAsync(() => {
       fixture.detectChanges();
       comp.popover.open();
       expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
 
       comp.popover.close();
-      fixture.detectChanges();
-      tick();
-      expect(overlayContainerElement.textContent).toBe('', 'Subsequently closed');
-    }));
-
-    it('should close with closePopover()', fakeAsync(() => {
-      fixture.detectChanges();
-      comp.anchor.popover.open();
-      expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
-
-      comp.anchor.popover.close();
       fixture.detectChanges();
       tick();
       expect(overlayContainerElement.textContent).toBe('', 'Subsequently closed');
@@ -189,33 +171,17 @@ describe('SatPopover', () => {
       expect(overlayContainerElement.textContent).toBe('', 'Closed after second toggle');
     }));
 
-    it('should toggle with togglePopover()', fakeAsync(() => {
-      fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
-
-      comp.anchor.popover.toggle();
-      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
-
-      comp.anchor.popover.toggle();
-      fixture.detectChanges();
-      tick();
-      expect(overlayContainerElement.textContent).toBe('', 'Closed after second toggle');
-    }));
-
     it('should emit when opened', fakeAsync(() => {
       fixture.detectChanges();
       let popoverOpenedEvent = false;
-      let anchorOpenedEvent = false;
       let popoverAfterOpenEvent = false;
 
       comp.popover.opened.subscribe(() => popoverOpenedEvent = true);
-      comp.anchor.popover.opened.subscribe(() => anchorOpenedEvent = true);
       comp.popover.afterOpen.subscribe(() => popoverAfterOpenEvent = true);
 
       comp.popover.open();
 
       expect(popoverOpenedEvent).toBe(true, 'popoverOpened called');
-      expect(anchorOpenedEvent).toBe(true, 'anchorOpened called');
       expect(popoverAfterOpenEvent).toBe(false, 'popoverAfterOpen not yet called');
 
       tick();
@@ -227,18 +193,15 @@ describe('SatPopover', () => {
       comp.popover.open();
 
       let popoverClosedEvent = false;
-      let anchorClosedEvent = false;
       let popoverAfterCloseEvent = false;
 
       comp.popover.closed.subscribe(() => popoverClosedEvent = true);
-      comp.anchor.popover.closed.subscribe(() => anchorClosedEvent = true);
       comp.popover.afterClose.subscribe(() => popoverAfterCloseEvent = true);
 
       comp.popover.close();
       fixture.detectChanges();
 
       expect(popoverClosedEvent).toBe(true, 'popoverClosed called');
-      expect(anchorClosedEvent).toBe(true, 'anchorClosed called');
       expect(popoverAfterCloseEvent).toBe(false, 'popoverAfterClose not yet called');
 
       tick();
@@ -249,25 +212,11 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       comp.popover.open();
 
-      const firstTestVal = 'abc123';
       const secondTestVal = 'xyz789';
 
       let popoverClosedValue;
-      let anchorClosedValue;
 
       comp.popover.closed.subscribe(val => popoverClosedValue = val);
-      comp.anchor.popover.closed.subscribe(val => anchorClosedValue = val);
-
-      comp.anchor.popover.close(firstTestVal);
-      fixture.detectChanges();
-      tick();
-
-      // Working when closed via anchor api
-      expect(popoverClosedValue).toBe(firstTestVal, 'popoverClosed with value - anchor api');
-      expect(anchorClosedValue).toBe(firstTestVal, 'anchorClosed with value - anchor api');
-
-      comp.popover.open();
-      fixture.detectChanges();
 
       comp.popover.close(secondTestVal);
       fixture.detectChanges();
@@ -275,25 +224,21 @@ describe('SatPopover', () => {
 
       // Working when closed via popover api
       expect(popoverClosedValue).toBe(secondTestVal, 'popoverClosed with value - popover api');
-      expect(anchorClosedValue).toBe(secondTestVal, 'anchorClosed with value - popover api');
     }));
 
     it('should return whether the popover is presently open', fakeAsync(() => {
       fixture.detectChanges();
 
-      expect(comp.anchor.popover.isOpen()).toBe(false, 'Initially closed - anchor');
       expect(comp.popover.isOpen()).toBe(false, 'Initially closed - popover');
 
       comp.popover.open();
 
-      expect(comp.anchor.popover.isOpen()).toBe(true, 'Subsequently opened - anchor');
       expect(comp.popover.isOpen()).toBe(true, 'Subsequently opened - popover');
 
       comp.popover.close();
       fixture.detectChanges();
       tick();
 
-      expect(comp.anchor.popover.isOpen()).toBe(false, 'Finally closed - anchor');
       expect(comp.popover.isOpen()).toBe(false, 'Finally closed - popover');
     }));
 
@@ -302,6 +247,64 @@ describe('SatPopover', () => {
       expect(comp.anchor.elementRef).toEqual(comp.anchorElement);
     }));
 
+    it('should provide a reference to the popover element', () => {
+      fixture.detectChanges();
+      expect(comp.anchor.popover).toBe(comp.popover);
+    });
+  });
+
+  describe('using satPopoverAnchorFor', () => {
+    describe('opening and closing behavior', () => {
+      let fixture: ComponentFixture<DirectiveAnchorForPopoverTestComponent>;
+      let comp:    DirectiveAnchorForPopoverTestComponent;
+      let overlayContainerElement: HTMLElement;
+
+      beforeEach(() => {
+        TestBed.configureTestingModule({
+          imports: [
+            SatPopoverModule,
+            NoopAnimationsModule,
+          ],
+          declarations: [DirectiveAnchorForPopoverTestComponent],
+          providers: [
+            {provide: OverlayContainer, useFactory: overlayContainerFactory}
+          ]
+        });
+
+        fixture = TestBed.createComponent(DirectiveAnchorForPopoverTestComponent);
+        comp = fixture.componentInstance;
+
+        overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+          .getContainerElement();
+      });
+
+      afterEach(() => {
+        document.body.removeChild(overlayContainerElement);
+      });
+
+      it('should open with open()', () => {
+        fixture.detectChanges();
+        expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
+        comp.popover.open();
+        expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
+      });
+
+      it('should close with close()', fakeAsync(() => {
+        fixture.detectChanges();
+        comp.popover.open();
+        expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
+
+        comp.popover.close();
+        fixture.detectChanges();
+        tick();
+        expect(overlayContainerElement.textContent).toBe('', 'Subsequently closed');
+      }));
+
+      it('should provide a reference to the popover element', () => {
+        fixture.detectChanges();
+        expect(comp.anchor.popover).toBe(comp.popover);
+      });
+    });
   });
 
   describe('backdrop', () => {
@@ -1155,6 +1158,24 @@ class AnchorlessPopoverTestComponent {
   `
 })
 class SimpleDirectiveAnchorPopoverTestComponent {
+  @ViewChild('anchorEl') anchorElement: ElementRef;
+  @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
+  @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
+  @ViewChild(SatPopover) popover: SatPopover;
+}
+
+/**
+ * This component is for testing the `satPopoverAnchorFor`
+ * input setter of `SatPopoverAnchor`.
+ */
+@Component({
+  template: `
+    <div #anchorEl satPopoverAnchor [satPopoverAnchorFor]='p'>Anchor</div>
+    <div #anchorEl2>Alternate anchor</div>
+    <sat-popover #p>Popover</sat-popover>
+  `
+})
+class DirectiveAnchorForPopoverTestComponent {
   @ViewChild('anchorEl') anchorElement: ElementRef;
   @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
