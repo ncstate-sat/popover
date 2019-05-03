@@ -4,8 +4,9 @@
   ],
   "linterOptions": {
     "exclude": [
-      "dist", "node_modules"
-    ],
+      "dist",
+      "node_modules"
+    ]
   },
   "rules": {
     "arrow-return-shorthand": true,
