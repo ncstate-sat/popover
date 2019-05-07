@@ -8,7 +8,7 @@ import { SatPopover } from '@ncstate/sat-popover';
     <mat-card>
       <mat-card-title>MatSelect Trigger</mat-card-title>
       <mat-card-content>
-        <mat-form-field satPopoverAnchor [satPopoverAnchorFor]='p'>
+        <mat-form-field [satPopoverAnchor]='p'>
           <mat-select placeholder="Select 'Fancy'" (selectionChange)="updateSelectValue($event.value)">
             <mat-option value="boring">Boring</mat-option>
             <mat-option value="standard">Standard</mat-option>

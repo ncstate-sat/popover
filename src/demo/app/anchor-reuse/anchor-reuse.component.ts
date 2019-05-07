@@ -23,15 +23,14 @@ import { SatPopover } from '@ncstate/sat-popover';
         <button
           mat-button
           *ngIf="showAnchor"
-          satPopoverAnchor
-          [satPopoverAnchorFor]='getActivePopover()'
+          [satPopoverAnchor]='getActivePopover()'
           (click)="getActivePopover().toggle()"
         >
           Anchor
         </button>
 
-        <sat-popover #a xAlign="after"><div class="wrapper">A</div></sat-popover>
-        <sat-popover #b xAlign="after"><div class="wrapper">B</div></sat-popover>
+        <sat-popover #a xAlign="after" hasBackdrop><div class="wrapper">A</div></sat-popover>
+        <sat-popover #b xAlign="after" hasBackdrop><div class="wrapper">B</div></sat-popover>
       </mat-card-content>
     </mat-card>
   `

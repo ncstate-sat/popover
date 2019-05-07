@@ -48,19 +48,24 @@ const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   exportAs: 'satPopoverAnchor',
 })
 export class SatPopoverAnchor {
-  popover: SatPopover;
-
-  /** Popover element setter. */
-  @Input()
-  set satPopoverAnchorFor(val: SatPopover) {
+  @Input('satPopoverAnchor')
+  get popover() {
+    return this._popover;
+  }
+  set popover(val: SatPopover) {
     if (val instanceof SatPopover) {
       val.anchor = this;
     }
-    else {
+    // when a directive is added with no arguments,
+    // angular assigns `''` as the argument
+    else if (val !== '') {
       throw getInvalidPopoverError();
     }
   }
-    
+  
+  /** @internal */
+  _popover: SatPopover;
+
   constructor(
     public elementRef: ElementRef,
     public viewContainerRef: ViewContainerRef,
@@ -88,7 +93,7 @@ export class SatPopover implements OnInit {
   get anchor() { return this._anchor; }
   set anchor(val: SatPopoverAnchor | ElementRef<HTMLElement> | HTMLElement) {
     if (val instanceof SatPopoverAnchor) {
-      val.popover = this;
+      val._popover = this;
       this._anchoringService.anchor(this, val.viewContainerRef, val.elementRef);
       this._anchor = val;
     }

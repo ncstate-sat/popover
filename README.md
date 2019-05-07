@@ -66,7 +66,21 @@ Wrap any component you want to display in a popover with an `<sat-popover>` comp
 </sat-popover>
 ```
 
-Next, supply an anchor element to the popover.
+Next, apply the `satPopoverAnchor` directive to the element you wish to be the popover anchor and pass the `<sat-popover>` component as an argument to the `satPopoverAnchor` directive.
+
+```html
+<button [satPopoverAnchor]='popover' (click)="popover.toggle()">
+  See Contact Details
+</button>
+
+<sat-popover #popover hasBackdrop>
+  <app-contact-overview [contact]="myContact"></app-contact-overview>
+</sat-popover>
+```
+
+> Note: `hasBackdrop` is explained below
+
+Alternatively, supply an anchor element to the popover.
 
 ```html
 <button satPopoverAnchor #anchor=satPopoverAnchor (click)="anchor.popover.toggle()">
@@ -74,20 +88,6 @@ Next, supply an anchor element to the popover.
 </button>
 
 <sat-popover [anchor]="anchor" hasBackdrop>
-  <app-contact-overview [contact]="myContact"></app-contact-overview>
-</sat-popover>
-```
-
-> Note: `hasBackdrop` is explained below
-
-Alternatively, supply a popover element to the anchor.
-
-```html
-<button satPopoverAnchor [satPopoverAnchorFor]='p' #anchor=satPopoverAnchor (click)="anchor.popover.toggle()">
-  See Contact Details
-</button>
-
-<sat-popover #p hasBackdrop>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
 </sat-popover>
 ```
@@ -163,7 +163,7 @@ trigger that fits your application's needs.
 | Property                      | Description                                       |
 |-------------------------------|---------------------------------------------------|
 | popover                       | A handle to the associated popover.               |
-| satPopoverAnchorFor (setter)  | An `@Input()` for setting the associated popover. |
+| satPopoverAnchor (setter)     | An `@Input()` for setting the associated popover. |
 | elementRef                    | The ElementRef for with the anchor.               |
 | viewContainerRef              | The ViewContainerRef for the anchor.              |
 

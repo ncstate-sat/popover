@@ -253,7 +253,7 @@ describe('SatPopover', () => {
     });
   });
 
-  describe('using satPopoverAnchorFor', () => {
+  describe('using satPopoverAnchor input setter', () => {
     describe('opening and closing behavior', () => {
       let fixture: ComponentFixture<DirectiveAnchorForPopoverTestComponent>;
       let comp:    DirectiveAnchorForPopoverTestComponent;
@@ -1165,12 +1165,12 @@ class SimpleDirectiveAnchorPopoverTestComponent {
 }
 
 /**
- * This component is for testing the `satPopoverAnchorFor`
- * input setter of `SatPopoverAnchor`.
+ * This component is for testing the
+ * `SatPopoverAnchor#satPopoverAnchor` input setter.
  */
 @Component({
   template: `
-    <div #anchorEl satPopoverAnchor [satPopoverAnchorFor]='p'>Anchor</div>
+    <div #anchorEl [satPopoverAnchor]='p'>Anchor</div>
     <div #anchorEl2>Alternate anchor</div>
     <sat-popover #p>Popover</sat-popover>
   `

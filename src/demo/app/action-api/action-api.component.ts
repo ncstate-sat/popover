@@ -20,9 +20,9 @@ import { Component } from '@angular/core';
         <button (click)="p.open()">popover#open()</button>
         <button (click)="p.close()">popover#close()</button>
         <button (click)="p.toggle()">popover#toggle()</button>
-        <button (click)="anchor.popover.open()">anchor#openPopover()</button>
-        <button (click)="anchor.popover.close()">anchor#closePopover()</button>
-        <button (click)="anchor.popover.toggle()">anchor#togglePopover()</button>
+        <button (click)="anchor.popover.open()">anchor#popover.open()</button>
+        <button (click)="anchor.popover.close()">anchor#popover.close()</button>
+        <button (click)="anchor.popover.toggle()">anchor#popover.toggle()</button>
       </mat-card-actions>
     </mat-card>
   `
