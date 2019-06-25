@@ -11,6 +11,8 @@ import {
   OnInit,
   Optional,
   Output,
+  Directive,
+  ViewContainerRef,
 } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
@@ -19,15 +21,13 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { transformPopover } from './popover.animations';
 import {
-  NotificationAction,
-  PopoverNotification,
-  PopoverNotificationService,
-} from './notification.service';
-import {
   getUnanchoredPopoverError,
   getInvalidHorizontalAlignError,
   getInvalidVerticalAlignError,
   getInvalidScrollStrategyError,
+  getInvalidPopoverAnchorError,
+  getInvalidSatPopoverAnchorError,
+  getInvalidPopoverError,
 } from './popover.errors';
 import {
   SatPopoverScrollStrategy,
@@ -38,9 +38,45 @@ import {
   VALID_VERT_ALIGN,
   SatPopoverOpenOptions,
 } from './types';
+import { SatPopoverAnchoringService } from './popover-anchoring.service';
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
 const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+
+@Directive({
+  selector: '[satPopoverAnchor]',
+  exportAs: 'satPopoverAnchor',
+})
+export class SatPopoverAnchor {
+  @Input('satPopoverAnchor')
+  get popover() {
+    return this._popover;
+  }
+  set popover(val: SatPopover) {
+    if (val instanceof SatPopover) {
+      val.anchor = this;
+    }
+    // when a directive is added with no arguments,
+    // angular assigns `''` as the argument
+    else if (val !== '') {
+      throw getInvalidPopoverError();
+    }
+  }
+  
+  /** @internal */
+  _popover: SatPopover;
+
+  constructor(
+    public elementRef: ElementRef,
+    public viewContainerRef: ViewContainerRef,
+  ) {}
+
+  ngAfterViewInit() {
+    if (!this.popover) {
+      throw getInvalidSatPopoverAnchorError();
+    }
+  }
+}
 
 @Component({
   selector: 'sat-popover',
@@ -48,8 +84,28 @@ const DEFAULT_TRANSITION  = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   animations: [transformPopover],
   styleUrls: ['./popover.component.scss'],
   templateUrl: './popover.component.html',
+  providers: [SatPopoverAnchoringService],
 })
-export class SatPopover implements OnInit, OnDestroy {
+export class SatPopover implements OnInit {
+
+  /** Anchor element. */
+  @Input()
+  get anchor() { return this._anchor; }
+  set anchor(val: SatPopoverAnchor | ElementRef<HTMLElement> | HTMLElement) {
+    if (val instanceof SatPopoverAnchor) {
+      val._popover = this;
+      this._anchoringService.anchor(this, val.viewContainerRef, val.elementRef);
+      this._anchor = val;
+    }
+    else if (val instanceof ElementRef || val instanceof HTMLElement) {
+      this._anchoringService.anchor(this, this._viewContainerRef, val);
+      this._anchor = val;
+    }
+    else if (val) {
+      throw getInvalidPopoverAnchorError();
+    }
+  }
+  private _anchor: SatPopoverAnchor | ElementRef<HTMLElement> | HTMLElement;  
 
   /** Alignment of the popover on the horizontal axis. */
   @Input()
@@ -58,7 +114,7 @@ export class SatPopover implements OnInit, OnDestroy {
     this._validateHorizontalAlign(val);
     if (this._horizontalAlign !== val) {
       this._horizontalAlign = val;
-      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
+      this._anchoringService.repositionPopover();
     }
   }
   private _horizontalAlign: SatPopoverHorizontalAlign = 'center';
@@ -75,7 +131,7 @@ export class SatPopover implements OnInit, OnDestroy {
     this._validateVerticalAlign(val);
     if (this._verticalAlign !== val) {
       this._verticalAlign = val;
-      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
+      this._anchoringService.repositionPopover();
     }
   }
   private _verticalAlign: SatPopoverVerticalAlign = 'center';
@@ -92,7 +148,7 @@ export class SatPopover implements OnInit, OnDestroy {
     const coercedVal = coerceBooleanProperty(val);
     if (this._forceAlignment !== coercedVal) {
       this._forceAlignment = coercedVal;
-      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
+      this._anchoringService.repositionPopover();
     }
   }
   private _forceAlignment = false;
@@ -107,7 +163,7 @@ export class SatPopover implements OnInit, OnDestroy {
     const coercedVal = coerceBooleanProperty(val);
     if (this._lockAlignment !== coercedVal) {
       this._lockAlignment = coerceBooleanProperty(val);
-      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.REPOSITION));
+      this._anchoringService.repositionPopover();
     }
   }
   private _lockAlignment = false;
@@ -137,7 +193,7 @@ export class SatPopover implements OnInit, OnDestroy {
     this._validateScrollStrategy(val);
     if (this._scrollStrategy !== val) {
       this._scrollStrategy = val;
-      this._dispatchConfigNotification(new PopoverNotification(NotificationAction.UPDATE_CONFIG));
+      this._anchoringService.updatePopoverConfig();
     }
   }
   private _scrollStrategy: SatPopoverScrollStrategy = 'reposition';
@@ -208,8 +264,8 @@ export class SatPopover implements OnInit, OnDestroy {
   /** Whether the popover is presently open. */
   _open = false;
 
-  /** Instance of notification service. Will be undefined until attached to an anchor. */
-  _notifications: PopoverNotificationService;
+  /** @internal */
+  _anchoringService: SatPopoverAnchoringService;
 
   /** Reference to the element to build a focus trap around. */
   @ViewChild('focusTrapElement')
@@ -223,46 +279,56 @@ export class SatPopover implements OnInit, OnDestroy {
 
   constructor(
     private _focusTrapFactory: FocusTrapFactory,
+    _anchoringService: SatPopoverAnchoringService,
+    private _viewContainerRef: ViewContainerRef,
     @Optional() @Inject(DOCUMENT) private _document: any
-  ) { }
+  ) {
+    // `@internal` stripping doesn't seem to work if the property is
+    // declared inside the constructor
+    this._anchoringService = _anchoringService;
+  }
 
   ngOnInit() {
     this._setAlignmentClasses();
   }
 
-  ngOnDestroy() {
-    if (this._notifications) {
-      this._notifications.dispose();
-    }
-  }
-
   /** Open this popover. */
   open(options: SatPopoverOpenOptions = {}): void {
-    const notification = new PopoverNotification(NotificationAction.OPEN, options);
-    this._dispatchActionNotification(notification);
+    if (this._anchor) {
+      this._anchoringService.openPopover(options);
+      return;
+    }
+
+    throw getUnanchoredPopoverError();
   }
 
   /** Close this popover. */
   close(value?: any): void {
-    const notification = new PopoverNotification(NotificationAction.CLOSE, value);
-    this._dispatchActionNotification(notification);
+    this._anchoringService.closePopover(value);
   }
 
   /** Toggle this popover open or closed. */
   toggle(): void {
-    const notification = new PopoverNotification(NotificationAction.TOGGLE);
-    this._dispatchActionNotification(notification);
+    this._anchoringService.togglePopover();
   }
 
   /** Realign the popover to the anchor. */
   realign(): void {
-    const notification = new PopoverNotification(NotificationAction.REALIGN);
-    this._dispatchActionNotification(notification);
+    this._anchoringService.realignPopoverToAnchor();
   }
 
   /** Gets whether the popover is presently open. */
   isOpen(): boolean {
     return this._open;
+  }
+
+  /** Allows programmatically setting a custom anchor. */
+  setCustomAnchor(
+    viewContainer: ViewContainerRef,
+    el: ElementRef<HTMLElement> | HTMLElement
+  ): void {
+    this._anchor = el;
+    this._anchoringService.anchor(this, viewContainer, el);
   }
 
   /** Gets an animation config with customized (or default) transition values. */
@@ -335,22 +401,6 @@ export class SatPopover implements OnInit, OnDestroy {
     if (this._document) {
       this._previouslyFocusedElement = this._document.activeElement as HTMLElement;
     }
-  }
-
-  /** Dispatch a notification to the notification service, if possible. */
-  private _dispatchConfigNotification(notification: PopoverNotification) {
-    if (this._notifications) {
-      this._notifications.dispatch(notification);
-    }
-  }
-
-  /** Dispatch a notification to the notification service and throw if unable to. */
-  private _dispatchActionNotification(notification: PopoverNotification) {
-    if (!this._notifications) {
-      throw getUnanchoredPopoverError();
-    }
-
-    this._notifications.dispatch(notification);
   }
 
   /** Throws an error if the alignment is not a valid horizontalAlign. */

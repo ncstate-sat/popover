@@ -16,11 +16,11 @@ import { Component } from '@angular/core';
           </mat-select>
         </mat-form-field>
 
-        <button mat-raised-button class="anchor" color="primary" [satPopoverAnchorFor]="p" (click)="p.toggle()">
+        <button mat-raised-button satPopoverAnchor #anchor=satPopoverAnchor class="anchor" color="primary" (click)="p.toggle()">
           TOGGLE
         </button>
 
-        <sat-popover #p horizontalAlign="after" hasBackdrop [scrollStrategy]="strategy">
+        <sat-popover #p [anchor]="anchor" horizontalAlign="after" hasBackdrop [scrollStrategy]="strategy">
           <div class="popover mat-body-1">Scroll the page to observe behavior.</div>
         </sat-popover>
       </mat-card-content>

@@ -14,7 +14,7 @@ import { SatPopover } from '@ncstate/sat-popover';
           <mat-checkbox [(ngModel)]="restoreFocus">Restore Focus</mat-checkbox>
         </div>
 
-        <div class="results mat-body-1" [satPopoverAnchorFor]="p">
+        <div satPopoverAnchor #anchor=satPopoverAnchor class="results mat-body-1">
           <button mat-icon-button class="edit" (click)="p.toggle()">
             <mat-icon>create</mat-icon>
           </button>
@@ -23,7 +23,7 @@ import { SatPopover } from '@ncstate/sat-popover';
           <p><b>Birth Date</b>: {{ form.value.birthDate | date }}</p>
         </div>
 
-        <sat-popover #p hasBackdrop horizontalAlign="after" [autoFocus]="autoFocus" [restoreFocus]="restoreFocus">
+        <sat-popover #p [anchor]="anchor" hasBackdrop horizontalAlign="after" [autoFocus]="autoFocus" [restoreFocus]="restoreFocus">
           <div class="form" [formGroup]="form">
             <mat-form-field>
               <input matInput (keydown)="closeOnEnter($event)" formControlName="first" placeholder="First Name" />

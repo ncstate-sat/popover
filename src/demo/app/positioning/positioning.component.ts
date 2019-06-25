@@ -45,9 +45,10 @@ import { Component } from '@angular/core';
 
         <button
           mat-raised-button
+          satPopoverAnchor
+          #anchor=satPopoverAnchor
           color="accent"
           [style.marginLeft]="margin + 'px'"
-          [satPopoverAnchorFor]="p"
           (click)="p.toggle()"
         >
           CLICK TO TOGGLE
@@ -56,6 +57,7 @@ import { Component } from '@angular/core';
 
       <sat-popover
         #p
+        [anchor]="anchor"
         hasBackdrop
         [horizontalAlign]="horizontalAlign"
         [verticalAlign]="verticalAlign"

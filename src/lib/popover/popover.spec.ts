@@ -12,21 +12,20 @@ import {
 import { ESCAPE, A } from '@angular/cdk/keycodes';
 
 import { SatPopoverModule } from './popover.module';
-import { SatPopover } from './popover.component';
-import { SatPopoverAnchor } from './popover-anchor.directive';
+import { SatPopover, SatPopoverAnchor } from './popover.component';
 import { SatPopoverAnchoringService } from './popover-anchoring.service';
 import {
-  getInvalidPopoverError,
   getUnanchoredPopoverError,
   getInvalidHorizontalAlignError,
   getInvalidVerticalAlignError,
   getInvalidScrollStrategyError,
+  getInvalidPopoverAnchorError,
+  getInvalidSatPopoverAnchorError,
 } from './popover.errors';
-
 
 describe('SatPopover', () => {
 
-  describe('passing to anchor', () => {
+  describe('passing an anchor', () => {
     let fixture: ComponentFixture<any>;
 
     beforeEach(() => {
@@ -34,8 +33,10 @@ describe('SatPopover', () => {
         imports: [SatPopoverModule],
         declarations: [
           InvalidPopoverTestComponent,
-          SimplePopoverTestComponent,
+          SimpleDirectiveAnchorPopoverTestComponent,
+          SimpleHTMLAnchorPopoverTestComponent,
           AnchorlessPopoverTestComponent,
+          InvalidAnchorTestComponent,
         ]
       });
 
@@ -46,15 +47,45 @@ describe('SatPopover', () => {
 
       expect(() => {
         fixture.detectChanges();
-      }).toThrow(getInvalidPopoverError());
+      }).toThrow(getInvalidPopoverAnchorError());
     });
 
-    it('should not throw an error if a valid popover is provided', () => {
-      fixture = TestBed.createComponent(SimplePopoverTestComponent);
+    it('should not throw an error if a valid "setPopoverAnchor" anchor is provided', () => {
+      fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
 
       expect(() => {
         fixture.detectChanges();
       }).not.toThrowError();
+    });
+
+    it('should not throw an error if a valid ElementRef anchor is provided', () => {
+      fixture = TestBed.createComponent(SimpleHTMLAnchorPopoverTestComponent);
+
+      expect(() => {
+        fixture.detectChanges();
+      }).not.toThrowError();
+    });
+
+    it('should update the anchor if a valid new anchor is provided', () => {
+      fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
+
+      fixture.detectChanges();
+
+      const comp = fixture.componentInstance as SimpleDirectiveAnchorPopoverTestComponent;
+
+      expect(comp.popover.anchor).toBe(comp.anchor);
+      expect(
+        (comp.popover._anchoringService as any)._anchor
+      ).toBe(comp.anchor.elementRef.nativeElement);
+
+      expect(() => {
+        comp.popover.anchor = comp.alternateAnchorElement;
+      }).not.toThrowError();
+
+      expect(comp.popover.anchor).toBe(comp.alternateAnchorElement);
+      expect(
+        (comp.popover._anchoringService as any)._anchor
+      ).toBe(comp.alternateAnchorElement.nativeElement);
     });
 
     it('should throw an error if open is called on a popover with no anchor', () => {
@@ -71,11 +102,19 @@ describe('SatPopover', () => {
       }).toThrow(getUnanchoredPopoverError());
     });
 
+    it('should throw an error if an anchor is not associated with a popover', () => {
+      fixture = TestBed.createComponent(InvalidAnchorTestComponent);
+
+      expect(() => {
+        fixture.detectChanges();
+      }).toThrow(getInvalidSatPopoverAnchorError());
+    });
+
   });
 
   describe('opening and closing behavior', () => {
-    let fixture: ComponentFixture<SimplePopoverTestComponent>;
-    let comp:    SimplePopoverTestComponent;
+    let fixture: ComponentFixture<SimpleDirectiveAnchorPopoverTestComponent>;
+    let comp:    SimpleDirectiveAnchorPopoverTestComponent;
     let overlayContainerElement: HTMLElement;
 
     beforeEach(() => {
@@ -84,13 +123,13 @@ describe('SatPopover', () => {
           SatPopoverModule,
           NoopAnimationsModule,
         ],
-        declarations: [SimplePopoverTestComponent],
+        declarations: [SimpleDirectiveAnchorPopoverTestComponent],
         providers: [
           {provide: OverlayContainer, useFactory: overlayContainerFactory}
         ]
       });
 
-      fixture = TestBed.createComponent(SimplePopoverTestComponent);
+      fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
       comp = fixture.componentInstance;
 
       overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
@@ -108,30 +147,12 @@ describe('SatPopover', () => {
       expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
     });
 
-    it('should open with openPopover()', () => {
-      fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
-      comp.anchor.openPopover();
-      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
-    });
-
     it('should close with close()', fakeAsync(() => {
       fixture.detectChanges();
       comp.popover.open();
       expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
 
       comp.popover.close();
-      fixture.detectChanges();
-      tick();
-      expect(overlayContainerElement.textContent).toBe('', 'Subsequently closed');
-    }));
-
-    it('should close with closePopover()', fakeAsync(() => {
-      fixture.detectChanges();
-      comp.anchor.openPopover();
-      expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
-
-      comp.anchor.closePopover();
       fixture.detectChanges();
       tick();
       expect(overlayContainerElement.textContent).toBe('', 'Subsequently closed');
@@ -150,33 +171,17 @@ describe('SatPopover', () => {
       expect(overlayContainerElement.textContent).toBe('', 'Closed after second toggle');
     }));
 
-    it('should toggle with togglePopover()', fakeAsync(() => {
-      fixture.detectChanges();
-      expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
-
-      comp.anchor.togglePopover();
-      expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
-
-      comp.anchor.togglePopover();
-      fixture.detectChanges();
-      tick();
-      expect(overlayContainerElement.textContent).toBe('', 'Closed after second toggle');
-    }));
-
     it('should emit when opened', fakeAsync(() => {
       fixture.detectChanges();
       let popoverOpenedEvent = false;
-      let anchorOpenedEvent = false;
       let popoverAfterOpenEvent = false;
 
       comp.popover.opened.subscribe(() => popoverOpenedEvent = true);
-      comp.anchor.popoverOpened.subscribe(() => anchorOpenedEvent = true);
       comp.popover.afterOpen.subscribe(() => popoverAfterOpenEvent = true);
 
       comp.popover.open();
 
       expect(popoverOpenedEvent).toBe(true, 'popoverOpened called');
-      expect(anchorOpenedEvent).toBe(true, 'anchorOpened called');
       expect(popoverAfterOpenEvent).toBe(false, 'popoverAfterOpen not yet called');
 
       tick();
@@ -188,18 +193,15 @@ describe('SatPopover', () => {
       comp.popover.open();
 
       let popoverClosedEvent = false;
-      let anchorClosedEvent = false;
       let popoverAfterCloseEvent = false;
 
       comp.popover.closed.subscribe(() => popoverClosedEvent = true);
-      comp.anchor.popoverClosed.subscribe(() => anchorClosedEvent = true);
       comp.popover.afterClose.subscribe(() => popoverAfterCloseEvent = true);
 
       comp.popover.close();
       fixture.detectChanges();
 
       expect(popoverClosedEvent).toBe(true, 'popoverClosed called');
-      expect(anchorClosedEvent).toBe(true, 'anchorClosed called');
       expect(popoverAfterCloseEvent).toBe(false, 'popoverAfterClose not yet called');
 
       tick();
@@ -210,25 +212,11 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       comp.popover.open();
 
-      const firstTestVal = 'abc123';
       const secondTestVal = 'xyz789';
 
       let popoverClosedValue;
-      let anchorClosedValue;
 
       comp.popover.closed.subscribe(val => popoverClosedValue = val);
-      comp.anchor.popoverClosed.subscribe(val => anchorClosedValue = val);
-
-      comp.anchor.closePopover(firstTestVal);
-      fixture.detectChanges();
-      tick();
-
-      // Working when closed via anchor api
-      expect(popoverClosedValue).toBe(firstTestVal, 'popoverClosed with value - anchor api');
-      expect(anchorClosedValue).toBe(firstTestVal, 'anchorClosed with value - anchor api');
-
-      comp.popover.open();
-      fixture.detectChanges();
 
       comp.popover.close(secondTestVal);
       fixture.detectChanges();
@@ -236,33 +224,87 @@ describe('SatPopover', () => {
 
       // Working when closed via popover api
       expect(popoverClosedValue).toBe(secondTestVal, 'popoverClosed with value - popover api');
-      expect(anchorClosedValue).toBe(secondTestVal, 'anchorClosed with value - popover api');
     }));
 
     it('should return whether the popover is presently open', fakeAsync(() => {
       fixture.detectChanges();
 
-      expect(comp.anchor.isPopoverOpen()).toBe(false, 'Initially closed - anchor');
       expect(comp.popover.isOpen()).toBe(false, 'Initially closed - popover');
 
       comp.popover.open();
 
-      expect(comp.anchor.isPopoverOpen()).toBe(true, 'Subsequently opened - anchor');
       expect(comp.popover.isOpen()).toBe(true, 'Subsequently opened - popover');
 
       comp.popover.close();
       fixture.detectChanges();
       tick();
 
-      expect(comp.anchor.isPopoverOpen()).toBe(false, 'Finally closed - anchor');
       expect(comp.popover.isOpen()).toBe(false, 'Finally closed - popover');
     }));
 
     it('should provide a reference to the anchor element', fakeAsync(() => {
       fixture.detectChanges();
-      expect(comp.anchor.getElement()).toEqual(comp.anchorElement);
+      expect(comp.anchor.elementRef).toEqual(comp.anchorElement);
     }));
 
+    it('should provide a reference to the popover element', () => {
+      fixture.detectChanges();
+      expect(comp.anchor.popover).toBe(comp.popover);
+    });
+  });
+
+  describe('using satPopoverAnchor input setter', () => {
+    describe('opening and closing behavior', () => {
+      let fixture: ComponentFixture<DirectiveAnchorForPopoverTestComponent>;
+      let comp:    DirectiveAnchorForPopoverTestComponent;
+      let overlayContainerElement: HTMLElement;
+
+      beforeEach(() => {
+        TestBed.configureTestingModule({
+          imports: [
+            SatPopoverModule,
+            NoopAnimationsModule,
+          ],
+          declarations: [DirectiveAnchorForPopoverTestComponent],
+          providers: [
+            {provide: OverlayContainer, useFactory: overlayContainerFactory}
+          ]
+        });
+
+        fixture = TestBed.createComponent(DirectiveAnchorForPopoverTestComponent);
+        comp = fixture.componentInstance;
+
+        overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer)
+          .getContainerElement();
+      });
+
+      afterEach(() => {
+        document.body.removeChild(overlayContainerElement);
+      });
+
+      it('should open with open()', () => {
+        fixture.detectChanges();
+        expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
+        comp.popover.open();
+        expect(overlayContainerElement.textContent).toContain('Popover', 'Subsequently open');
+      });
+
+      it('should close with close()', fakeAsync(() => {
+        fixture.detectChanges();
+        comp.popover.open();
+        expect(overlayContainerElement.textContent).toContain('Popover', 'Initially open');
+
+        comp.popover.close();
+        fixture.detectChanges();
+        tick();
+        expect(overlayContainerElement.textContent).toBe('', 'Subsequently closed');
+      }));
+
+      it('should provide a reference to the popover element', () => {
+        fixture.detectChanges();
+        expect(comp.anchor.popover).toBe(comp.popover);
+      });
+    });
   });
 
   describe('backdrop', () => {
@@ -640,7 +682,7 @@ describe('SatPopover', () => {
 
       // open the overlay and store the overlayRef
       comp.popover.open();
-      const overlayAfterFirstOpen = comp.anchor._anchoring._overlayRef;
+      const overlayAfterFirstOpen = comp.popover._anchoringService._overlayRef;
 
       comp.popover.close();
       fixture.detectChanges();
@@ -651,7 +693,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      const overlayAfterSecondOpen = comp.anchor._anchoring._overlayRef;
+      const overlayAfterSecondOpen = comp.popover._anchoringService._overlayRef;
 
       expect(overlayAfterFirstOpen === overlayAfterSecondOpen).toBe(true);
     }));
@@ -661,7 +703,7 @@ describe('SatPopover', () => {
 
       // open the overlay and store the overlayRef
       comp.popover.open();
-      const overlayAfterFirstOpen = comp.anchor._anchoring._overlayRef;
+      const overlayAfterFirstOpen = comp.popover._anchoringService._overlayRef;
 
       comp.popover.close();
       fixture.detectChanges();
@@ -672,7 +714,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      const overlayAfterSecondOpen = comp.anchor._anchoring._overlayRef;
+      const overlayAfterSecondOpen = comp.popover._anchoringService._overlayRef;
 
       expect(overlayAfterFirstOpen === overlayAfterSecondOpen).toBe(false);
     }));
@@ -684,7 +726,7 @@ describe('SatPopover', () => {
 
       // centered over anchor can be any of 5 x 5 positions
       comp.popover.open();
-      overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      overlayConfig = comp.popover._anchoringService._overlayRef.getConfig();
       strategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(25, 'overlapping');
 
@@ -698,7 +740,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      overlayConfig = comp.popover._anchoringService._overlayRef.getConfig();
       strategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(4, 'non-overlapping');
 
@@ -712,7 +754,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      overlayConfig = comp.popover._anchoringService._overlayRef.getConfig();
       strategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(10, 'overlapping in one dimension');
     }));
@@ -757,7 +799,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
 
       comp.popover.open();
-      const overlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      const overlayConfig = comp.popover._anchoringService._overlayRef.getConfig();
       const strategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       expect(strategy.positions.length).toBe(1, 'only one position');
     });
@@ -770,7 +812,7 @@ describe('SatPopover', () => {
       // Open the popover to get a spy on its position strategy
       comp.popover.open();
       tick();
-      const firstOverlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      const firstOverlayConfig = comp.popover._anchoringService._overlayRef.getConfig();
       const firstStrategy =
           firstOverlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       const firstSpy = spyOn(firstStrategy, 'reapplyLastPosition');
@@ -791,7 +833,7 @@ describe('SatPopover', () => {
       // Open the popover to get a spy on its position strategy
       comp.popover.open();
       tick();
-      const secondOverlayConfig = comp.anchor._anchoring._overlayRef.getConfig();
+      const secondOverlayConfig = comp.popover._anchoringService._overlayRef.getConfig();
       const secondStrategy =
           secondOverlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
       const secondSpy = spyOn(secondStrategy, 'reapplyLastPosition');
@@ -807,7 +849,7 @@ describe('SatPopover', () => {
 
     it('should realign when the anchor moves', fakeAsync(() => {
       // Move the anchor off the left edge of the page
-      const anchorEl = comp.anchor.getElement().nativeElement;
+      const anchorEl = comp.anchor.elementRef.nativeElement;
       anchorEl.style.display = 'inline-block';
       anchorEl.style.position = 'relative';
       anchorEl.style.left = '50px';
@@ -872,7 +914,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       comp.popover.open();
 
-      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.popover._anchoringService._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'reposition strategy');
 
       comp.popover.close();
@@ -883,7 +925,7 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       comp.popover.open();
 
-      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.popover._anchoringService._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof BlockScrollStrategy).toBe(true, 'block strategy');
     }));
 
@@ -893,7 +935,7 @@ describe('SatPopover', () => {
       comp.popover.open();
 
       // expect it to be open with default strategy
-      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.popover._anchoringService._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'reposition strategy');
       expect(overlayContainerElement.textContent).toContain('Popover', 'initially open');
 
@@ -903,7 +945,7 @@ describe('SatPopover', () => {
       tick();
 
       // expect it to have remained open with default strategy
-      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.popover._anchoringService._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof RepositionScrollStrategy).toBe(true, 'still reposition strategy');
       expect(overlayContainerElement.textContent).toContain('Popover', 'Still open');
 
@@ -914,7 +956,7 @@ describe('SatPopover', () => {
       comp.popover.open();
 
       // expect the new strategy to be in place
-      strategy = comp.anchor._anchoring._overlayRef.getConfig().scrollStrategy;
+      strategy = comp.popover._anchoringService._overlayRef.getConfig().scrollStrategy;
       expect(strategy instanceof BlockScrollStrategy).toBe(true, 'block strategy');
     }));
 
@@ -971,7 +1013,7 @@ describe('SatPopover', () => {
     });
 
     it('should open via popover api after being anchored', () => {
-      comp.anchoring.anchor(comp.popover, comp.container, comp.customAnchor);
+      comp.popover.setCustomAnchor(comp.container, comp.customAnchor);
       fixture.detectChanges();
       expect(overlayContainerElement.textContent).toBe('', 'Initially closed');
       comp.popover.open();
@@ -988,7 +1030,7 @@ describe('SatPopover', () => {
 
     it('should get the anchor elementRef', () => {
       comp.anchoring.anchor(comp.popover, comp.container, comp.customAnchor);
-      expect(comp.anchoring.getAnchorElement()).toEqual(comp.customAnchor);
+      expect(comp.anchoring.getAnchorElement()).toEqual(comp.customAnchor.nativeElement);
     });
   });
 
@@ -1068,13 +1110,24 @@ describe('SatPopover', () => {
 });
 
 /**
- * This component is for testing that passing an invalid popover
- * to an anchor will throw an error.
+ * This component is for testing that an anchor not associated with
+ * a popover will throw an error.
  */
 @Component({
   template: `
-    <div [satPopoverAnchorFor]="invalid">Anchor</div>
-    <div #invalid>Dummy</div>
+    <div satPopoverAnchor></div>
+  `
+})
+class InvalidAnchorTestComponent { }
+
+/**
+ * This component is for testing that passing an invalid anchor
+ * to a popover will throw an error.
+ */
+@Component({
+  template: `
+    <sat-popover #invalid>Dummy</sat-popover>
+    <sat-popover [anchor]="invalid">Dummy</sat-popover>
   `
 })
 class InvalidPopoverTestComponent { }
@@ -1095,17 +1148,52 @@ class AnchorlessPopoverTestComponent {
 
 /**
  * This component is for testing the default behavior of a simple
- * popover attached to a simple anchor.
+ * popover attached to a simple satPopoverAnchor anchor.
  */
 @Component({
   template: `
-    <div #anchorEl [satPopoverAnchorFor]="p">Anchor</div>
+    <div #anchorEl satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
+    <div #anchorEl2>Alternate anchor</div>
+    <sat-popover [anchor]='anchor'>Popover</sat-popover>
+  `
+})
+class SimpleDirectiveAnchorPopoverTestComponent {
+  @ViewChild('anchorEl') anchorElement: ElementRef;
+  @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
+  @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
+  @ViewChild(SatPopover) popover: SatPopover;
+}
+
+/**
+ * This component is for testing the
+ * `SatPopoverAnchor#satPopoverAnchor` input setter.
+ */
+@Component({
+  template: `
+    <div #anchorEl [satPopoverAnchor]='p'>Anchor</div>
+    <div #anchorEl2>Alternate anchor</div>
     <sat-popover #p>Popover</sat-popover>
   `
 })
-class SimplePopoverTestComponent {
+class DirectiveAnchorForPopoverTestComponent {
   @ViewChild('anchorEl') anchorElement: ElementRef;
+  @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
   @ViewChild(SatPopoverAnchor) anchor: SatPopoverAnchor;
+  @ViewChild(SatPopover) popover: SatPopover;
+}
+
+/**
+ * This component is for testing the default behavior of a simple
+ * popover attached to a simple ElementRef anchor.
+ */
+@Component({
+  template: `
+    <div #anchorEl>Anchor</div>
+    <sat-popover [anchor]='anchor'>Popover</sat-popover>
+  `
+})
+class SimpleHTMLAnchorPopoverTestComponent {
+  @ViewChild('anchorEl') anchorElement: ElementRef;
   @ViewChild(SatPopover) popover: SatPopover;
 }
 
@@ -1115,8 +1203,9 @@ class SimplePopoverTestComponent {
  */
 @Component({
   template: `
-    <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p
+    <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
+    <sat-popover
+        [anchor]="anchor"
         [hasBackdrop]="backdrop"
         [backdropClass]="klass"
         (backdropClicked)="clicks = clicks + 1">
@@ -1137,8 +1226,8 @@ class BackdropPopoverTestComponent {
  */
 @Component({
   template: `
-    <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p (overlayKeydown)="lastKeyCode = $event.keyCode">
+    <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
+    <sat-popover [anchor]="anchor" (overlayKeydown)="lastKeyCode = $event.keyCode">
       Popover
       <input type="text" class="first">
       <input type="text" class="second">
@@ -1155,10 +1244,12 @@ export class KeyboardPopoverTestComponent {
  */
 @Component({
   template: `
-    <button #b1 [satPopoverAnchorFor]="p" (click)="p.open()">Button 1</button>
+    <button #b1 satPopoverAnchor #anchor="satPopoverAnchor" (click)="p.open()">Button 1</button>
     <button #b2>Button 2</button>
 
-    <sat-popover #p
+    <sat-popover
+      #p
+      [anchor]="anchor"
       [autoFocus]="autoFocus"
       [restoreFocus]="restoreFocus">
       <input type="text" class="input">
@@ -1177,8 +1268,9 @@ export class FocusPopoverTestComponent {
 /** This component is for testing dynamic positioning behavior. */
 @Component({
   template: `
-    <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p
+    <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
+    <sat-popover 
+        [anchor]="anchor"
         [horizontalAlign]="hAlign"
         [verticalAlign]="vAlign"
         [forceAlignment]="forceAlignment"
@@ -1199,8 +1291,8 @@ export class PositioningTestComponent {
 /** This component is for testing position aliases. */
 @Component({
   template: `
-    <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p [xAlign]="xAlign" [yAlign]="yAlign">
+    <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
+    <sat-popover [anchor]="anchor" [xAlign]="xAlign" [yAlign]="yAlign">
       Popover
     </sat-popover>
   `
@@ -1215,8 +1307,8 @@ export class PositioningAliasTestComponent {
 /** This component is for testing scroll behavior. */
 @Component({
   template: `
-    <div [satPopoverAnchorFor]="p">Anchor</div>
-    <sat-popover #p [scrollStrategy]="strategy">
+    <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
+    <sat-popover [anchor]="anchor" [scrollStrategy]="strategy">
       Popover
     </sat-popover>
   `
@@ -1248,8 +1340,8 @@ export class ServiceTestComponent {
 /** This component is for testing the hover directive behavior. */
 @Component({
   template: `
-    <div #anchorEl [satPopoverAnchorFor]="p" [satPopoverHover]="delay">Anchor</div>
-    <sat-popover #p>Popover</sat-popover>
+    <div #anchorEl satPopoverAnchor #anchor="satPopoverAnchor" [satPopoverHover]="delay">Anchor</div>
+    <sat-popover [anchor]="anchor">Popover</sat-popover>
   `
 })
 export class HoverDirectiveTestComponent {

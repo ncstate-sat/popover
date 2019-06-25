@@ -22,11 +22,13 @@ import { Component } from '@angular/core';
           </div>
         </div>
 
-        <div class="anchor" [satPopoverAnchorFor]="p" (click)="p.toggle()"></div>
+        <div satPopoverAnchor #popoverAnchor=satPopoverAnchor class="anchor" (click)="p.toggle()"></div>
+
         <sat-popover
           #p
           xAlign="after"
           yAlign="below"
+          [anchor]="popoverAnchor"
           [openTransition]="openTransition"
           [closeTransition]="closeTransition"
           (opened)="showCallback('opened')"

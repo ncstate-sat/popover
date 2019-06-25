@@ -14,27 +14,28 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
   ],
   template: `
     <!-- Fab -->
-    <button mat-fab color="primary" [@preventInitialAnimation] [satPopoverAnchorFor]="dial" (click)="dial.toggle()">
-      <mat-icon [@spinInOut]="'in'" *ngIf="dial.isOpen()">close</mat-icon>
-      <mat-icon [@spinInOut]="'in'" *ngIf="!dial.isOpen()">edit</mat-icon>
+    <button mat-fab satPopoverAnchor #dialAnchor=satPopoverAnchor color="primary" [@preventInitialAnimation] (click)="dialPopover.toggle()">
+      <mat-icon [@spinInOut]="'in'" *ngIf="dialPopover.isOpen()">close</mat-icon>
+      <mat-icon [@spinInOut]="'in'" *ngIf="!dialPopover.isOpen()">edit</mat-icon>
     </button>
 
     <!-- Actions -->
-    <sat-popover #dial verticalAlign="above">
+    <sat-popover #dialPopover [anchor]="dialAnchor" verticalAlign="above">
       <div class="dial">
         <ng-container *ngFor="let a of actions">
           <button
             mat-mini-fab
+            satPopoverAnchor
+            #tooltipAnchor=satPopoverAnchor
             color="accent"
-            [satPopoverAnchorFor]="tooltip"
             (mouseenter)="tooltip.open()"
             (mouseleave)="tooltip.close()"
-            (click)="dial.close()"
+            (click)="dialPopover.close()"
           >
             <mat-icon>{{ a.icon }}</mat-icon>
           </button>
 
-          <sat-popover #tooltip horizontalAlign="before">
+          <sat-popover #tooltip [anchor]='tooltipAnchor' horizontalAlign="before">
             <div class="tooltip mat-body-1">
               {{ a.name }}
             </div>
