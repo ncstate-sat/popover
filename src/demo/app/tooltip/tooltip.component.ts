@@ -13,7 +13,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
         <!-- Basic tooltip -->
         <div
           satPopoverAnchor
-          #instantAnchor=satPopoverAnchor
+          #instantAnchor="satPopoverAnchor"
           class="anchor"
           (mouseenter)="instantPopover.open()"
           (mouseleave)="instantPopover.close()"
@@ -30,7 +30,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
         <!-- Tooltip with delay -->
         <div
           satPopoverAnchor
-          #delayedAnchor=satPopoverAnchor
+          #delayedAnchor="satPopoverAnchor"
           class="anchor"
           (mouseenter)="mouseenter.next()"
           (mouseleave)="mouseleave.next()"
@@ -44,7 +44,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
         </sat-popover>
 
         <!-- Tooltip using hover directive -->
-        <div satPopoverAnchor #hoverAnchor=satPopoverAnchor class="anchor">
+        <div satPopoverAnchor #hoverAnchor="satPopoverAnchor" class="anchor">
           Hover
           <span class="hover-text" [satPopoverHover]="500">this text</span>
           for 500ms
@@ -57,7 +57,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
   `
 })
 export class TooltipDemo implements AfterViewInit {
-  @ViewChild('poDelayed') delayed: SatPopover;
+  @ViewChild('poDelayed', { static: false }) delayed: SatPopover;
 
   mouseenter = new Subject<void>();
   mouseleave = new Subject<void>();

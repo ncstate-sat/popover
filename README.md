@@ -11,7 +11,7 @@
 
 `sat-popover` has a peer dependency on the Angular CDK to leverage its overlay API.
 
-```
+```bash
 npm install --save @ncstate/sat-popover @angular/cdk
 ```
 
@@ -298,6 +298,7 @@ includes background color, box shadows, margin offsets, etc.
 ## Add-on behaviors
 
 ### Hover
+
 The `SatPopoverHoverDirective` is available as a way to automatically add hover logic to your
 anchor with an optional delay. The `SatPopoverHoverDirective` must be used in conjunction
 with `SatPopoverAnchor`.

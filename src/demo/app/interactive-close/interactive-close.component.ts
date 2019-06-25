@@ -20,7 +20,7 @@ import { filter, takeUntil } from 'rxjs/operators';
           You don't necessarily need to select an option. You can press ESC or click on the backdrop to close the
           popover.
         </p>
-        <button mat-raised-button satPopoverAnchor #anchor=satPopoverAnchor color="accent" (click)="p.open()">
+        <button mat-raised-button satPopoverAnchor #anchor="satPopoverAnchor" color="accent" (click)="p.open()">
           Open
         </button>
       </mat-card-content>
@@ -43,8 +43,8 @@ import { filter, takeUntil } from 'rxjs/operators';
   `
 })
 export class InteractiveCloseDemo implements AfterViewInit, OnDestroy {
-  @ViewChild(SatPopover) popover: SatPopover;
-  @ViewChild('optionsPanel') optionsPanel: ElementRef;
+  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild('optionsPanel', { static: false }) optionsPanel: ElementRef;
 
   showError = false;
   interactiveClose = false;
