@@ -23,7 +23,7 @@ import { SatPopover } from '@ncstate/sat-popover';
         <button
           mat-button
           *ngIf="showAnchor"
-          [satPopoverAnchor]='getActivePopover()'
+          [satPopoverAnchor]="getActivePopover()"
           (click)="getActivePopover().toggle()"
         >
           Anchor
@@ -36,8 +36,8 @@ import { SatPopover } from '@ncstate/sat-popover';
   `
 })
 export class AnchorReuseComponent {
-  @ViewChild('a') aPopover: SatPopover;
-  @ViewChild('b') bPopover: SatPopover;
+  @ViewChild('a', { static: false }) aPopover: SatPopover;
+  @ViewChild('b', { static: false }) bPopover: SatPopover;
 
   activePopover = 'a';
   showAnchor = true;

@@ -5,24 +5,19 @@ export function getUnanchoredPopoverError(): Error {
 }
 
 export function getInvalidPopoverAnchorError(): Error {
-  return Error(
-    'SatPopover#anchor must be an instance of SatPopoverAnchor, ' +
-    'ElementRef, or HTMLElement.'
-  );
+  return Error('SatPopover#anchor must be an instance of SatPopoverAnchor, ElementRef, or HTMLElement.');
 }
 
 export function getInvalidPopoverError(): Error {
-  return Error(
-    'SatPopoverAnchor#satPopoverAnchorFor must be an instance of SatPopover.'
-  );
+  return Error('SatPopoverAnchor#satPopoverAnchor must be an instance of SatPopover.');
 }
 
 export function getInvalidSatPopoverAnchorError(): Error {
   return Error(
     `SatPopoverAnchor must be associated with a ` +
-    `SatPopover component. ` +
-    `Examples: <sat-popover [anchor]="satPopoverAnchorTemplateRef"> or ` +
-    `<button satPopoverAnchor [satPopoverAnchorFor]="satPopoverTemplateRef">`
+      `SatPopover component. ` +
+      `Examples: <sat-popover [anchor]="satPopoverAnchorTemplateRef"> or ` +
+      `<button satPopoverAnchor [satPopoverAnchor]="satPopoverTemplateRef">`
   );
 }
 
@@ -39,6 +34,5 @@ export function getInvalidScrollStrategyError(strategy): Error {
 }
 
 function generateGenericError(apiName: string, invalid: any, valid: string[]): string {
-  return `Invalid ${apiName}: '${invalid}'. Valid options are ` +
-    `${valid.map(v => `'${v}'`).join(', ')}.`;
+  return `Invalid ${apiName}: '${invalid}'. Valid options are ${valid.map(v => `'${v}'`).join(', ')}.`;
 }
