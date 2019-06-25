@@ -1,3 +1,9 @@
+# 3.3.0 vigorous-tigress
+
+### Breaking Changes (aka Features)
+* Peer dependencies of `@angular/{core,common,cdk}` are now set to `^8.0.0`.
+* Dynamic Anchors are now available. See README for more information on this breaking change.
+
 # 3.2.0 yttrium-atrium
 
 ### Features
