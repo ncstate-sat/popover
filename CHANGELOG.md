@@ -1,4 +1,11 @@
-# 3.3.0 vigorous-tigress
+# 4.0.0 quarrel-squirrel
+
+### Breaking Changes (aka Features)
+* Peer dependencies of `@angular/{core,common,cdk}` are now set to `^8.0.0`.
+* Dynamic Anchors are now available. See README for more information on this breaking change.
+* No significant changes from v3.3.0, just bumping version via `semver` protocol.
+
+# 3.3.0 vigorous-tigress (obsoleted with v4.0.0)
 
 ### Breaking Changes (aka Features)
 * Peer dependencies of `@angular/{core,common,cdk}` are now set to `^8.0.0`.
