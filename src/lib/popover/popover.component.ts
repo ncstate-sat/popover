@@ -17,7 +17,7 @@ import {
 import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 
 import { transformPopover } from './popover.animations';
 import {
@@ -42,6 +42,8 @@ import { SatPopoverAnchoringService } from './popover-anchoring.service';
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
 const DEFAULT_TRANSITION = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+const DEFAULT_OPEN_ANIMATION_START_SCALE = 0.3;
+const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
 
 @Directive({
   selector: '[satPopoverAnchor]',
@@ -261,6 +263,32 @@ export class SatPopover implements OnInit {
   }
   private _closeTransition = DEFAULT_TRANSITION;
 
+  /** Scale value at the start of the :enter animation. */
+  @Input()
+  get openAnimationStartAtScale() {
+    return this._openAnimationStartAtScale;
+  }
+  set openAnimationStartAtScale(val: number) {
+    const coercedVal = coerceNumberProperty(val);
+    if (!isNaN(coercedVal)) {
+      this._openAnimationStartAtScale = val;
+    }
+  }
+  private _openAnimationStartAtScale = DEFAULT_OPEN_ANIMATION_START_SCALE;
+
+  /** Scale value at the end of the :leave animation */
+  @Input()
+  get closeAnimationEndAtScale() {
+    return this._closeAnimationEndAtScale;
+  }
+  set closeAnimationEndAtScale(val: number) {
+    const coercedVal = coerceNumberProperty(val);
+    if (!isNaN(coercedVal)) {
+      this._closeAnimationEndAtScale = val;
+    }
+  }
+  private _closeAnimationEndAtScale = DEFAULT_CLOSE_ANIMATION_END_SCALE;
+
   /** Optional backdrop class. */
   @Input() backdropClass = '';
 
@@ -359,7 +387,12 @@ export class SatPopover implements OnInit {
   _getAnimation(): { value: any; params: any } {
     return {
       value: 'visible',
-      params: { openTransition: this.openTransition, closeTransition: this.closeTransition }
+      params: {
+        openTransition: this.openTransition,
+        closeTransition: this.closeTransition,
+        startAtScale: this.openAnimationStartAtScale,
+        endAtScale: this.closeAnimationEndAtScale
+      }
     };
   }
 
