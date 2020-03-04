@@ -3,6 +3,7 @@
   "version": "4.0.0",
   "license": "MIT",
   "scripts": {
+    "postinstall": "ngcc",
     "clean": "rm -rf dist",
     "demo": "ng serve demo",
     "build": "ng build popover && ts-node tools/prepare-package.ts",
