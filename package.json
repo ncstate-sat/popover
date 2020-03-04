@@ -41,7 +41,6 @@
     "@angular/compiler-cli": "^8.2.14",
     "@angular/core": "^8.2.14",
     "@angular/forms": "^8.2.14",
-    "@angular/http": "^7.2.15",
     "@angular/language-service": "^8.2.14",
     "@angular/material": "^8.2.3",
     "@angular/platform-browser": "^8.2.14",
