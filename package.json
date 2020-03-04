@@ -48,10 +48,10 @@
     "@angular/router": "^9.0.4",
     "@types/jasmine": "~3.3.13",
     "@types/jasminewd2": "~2.0.6",
-    "@types/node": "~12.0.10",
+    "@types/node": "^12.11.1",
     "angular-cli-ghpages": "^0.5.3",
     "chalk": "^2.4.2",
-    "codelyzer": "~5.1.0",
+    "codelyzer": "^5.1.2",
     "core-js": "^3.1.4",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -60,14 +60,15 @@
     "karma-coverage-istanbul-reporter": "~2.0.5",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
-    "ng-packagr": "^9.0.2",
+    "ng-packagr": "^9.0.0",
     "protractor": "^5.4.2",
     "rxjs": "^6.5.4",
     "ts-node": "~8.3.0",
-    "tsickle": "^0.38.0",
-    "tslib": "^1.11.1",
     "tslint": "~5.18.0",
     "typescript": "~3.7.5",
-    "zone.js": "^0.10.2"
+    "zone.js": "~0.10.2"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
   }
 }
