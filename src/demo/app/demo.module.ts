@@ -3,19 +3,17 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SatPopoverModule } from '@ncstate/sat-popover';
-import {
-  MatToolbarModule,
-  MatCardModule,
-  MatButtonModule,
-  MatSelectModule,
-  MatInputModule,
-  MatIconModule,
-  MatCheckboxModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatRadioModule,
-  MatSlideToggleModule
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BidiModule } from '@angular/cdk/bidi';
 
 import { DemoComponent } from './demo.component';
