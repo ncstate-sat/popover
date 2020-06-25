@@ -57,7 +57,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
   `
 })
 export class TooltipDemo implements AfterViewInit {
-  @ViewChild('poDelayed', { static: false }) delayed: SatPopover;
+  @ViewChild('poDelayed') delayed: SatPopover;
 
   mouseenter = new Subject<void>();
   mouseleave = new Subject<void>();

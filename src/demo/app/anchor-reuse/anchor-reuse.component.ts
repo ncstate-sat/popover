@@ -36,8 +36,8 @@ import { SatPopover } from '@ncstate/sat-popover';
   `
 })
 export class AnchorReuseComponent {
-  @ViewChild('a', { static: false }) aPopover: SatPopover;
-  @ViewChild('b', { static: false }) bPopover: SatPopover;
+  @ViewChild('a') aPopover: SatPopover;
+  @ViewChild('b') bPopover: SatPopover;
 
   activePopover = 'a';
   showAnchor = true;
