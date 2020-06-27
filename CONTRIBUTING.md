@@ -1,25 +1,22 @@
-## Contributing
+# Contributing
 
+## Build the library
 
-### Build the library
-
-```
+```bash
 npm run build
 ```
 
+## Run the demo server
 
-### Run the demo server
-
-```
+```bash
 npm run demo
 ```
 
 Open at http://localhost:4200
 
+## Testing
 
-### Testing
-
-```
+```bash
 npm run test
 npm run test:once
 ```
