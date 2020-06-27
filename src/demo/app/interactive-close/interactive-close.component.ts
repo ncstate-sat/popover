@@ -44,7 +44,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 })
 export class InteractiveCloseDemo implements AfterViewInit, OnDestroy {
   @ViewChild(SatPopover, { static: true }) popover: SatPopover;
-  @ViewChild('optionsPanel', { static: false }) optionsPanel: ElementRef;
+  @ViewChild('optionsPanel') optionsPanel: ElementRef;
 
   showError = false;
   interactiveClose = false;
