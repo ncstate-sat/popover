@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 6.0.0 whatza-pizza
+
+### Breaking Changes (aka Features)
+
+- Peer dependencies of `@angular/{core,common,cdk}` are now set to `^10.0.*`.
+
 ## 5.0.0 schmock-frock
 
 ### Breaking Changes (aka Features)
