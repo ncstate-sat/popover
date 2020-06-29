@@ -9,6 +9,7 @@
     "sourceMap": true,
     "inlineSources": true,
     "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "types": [],
@@ -21,7 +22,8 @@
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "enableIvy": false
   },
   "exclude": [
     "test.ts",
