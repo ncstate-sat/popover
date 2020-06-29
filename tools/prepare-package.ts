@@ -1,4 +1,4 @@
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { readFileSync, writeFileSync, copyFileSync } from 'fs';
 import {
   DIST_PACKAGE_PATH,
