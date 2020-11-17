@@ -11,7 +11,7 @@
       "prefix": "sat",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/lib/tsconfig.lib.json",
             "project": "src/lib/ng-package.json"
@@ -20,7 +20,38 @@
             "production": {
               "project": "src/lib/ng-package.prod.json"
             },
-            "tsConfig": "src/lib/tsconfig.lib.prod.json"
+            "tsConfig": {
+              "0": "s",
+              "1": "r",
+              "2": "c",
+              "3": "/",
+              "4": "l",
+              "5": "i",
+              "6": "b",
+              "7": "/",
+              "8": "t",
+              "9": "s",
+              "10": "c",
+              "11": "o",
+              "12": "n",
+              "13": "f",
+              "14": "i",
+              "15": "g",
+              "16": ".",
+              "17": "l",
+              "18": "i",
+              "19": "b",
+              "20": ".",
+              "21": "p",
+              "22": "r",
+              "23": "o",
+              "24": "d",
+              "25": ".",
+              "26": "j",
+              "27": "s",
+              "28": "o",
+              "29": "n"
+            }
           }
         },
         "test": {
@@ -88,7 +119,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
