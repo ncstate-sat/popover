@@ -38,9 +38,7 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
           Hover Me (1000ms delay)
         </div>
         <sat-popover #poDelayed [anchor]="delayedAnchor" horizontalAlign="after">
-          <div class="tooltip-wrapper mat-body-1">
-            A tooltip that's slow to open
-          </div>
+          <div class="tooltip-wrapper mat-body-1"> A tooltip that's slow to open </div>
         </sat-popover>
 
         <!-- Tooltip using hover directive -->
@@ -64,14 +62,7 @@ export class TooltipDemo implements AfterViewInit {
 
   ngAfterViewInit() {
     this.mouseenter
-      .pipe(
-        switchMap(() =>
-          of(null).pipe(
-            delay(1000),
-            takeUntil(this.mouseleave)
-          )
-        )
-      )
+      .pipe(switchMap(() => of(null).pipe(delay(1000), takeUntil(this.mouseleave))))
       .subscribe(() => this.delayed.open());
 
     this.mouseleave.subscribe(() => this.delayed.close());

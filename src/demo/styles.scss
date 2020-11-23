@@ -2,8 +2,8 @@
 
 // Material theming
 $ncstate-primary: mat-palette($mat-red, 700);
-$ncstate-accent:  mat-palette($mat-blue-grey);
-$ncstate-warn:    mat-palette($mat-deep-orange);
+$ncstate-accent: mat-palette($mat-blue-grey);
+$ncstate-warn: mat-palette($mat-deep-orange);
 
 $ncstate-theme: mat-light-theme($ncstate-primary, $ncstate-accent, $ncstate-warn);
 
@@ -12,7 +12,8 @@ $gradient-opacity: 0.48;
 @include mat-core();
 @include angular-material-theme($ncstate-theme);
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }

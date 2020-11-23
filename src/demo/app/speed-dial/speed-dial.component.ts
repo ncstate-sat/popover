@@ -14,7 +14,14 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
   ],
   template: `
     <!-- Fab -->
-    <button mat-fab satPopoverAnchor #dialAnchor=satPopoverAnchor color="primary" [@preventInitialAnimation] (click)="dialPopover.toggle()">
+    <button
+      mat-fab
+      satPopoverAnchor
+      #dialAnchor="satPopoverAnchor"
+      color="primary"
+      [@preventInitialAnimation]
+      (click)="dialPopover.toggle()"
+    >
       <mat-icon [@spinInOut]="'in'" *ngIf="dialPopover.isOpen()">close</mat-icon>
       <mat-icon [@spinInOut]="'in'" *ngIf="!dialPopover.isOpen()">edit</mat-icon>
     </button>
@@ -26,7 +33,7 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
           <button
             mat-mini-fab
             satPopoverAnchor
-            #tooltipAnchor=satPopoverAnchor
+            #tooltipAnchor="satPopoverAnchor"
             color="accent"
             (mouseenter)="tooltip.open()"
             (mouseleave)="tooltip.close()"
@@ -35,7 +42,7 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
             <mat-icon>{{ a.icon }}</mat-icon>
           </button>
 
-          <sat-popover #tooltip [anchor]='tooltipAnchor' horizontalAlign="before">
+          <sat-popover #tooltip [anchor]="tooltipAnchor" horizontalAlign="before">
             <div class="tooltip mat-body-1">
               {{ a.name }}
             </div>

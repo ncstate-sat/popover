@@ -34,5 +34,5 @@ export function getInvalidScrollStrategyError(strategy): Error {
 }
 
 function generateGenericError(apiName: string, invalid: any, valid: string[]): string {
-  return `Invalid ${apiName}: '${invalid}'. Valid options are ${valid.map(v => `'${v}'`).join(', ')}.`;
+  return `Invalid ${apiName}: '${invalid}'. Valid options are ${valid.map((v) => `'${v}'`).join(', ')}.`;
 }

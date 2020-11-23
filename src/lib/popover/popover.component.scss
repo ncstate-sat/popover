@@ -4,7 +4,6 @@
 @include cdk-overlay();
 
 .sat-popover-container {
-
   &.sat-popover-before.sat-popover-above {
     transform-origin: right bottom;
 
@@ -60,5 +59,4 @@
       transform-origin: right top;
     }
   }
-
 }

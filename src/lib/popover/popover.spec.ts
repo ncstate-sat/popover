@@ -204,7 +204,7 @@ describe('SatPopover', () => {
 
       let popoverClosedValue;
 
-      comp.popover.closed.subscribe(val => (popoverClosedValue = val));
+      comp.popover.closed.subscribe((val) => (popoverClosedValue = val));
 
       comp.popover.close(secondTestVal);
       fixture.detectChanges();
@@ -807,7 +807,7 @@ describe('SatPopover', () => {
       comp.popover.open();
       fixture.detectChanges();
 
-      const getCenter = clientRect => clientRect.x + clientRect.width / 2;
+      const getCenter = (clientRect) => clientRect.x + clientRect.width / 2;
       const centerOfAnchor = () => getCenter(anchorEl.getBoundingClientRect());
       const centerOfPopover = () =>
         getCenter(overlayContainerElement.querySelector('.sat-popover-container').getBoundingClientRect());
@@ -1066,11 +1066,9 @@ describe('SatPopover', () => {
  * a popover will throw an error.
  */
 @Component({
-  template: `
-    <div satPopoverAnchor></div>
-  `
+  template: ` <div satPopoverAnchor></div> `
 })
-class InvalidAnchorTestComponent { }
+class InvalidAnchorTestComponent {}
 
 /**
  * This component is for testing that passing an invalid anchor
@@ -1082,16 +1080,14 @@ class InvalidAnchorTestComponent { }
     <sat-popover [anchor]="invalid">Dummy</sat-popover>
   `
 })
-class InvalidPopoverTestComponent { }
+class InvalidPopoverTestComponent {}
 
 /**
  * This component is for testing that trying to open/close/toggle
  * a popover with no anchor will throw an error.
  */
 @Component({
-  template: `
-    <sat-popover horizontalAlign="after">Anchorless</sat-popover>
-  `
+  template: ` <sat-popover horizontalAlign="after">Anchorless</sat-popover> `
 })
 class AnchorlessPopoverTestComponent {
   @ViewChild(SatPopover, { static: true }) popover: SatPopover;
@@ -1241,9 +1237,7 @@ export class PositioningTestComponent {
 @Component({
   template: `
     <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
-    <sat-popover [anchor]="anchor" [xAlign]="xAlign" [yAlign]="yAlign">
-      Popover
-    </sat-popover>
+    <sat-popover [anchor]="anchor" [xAlign]="xAlign" [yAlign]="yAlign"> Popover </sat-popover>
   `
 })
 export class PositioningAliasTestComponent {
@@ -1257,9 +1251,7 @@ export class PositioningAliasTestComponent {
 @Component({
   template: `
     <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
-    <sat-popover [anchor]="anchor" [scrollStrategy]="strategy">
-      Popover
-    </sat-popover>
+    <sat-popover [anchor]="anchor" [scrollStrategy]="strategy"> Popover </sat-popover>
   `
 })
 export class ScrollingTestComponent {
@@ -1280,7 +1272,7 @@ export class ServiceTestComponent {
   @ViewChild('customAnchor', { static: true }) customAnchor: ElementRef;
   @ViewChild(SatPopover, { static: true }) popover: SatPopover;
 
-  constructor(public anchoring: SatPopoverAnchoringService, public container: ViewContainerRef) { }
+  constructor(public anchoring: SatPopoverAnchoringService, public container: ViewContainerRef) {}
 }
 
 /** This component is for testing the hover directive behavior. */
@@ -1327,7 +1319,7 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
   });
 
   // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
-  event.preventDefault = function() {
+  event.preventDefault = function () {
     Object.defineProperty(event, 'defaultPrevented', { get: () => true });
     return originalPreventDefault.apply(this, arguments);
   };

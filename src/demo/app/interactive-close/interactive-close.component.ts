@@ -52,7 +52,7 @@ export class InteractiveCloseDemo implements AfterViewInit, OnDestroy {
   private _onDestroy = new Subject<void>();
 
   ngAfterViewInit() {
-    const escape$ = this.popover.overlayKeydown.pipe(filter(e => e.keyCode === ESCAPE));
+    const escape$ = this.popover.overlayKeydown.pipe(filter((e) => e.keyCode === ESCAPE));
     const backdrop$ = this.popover.backdropClicked;
 
     merge(escape$, backdrop$)

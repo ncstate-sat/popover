@@ -16,7 +16,14 @@ import { Component } from '@angular/core';
           </mat-select>
         </mat-form-field>
 
-        <button mat-raised-button satPopoverAnchor #anchor=satPopoverAnchor class="anchor" color="primary" (click)="p.toggle()">
+        <button
+          mat-raised-button
+          satPopoverAnchor
+          #anchor="satPopoverAnchor"
+          class="anchor"
+          color="primary"
+          (click)="p.toggle()"
+        >
           TOGGLE
         </button>
 

@@ -34,19 +34,15 @@ import { Component } from '@angular/core';
             <input matInput type="number" [(ngModel)]="margin" placeholder="anchor's margin-left (px)" />
           </mat-form-field>
 
-          <mat-checkbox [(ngModel)]="forceAlignment">
-            forceAlignment
-          </mat-checkbox>
+          <mat-checkbox [(ngModel)]="forceAlignment"> forceAlignment </mat-checkbox>
 
-          <mat-checkbox [(ngModel)]="lockAlignment">
-            lockAlignment
-          </mat-checkbox>
+          <mat-checkbox [(ngModel)]="lockAlignment"> lockAlignment </mat-checkbox>
         </div>
 
         <button
           mat-raised-button
           satPopoverAnchor
-          #anchor=satPopoverAnchor
+          #anchor="satPopoverAnchor"
           color="accent"
           [style.marginLeft]="margin + 'px'"
           (click)="p.toggle()"
@@ -64,9 +60,7 @@ import { Component } from '@angular/core';
         [forceAlignment]="forceAlignment"
         [lockAlignment]="lockAlignment"
       >
-        <div class="popover mat-body-2">
-          Nifty
-        </div>
+        <div class="popover mat-body-2"> Nifty </div>
       </sat-popover>
     </mat-card>
   `
