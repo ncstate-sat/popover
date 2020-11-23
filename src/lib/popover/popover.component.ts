@@ -41,8 +41,6 @@ import {
 import { SatPopoverAnchoringService } from './popover-anchoring.service';
 import { DEFAULT_TRANSITION } from './tokens';
 
-// See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
-const DEFAULT_TRANSITION = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 const DEFAULT_OPEN_ANIMATION_START_SCALE = 0.3;
 const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
 
