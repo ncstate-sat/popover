@@ -289,6 +289,16 @@ You can modify these animation curves using `openTransition` and `closeTransitio
 </sat-popover>
 ```
 
+Additionally you can modify the scale values for the opening (`startAtScale`) and closing (`endAtScale`) animations.
+```html
+<!-- very subtle scale animation -->
+<sat-popover #mySubtlePopover
+    openAnimationStartAtScale="0.95"
+    closeAnimationEndAtScale="0.95">
+  <!-- ... -->
+</sat-popover>
+```
+
 ## Styles
 
 The `<sat-popover>` component only provides styles to affect its own transform origin. It is

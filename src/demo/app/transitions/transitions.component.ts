@@ -14,6 +14,14 @@ import { Component } from '@angular/core';
           <mat-form-field>
             <input matInput type="text" [(ngModel)]="closeTransition" />
           </mat-form-field>
+          <mat-form-field>
+            <input matInput type="number" [(ngModel)]="startAtScale" />
+            <mat-hint>Initial scale value for open animation.</mat-hint>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="number" [(ngModel)]="endAtScale" />
+            <mat-hint>End scale value for close animation.</mat-hint>
+          </mat-form-field>
         </div>
 
         <div class="indicators">
@@ -31,6 +39,8 @@ import { Component } from '@angular/core';
           [anchor]="popoverAnchor"
           [openTransition]="openTransition"
           [closeTransition]="closeTransition"
+          [openAnimationStartAtScale]="startAtScale"
+          [closeAnimationEndAtScale]="endAtScale"
           (opened)="showCallback('opened')"
           (closed)="showCallback('closed')"
           (afterOpen)="showCallback('afterOpen')"
@@ -45,6 +55,8 @@ import { Component } from '@angular/core';
 export class TransitionsDemo {
   openTransition = '2000ms ease';
   closeTransition = '2000ms ease';
+  startAtScale = 0.3;
+  endAtScale = 0.5;
 
   callbackIndicators = [
     { name: 'opened', active: false },
