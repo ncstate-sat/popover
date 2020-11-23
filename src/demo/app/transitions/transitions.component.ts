@@ -30,7 +30,7 @@ import { Component } from '@angular/core';
           </div>
         </div>
 
-        <div satPopoverAnchor #popoverAnchor=satPopoverAnchor class="anchor" (click)="p.toggle()"></div>
+        <div satPopoverAnchor #popoverAnchor="satPopoverAnchor" class="anchor" (click)="p.toggle()"></div>
 
         <sat-popover
           #p
@@ -66,7 +66,7 @@ export class TransitionsDemo {
   ];
 
   showCallback(name) {
-    const callback = this.callbackIndicators.find(i => i.name === name);
+    const callback = this.callbackIndicators.find((i) => i.name === name);
 
     // Flash the callback indicator
     callback.active = true;

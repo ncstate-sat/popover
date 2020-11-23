@@ -14,7 +14,9 @@ export class SatPopoverHoverDirective implements AfterViewInit, OnDestroy {
    * the popover opens. Defaults to 0ms.
    */
   @Input()
-  get satPopoverHover() { return this._satPopoverHover; }
+  get satPopoverHover() {
+    return this._satPopoverHover;
+  }
   set satPopoverHover(val: number) {
     this._satPopoverHover = coerceNumberProperty(val);
   }
@@ -29,7 +31,7 @@ export class SatPopoverHoverDirective implements AfterViewInit, OnDestroy {
   /** Emits when the user's mouse leaves the element. */
   private _onMouseLeave = new Subject<void>();
 
-  constructor(public anchor: SatPopoverAnchor) { }
+  constructor(public anchor: SatPopoverAnchor) {}
 
   ngAfterViewInit() {
     // Whenever the user hovers this host element, delay the configured
@@ -38,12 +40,9 @@ export class SatPopoverHoverDirective implements AfterViewInit, OnDestroy {
     this._onMouseEnter
       .pipe(
         switchMap(() => {
-          return of(null).pipe(
-            delay(this._satPopoverHover || 0),
-            takeUntil(this._onMouseLeave),
-          );
+          return of(null).pipe(delay(this._satPopoverHover || 0), takeUntil(this._onMouseLeave));
         }),
-        takeUntil(this._onDestroy),
+        takeUntil(this._onDestroy)
       )
       .subscribe(() => this.anchor.popover.open());
   }

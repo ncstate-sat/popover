@@ -8,7 +8,7 @@ declare const require: any;
 
 export const environment = {
   production: false,
-  version,
+  version
 };
 
 /*

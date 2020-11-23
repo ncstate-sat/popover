@@ -12,22 +12,12 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
     "paths": {
       "@ncstate/sat-popover": ["dist/popover"],
-      "core-js/es7/reflect": [
-        "node_modules/core-js/proposals/reflect-metadata",
-        "node_modules/core-js/es/reflect"
-      ],
-      "core-js/es6/*": [
-        "node_modules/core-js/es"
-      ]
+      "core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata", "node_modules/core-js/es/reflect"],
+      "core-js/es6/*": ["node_modules/core-js/es"]
     }
   }
 }

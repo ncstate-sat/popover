@@ -7,8 +7,8 @@ import { Component } from '@angular/core';
     <mat-card>
       <mat-card-title>Action API</mat-card-title>
       <mat-card-content>
-        <div satPopoverAnchor #anchor=satPopoverAnchor class="avatar">W</div>
-        <sat-popover #p [anchor]='anchor' horizontalAlign="after" forceAlignment>
+        <div satPopoverAnchor #anchor="satPopoverAnchor" class="avatar">W</div>
+        <sat-popover #p [anchor]="anchor" horizontalAlign="after" forceAlignment>
           <div class="info mat-caption">
             <div class="caret"></div>
             <div>Messages: 12</div>

@@ -69,9 +69,7 @@ Wrap any component you want to display in a popover with an `<sat-popover>` comp
 Next, apply the `satPopoverAnchor` directive to the element you wish to be the popover anchor and pass the `<sat-popover>` component as an argument to the `satPopoverAnchor` directive.
 
 ```html
-<button [satPopoverAnchor]='popover' (click)="popover.toggle()">
-  See Contact Details
-</button>
+<button [satPopoverAnchor]="popover" (click)="popover.toggle()"> See Contact Details </button>
 
 <sat-popover #popover hasBackdrop>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
@@ -83,9 +81,7 @@ Next, apply the `satPopoverAnchor` directive to the element you wish to be the p
 Alternatively, supply an anchor element to the popover.
 
 ```html
-<button satPopoverAnchor #anchor=satPopoverAnchor (click)="anchor.popover.toggle()">
-  See Contact Details
-</button>
+<button satPopoverAnchor #anchor="satPopoverAnchor" (click)="anchor.popover.toggle()"> See Contact Details </button>
 
 <sat-popover [anchor]="anchor" hasBackdrop>
   <app-contact-overview [contact]="myContact"></app-contact-overview>
@@ -106,9 +102,9 @@ to appear below the anchor:
 You can use the following to align the popover around the anchor:
 
 | Input             | Type                                                | Default  |
-|-------------------|-----------------------------------------------------|----------|
+| ----------------- | --------------------------------------------------- | -------- |
 | `horizontalAlign` | 'before' \| 'start' \| 'center' \| 'end' \| 'after' | 'center' |
-| `verticalAlign`   | 'above'  \| 'start' \| 'center' \| 'end' \| 'below' | 'center' |
+| `verticalAlign`   | 'above' \| 'start' \| 'center' \| 'end' \| 'below'  | 'center' |
 
 For convenience, you can also use `xAlign` and `yAlign` as shorthand for `horizontalAlign`
 and `verticalAlign`, respectively.
@@ -142,7 +138,7 @@ trigger that fits your application's needs.
 #### `SatPopover` has the following methods and outputs
 
 | Method  | Description                                  |
-|---------|----------------------------------------------|
+| ------- | -------------------------------------------- |
 | open    | Open the popover.                            |
 | close   | Close the popover. Optionally takes a value. |
 | toggle  | Toggle the popover open or closed.           |
@@ -150,7 +146,7 @@ trigger that fits your application's needs.
 | realign | Realign the popover to the anchor.           |
 
 | Output          | Description                                                       |
-|-----------------|-------------------------------------------------------------------|
+| --------------- | ----------------------------------------------------------------- |
 | opened          | Emits when the popover is opened.                                 |
 | closed          | Emits when the popover is closed.                                 |
 | afterOpen       | Emits when the popover has finished opening.                      |
@@ -160,12 +156,12 @@ trigger that fits your application's needs.
 
 #### `SatPopoverAnchor` has the following properties
 
-| Property                      | Description                                       |
-|-------------------------------|---------------------------------------------------|
-| popover                       | A handle to the associated popover.               |
-| satPopoverAnchor (setter)     | An `@Input()` for setting the associated popover. |
-| elementRef                    | The ElementRef for with the anchor.               |
-| viewContainerRef              | The ViewContainerRef for the anchor.              |
+| Property                  | Description                                       |
+| ------------------------- | ------------------------------------------------- |
+| popover                   | A handle to the associated popover.               |
+| satPopoverAnchor (setter) | An `@Input()` for setting the associated popover. |
+| elementRef                | The ElementRef for with the anchor.               |
+| viewContainerRef          | The ViewContainerRef for the anchor.              |
 
 ### Focus behavior
 
@@ -200,9 +196,7 @@ is set to `false` either in the open options or via the component input, focus w
 restored.
 
 ```html
-<button (click)="popover.open({ restoreFocus: false })">
-  Open
-</button>
+<button (click)="popover.open({ restoreFocus: false })"> Open </button>
 ```
 
 ### Backdrop
@@ -227,8 +221,8 @@ If used, the default backdrop will be transparent. You can add any custom backdr
 ```
 
 > Note: if you plan on using `mouseenter` and `mouseleave` events to open and close your popover,
-keep in mind that a backdrop will block pointer events once it is open, immediately triggering
-a `mouseleave` event.
+> keep in mind that a backdrop will block pointer events once it is open, immediately triggering
+> a `mouseleave` event.
 
 ### Interactive closing
 
@@ -263,17 +257,17 @@ itself to stay attached to its anchor. You can adjust this behavior with `scroll
 </sat-popover>
 ```
 
-| Strategy       | Description
-|----------------|------------------------------------------------
-| `'noop'`       | Don't update position.
-| `'block'`      | Block page scrolling while open.
-| `'reposition'` | Reposition the popover on scroll (default).
-| `'close'`      | Close the popover on scroll.
+| Strategy       | Description                                 |
+| -------------- | ------------------------------------------- |
+| `'noop'`       | Don't update position.                      |
+| `'block'`      | Block page scrolling while open.            |
+| `'reposition'` | Reposition the popover on scroll (default). |
+| `'close'`      | Close the popover on scroll.                |
 
 > Note: if your popover fails to stay anchored with the `reposition` strategy, you may need to add
-the [`cdkScrollable`](https://material.angular.io/cdk/scrolling/overview) directive to your
-scrolling container. This will ensure scroll events are dispatched to the popover's positioning
-service.
+> the [`cdkScrollable`](https://material.angular.io/cdk/scrolling/overview) directive to your
+> scrolling container. This will ensure scroll events are dispatched to the popover's positioning
+> service.
 
 ### Animations
 
@@ -282,9 +276,7 @@ You can modify these animation curves using `openTransition` and `closeTransitio
 
 ```html
 <!-- open slowly but close quickly -->
-<sat-popover #mySlowPopover
-    openTransition="1000ms ease-out"
-    closeTransition="100ms ease-in">
+<sat-popover #mySlowPopover openTransition="1000ms ease-out" closeTransition="100ms ease-in">
   <!-- ... -->
 </sat-popover>
 ```
@@ -306,13 +298,11 @@ import { SatPopoverModule, DEFAULT_TRANSITION } from '@ncstate/sat-popover';
 export class AppModule { }
 ```
 
-
 Additionally you can modify the scale values for the opening (`startAtScale`) and closing (`endAtScale`) animations.
+
 ```html
 <!-- very subtle scale animation -->
-<sat-popover #mySubtlePopover
-    openAnimationStartAtScale="0.95"
-    closeAnimationEndAtScale="0.95">
+<sat-popover #mySubtlePopover openAnimationStartAtScale="0.95" closeAnimationEndAtScale="0.95">
   <!-- ... -->
 </sat-popover>
 ```
@@ -332,13 +322,9 @@ anchor with an optional delay. The `SatPopoverHoverDirective` must be used in co
 with `SatPopoverAnchor`.
 
 ```html
-<div satPopoverAnchor [satPopoverHover]="1000">
-  Hover to show tooltip after 1 second
-</div>
+<div satPopoverAnchor [satPopoverHover]="1000"> Hover to show tooltip after 1 second </div>
 ```
 
 ```html
-<div satPopoverAnchor>
-  Hover <span satPopoverHover>this text</span> to show tooltip immediately
-</div>
+<div satPopoverAnchor> Hover <span satPopoverHover>this text</span> to show tooltip immediately </div>
 ```

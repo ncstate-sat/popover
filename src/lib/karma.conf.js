@@ -30,9 +30,9 @@ module.exports = function (config) {
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',
-        flags: ['--no-sandbox'],
-      },
-    },
+        flags: ['--no-sandbox']
+      }
+    }
   };
 
   // Run with --no-sandbox mode on Travis

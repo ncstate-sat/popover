@@ -1,11 +1,4 @@
-import {
-  ElementRef,
-  Injectable,
-  NgZone,
-  OnDestroy,
-  Optional,
-  ViewContainerRef
-} from '@angular/core';
+import { ElementRef, Injectable, NgZone, OnDestroy, Optional, ViewContainerRef } from '@angular/core';
 import {
   ConnectionPositionPair,
   FlexibleConnectedPositionStrategy,
@@ -14,9 +7,9 @@ import {
   OverlayConfig,
   OverlayRef,
   ScrollStrategy,
-  VerticalConnectionPos,
+  VerticalConnectionPos
 } from '@angular/cdk/overlay';
-import { Directionality, Direction} from '@angular/cdk/bidi';
+import { Directionality, Direction } from '@angular/cdk/bidi';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Subscription, Subject } from 'rxjs';
@@ -27,7 +20,7 @@ import {
   SatPopoverHorizontalAlign,
   SatPopoverVerticalAlign,
   SatPopoverScrollStrategy,
-  SatPopoverOpenOptions,
+  SatPopoverOpenOptions
 } from './types';
 
 /**
@@ -46,7 +39,6 @@ interface PopoverConfig {
 
 @Injectable()
 export class SatPopoverAnchoringService implements OnDestroy {
-
   /** Emits when the popover is opened. */
   popoverOpened = new Subject<void>();
 
@@ -80,11 +72,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   /** Emits when the service is destroyed. */
   private _onDestroy = new Subject<void>();
 
-  constructor(
-    private _overlay: Overlay,
-    private _ngZone: NgZone,
-    @Optional() private _dir: Directionality
-  ) { }
+  constructor(private _overlay: Overlay, private _ngZone: NgZone, @Optional() private _dir: Directionality) {}
 
   ngOnDestroy() {
     // Destroy popover before terminating subscriptions so that any resulting
@@ -106,21 +94,11 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Anchor a popover instance to a view and connection element. */
-  anchor(
-    popover: SatPopover,
-    viewContainerRef: ViewContainerRef,
-    anchor: ElementRef | HTMLElement
-  ): void {
+  anchor(popover: SatPopover, viewContainerRef: ViewContainerRef, anchor: ElementRef | HTMLElement): void {
     // If we're just changing the anchor element and the overlayRef already exists,
     // simply update the existing _overlayRef's anchor.
-    if (
-      this._popover === popover &&
-      this._viewContainerRef === viewContainerRef &&
-      this._overlayRef
-    ) {
-      this._anchor = anchor instanceof ElementRef
-        ? anchor.nativeElement
-        : anchor;
+    if (this._popover === popover && this._viewContainerRef === viewContainerRef && this._overlayRef) {
+      this._anchor = anchor instanceof ElementRef ? anchor.nativeElement : anchor;
       const config = this._overlayRef.getConfig();
       const strategy = config.positionStrategy as FlexibleConnectedPositionStrategy;
       strategy.setOrigin(this._anchor);
@@ -134,9 +112,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
     // Assign local refs
     this._popover = popover;
     this._viewContainerRef = viewContainerRef;
-    this._anchor = anchor instanceof ElementRef
-      ? anchor.nativeElement
-      : anchor;
+    this._anchor = anchor instanceof ElementRef ? anchor.nativeElement : anchor;
   }
 
   /** Gets whether the popover is presently open. */
@@ -217,14 +193,12 @@ export class SatPopoverAnchoringService implements OnDestroy {
         backdropClass: this._popover.backdropClass,
         scrollStrategy: this._popover.scrollStrategy,
         forceAlignment: this._popover.forceAlignment,
-        lockAlignment: this._popover.lockAlignment,
+        lockAlignment: this._popover.lockAlignment
       };
 
       const overlayConfig = this._getOverlayConfig(popoverConfig, this._anchor);
 
-      this._subscribeToPositionChanges(
-        overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy
-      );
+      this._subscribeToPositionChanges(overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy);
 
       this._overlayRef = this._overlay.create(overlayConfig);
     }
@@ -233,7 +207,6 @@ export class SatPopoverAnchoringService implements OnDestroy {
     this._overlayRef.attach(this._portal);
     return this._overlayRef;
   }
-
 
   /** Removes the popover from the DOM. Does NOT update open state. */
   private _destroyPopover(): void {
@@ -249,10 +222,10 @@ export class SatPopoverAnchoringService implements OnDestroy {
    */
   private _destroyPopoverOnceClosed(): void {
     if (this.isPopoverOpen() && this._overlayRef) {
-      this._overlayRef.detachments().pipe(
-        take(1),
-        takeUntil(this._onDestroy)
-      ).subscribe(() => this._destroyPopover());
+      this._overlayRef
+        .detachments()
+        .pipe(take(1), takeUntil(this._onDestroy))
+        .subscribe(() => this._destroyPopover());
     } else {
       this._destroyPopover();
     }
@@ -266,7 +239,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
         tap(() => this._popover.backdropClicked.emit()),
         filter(() => this._popover.interactiveClose),
         takeUntil(this.popoverClosed),
-        takeUntil(this._onDestroy),
+        takeUntil(this._onDestroy)
       )
       .subscribe(() => this.closePopover());
   }
@@ -276,11 +249,11 @@ export class SatPopoverAnchoringService implements OnDestroy {
     this._overlayRef
       .keydownEvents()
       .pipe(
-        tap(event => this._popover.overlayKeydown.emit(event)),
-        filter(event => event.keyCode === ESCAPE),
+        tap((event) => this._popover.overlayKeydown.emit(event)),
+        filter((event) => event.keyCode === ESCAPE),
         filter(() => this._popover.interactiveClose),
         takeUntil(this.popoverClosed),
-        takeUntil(this._onDestroy),
+        takeUntil(this._onDestroy)
       )
       .subscribe(() => this.closePopover());
   }
@@ -326,12 +299,12 @@ export class SatPopoverAnchoringService implements OnDestroy {
         config.verticalAlign,
         config.forceAlignment,
         config.lockAlignment,
-        anchor,
+        anchor
       ),
       hasBackdrop: config.hasBackdrop,
       backdropClass: config.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._getScrollStrategyInstance(config.scrollStrategy),
-      direction: this._getDirection(),
+      direction: this._getDirection()
     });
   }
 
@@ -344,17 +317,15 @@ export class SatPopoverAnchoringService implements OnDestroy {
       this._positionChangeSubscription.unsubscribe();
     }
 
-    this._positionChangeSubscription = position.positionChanges
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe(change => {
-        // Position changes may occur outside the Angular zone
-        this._ngZone.run(() => {
-          this._popover._setAlignmentClasses(
-            getHorizontalPopoverAlignment(change.connectionPair.overlayX),
-            getVerticalPopoverAlignment(change.connectionPair.overlayY),
-          );
-        });
+    this._positionChangeSubscription = position.positionChanges.pipe(takeUntil(this._onDestroy)).subscribe((change) => {
+      // Position changes may occur outside the Angular zone
+      this._ngZone.run(() => {
+        this._popover._setAlignmentClasses(
+          getHorizontalPopoverAlignment(change.connectionPair.overlayX),
+          getVerticalPopoverAlignment(change.connectionPair.overlayY)
+        );
       });
+    });
   }
 
   /** Map a scroll strategy string type to an instance of a scroll strategy. */
@@ -378,13 +349,14 @@ export class SatPopoverAnchoringService implements OnDestroy {
     verticalTarget: SatPopoverVerticalAlign,
     forceAlignment: boolean,
     lockAlignment: boolean,
-    anchor: HTMLElement,
+    anchor: HTMLElement
   ): FlexibleConnectedPositionStrategy {
     // Attach the overlay at the preferred position
     const targetPosition = getPosition(horizontalTarget, verticalTarget);
     const positions = [targetPosition];
 
-    const strategy = this._overlay.position()
+    const strategy = this._overlay
+      .position()
       .flexibleConnectedTo(anchor)
       .withFlexibleDimensions(false)
       .withPush(false)
@@ -411,19 +383,17 @@ export class SatPopoverAnchoringService implements OnDestroy {
 
     // If a target alignment doesn't cover the anchor, don't let any of the fallback alignments
     // cover the anchor
-    const possibleHorizontalAlignments: SatPopoverHorizontalAlign[] =
-      horizontalOverlapAllowed ?
-        ['before', 'start', 'center', 'end', 'after'] :
-        ['before', 'after'];
-    const possibleVerticalAlignments: SatPopoverVerticalAlign[] =
-      verticalOverlapAllowed ?
-        ['above', 'start', 'center', 'end', 'below'] :
-        ['above', 'below'];
+    const possibleHorizontalAlignments: SatPopoverHorizontalAlign[] = horizontalOverlapAllowed
+      ? ['before', 'start', 'center', 'end', 'after']
+      : ['before', 'after'];
+    const possibleVerticalAlignments: SatPopoverVerticalAlign[] = verticalOverlapAllowed
+      ? ['above', 'start', 'center', 'end', 'below']
+      : ['above', 'below'];
 
     // Create fallbacks for each allowed prioritized fallback alignment combo
     const fallbacks: ConnectionPositionPair[] = [];
-    prioritizeAroundTarget(hTarget, possibleHorizontalAlignments).forEach(h => {
-      prioritizeAroundTarget(vTarget, possibleVerticalAlignments).forEach(v => {
+    prioritizeAroundTarget(hTarget, possibleHorizontalAlignments).forEach((h) => {
+      prioritizeAroundTarget(vTarget, possibleVerticalAlignments).forEach((v) => {
         fallbacks.push(getPosition(h, v));
       });
     });
@@ -431,17 +401,13 @@ export class SatPopoverAnchoringService implements OnDestroy {
     // Remove the first item since it will be the target alignment and isn't considered a fallback
     return fallbacks.slice(1, fallbacks.length);
   }
-
 }
 
 /** Helper function to get a cdk position pair from SatPopover alignments. */
-function getPosition(
-  h: SatPopoverHorizontalAlign,
-  v: SatPopoverVerticalAlign,
-): ConnectionPositionPair {
-  const {originX, overlayX} = getHorizontalConnectionPosPair(h);
-  const {originY, overlayY} = getVerticalConnectionPosPair(v);
-  return new ConnectionPositionPair({originX, originY}, {overlayX, overlayY});
+function getPosition(h: SatPopoverHorizontalAlign, v: SatPopoverVerticalAlign): ConnectionPositionPair {
+  const { originX, overlayX } = getHorizontalConnectionPosPair(h);
+  const { originY, overlayY } = getVerticalConnectionPosPair(v);
+  return new ConnectionPositionPair({ originX, originY }, { overlayX, overlayY });
 }
 
 /** Helper function to convert an overlay connection position to equivalent popover alignment. */
@@ -471,39 +437,40 @@ function getVerticalPopoverAlignment(v: VerticalConnectionPos): SatPopoverVertic
 }
 
 /** Helper function to convert alignment to origin/overlay position pair. */
-function getHorizontalConnectionPosPair(h: SatPopoverHorizontalAlign):
-    {originX: HorizontalConnectionPos, overlayX: HorizontalConnectionPos} {
+function getHorizontalConnectionPosPair(
+  h: SatPopoverHorizontalAlign
+): { originX: HorizontalConnectionPos; overlayX: HorizontalConnectionPos } {
   switch (h) {
     case 'before':
-      return {originX: 'start', overlayX: 'end'};
+      return { originX: 'start', overlayX: 'end' };
     case 'start':
-      return {originX: 'start', overlayX: 'start'};
+      return { originX: 'start', overlayX: 'start' };
     case 'end':
-      return {originX: 'end', overlayX: 'end'};
+      return { originX: 'end', overlayX: 'end' };
     case 'after':
-      return {originX: 'end', overlayX: 'start'};
+      return { originX: 'end', overlayX: 'start' };
     default:
-      return {originX: 'center', overlayX: 'center'};
+      return { originX: 'center', overlayX: 'center' };
   }
 }
 
 /** Helper function to convert alignment to origin/overlay position pair. */
-function getVerticalConnectionPosPair(v: SatPopoverVerticalAlign):
-    {originY: VerticalConnectionPos, overlayY: VerticalConnectionPos} {
+function getVerticalConnectionPosPair(
+  v: SatPopoverVerticalAlign
+): { originY: VerticalConnectionPos; overlayY: VerticalConnectionPos } {
   switch (v) {
     case 'above':
-      return {originY: 'top', overlayY: 'bottom'};
+      return { originY: 'top', overlayY: 'bottom' };
     case 'start':
-      return {originY: 'top', overlayY: 'top'};
+      return { originY: 'top', overlayY: 'top' };
     case 'end':
-      return {originY: 'bottom', overlayY: 'bottom'};
+      return { originY: 'bottom', overlayY: 'bottom' };
     case 'below':
-      return {originY: 'bottom', overlayY: 'top'};
+      return { originY: 'bottom', overlayY: 'top' };
     default:
-      return {originY: 'center', overlayY: 'center'};
+      return { originY: 'center', overlayY: 'center' };
   }
 }
-
 
 /**
  * Helper function that takes an ordered array options and returns a reorderded

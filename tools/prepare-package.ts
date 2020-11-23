@@ -17,7 +17,7 @@ interface PackageData {
 
 /** Pull required data from the source package.json. */
 function getSourceData(dependencyKeys: string[], propertyKeys: string[]): PackageData {
-  const pick = (obj, props) => Object.assign({}, ...props.map(prop => ({[prop]: obj[prop]})));
+  const pick = (obj, props) => Object.assign({}, ...props.map((prop) => ({ [prop]: obj[prop] })));
   const src = JSON.parse(readFileSync(SOURCE_PACKAGE_PATH, 'utf8'));
 
   // package version
