@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 7.0.0 matzah-pasta
+
+### Breaking Changes (aka Features)
+
+- Peer dependencies of `@angular/{core,common,cdk}` are now set to `^11.0.0`.
+
 ## 6.0.0 whatza-pizza
 
 ### Breaking Changes (aka Features)
