@@ -22,6 +22,7 @@ import {
   getInvalidPopoverAnchorError,
   getInvalidSatPopoverAnchorError
 } from './popover.errors';
+import { DEFAULT_TRANSITION } from './tokens';
 
 describe('SatPopover', () => {
   describe('passing an anchor', () => {
@@ -1030,6 +1031,34 @@ describe('SatPopover', () => {
       expect(comp.popover.isOpen()).toBe(false);
     }));
   });
+
+  describe('default transition', () => {
+    let fixture: ComponentFixture<SimpleDirectiveAnchorPopoverTestComponent>;
+    let comp: SimpleDirectiveAnchorPopoverTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [SatPopoverModule, NoopAnimationsModule],
+        declarations: [SimpleDirectiveAnchorPopoverTestComponent],
+        providers: [{ provide: DEFAULT_TRANSITION, useValue: '300ms ease' }]
+      });
+
+      fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
+      comp = fixture.componentInstance;
+
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer).getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    it('should use the provided default transition', () => {
+      expect(comp.popover.openTransition).toBe('300ms ease');
+      expect(comp.popover.closeTransition).toBe('300ms ease');
+    });
+  });
 });
 
 /**
@@ -1041,7 +1070,7 @@ describe('SatPopover', () => {
     <div satPopoverAnchor></div>
   `
 })
-class InvalidAnchorTestComponent {}
+class InvalidAnchorTestComponent { }
 
 /**
  * This component is for testing that passing an invalid anchor
@@ -1053,7 +1082,7 @@ class InvalidAnchorTestComponent {}
     <sat-popover [anchor]="invalid">Dummy</sat-popover>
   `
 })
-class InvalidPopoverTestComponent {}
+class InvalidPopoverTestComponent { }
 
 /**
  * This component is for testing that trying to open/close/toggle
@@ -1251,7 +1280,7 @@ export class ServiceTestComponent {
   @ViewChild('customAnchor', { static: true }) customAnchor: ElementRef;
   @ViewChild(SatPopover, { static: true }) popover: SatPopover;
 
-  constructor(public anchoring: SatPopoverAnchoringService, public container: ViewContainerRef) {}
+  constructor(public anchoring: SatPopoverAnchoringService, public container: ViewContainerRef) { }
 }
 
 /** This component is for testing the hover directive behavior. */

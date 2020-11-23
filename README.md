@@ -289,6 +289,24 @@ You can modify these animation curves using `openTransition` and `closeTransitio
 </sat-popover>
 ```
 
+You can also modify the default transition globally by adding a custom value to the
+`DEFAULT_TRANSITION` provider.
+
+```ts
+import { SatPopoverModule, DEFAULT_TRANSITION } from '@ncstate/sat-popover';
+
+@NgModule({
+  ...
+  imports: [ SatPopoverModule ],
+  providers: [
+    { provide: DEFAULT_TRANSITION, useValue: '300ms ease' }
+  ]
+  ...
+})
+export class AppModule { }
+```
+
+
 Additionally you can modify the scale values for the opening (`startAtScale`) and closing (`endAtScale`) animations.
 ```html
 <!-- very subtle scale animation -->

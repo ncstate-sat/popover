@@ -6,6 +6,7 @@ import { BidiModule } from '@angular/cdk/bidi';
 
 import { SatPopover, SatPopoverAnchor } from './popover.component';
 import { SatPopoverHoverDirective } from './popover-hover.directive';
+import { DEFAULT_TRANSITION } from './tokens';
 
 @NgModule({
   imports: [
@@ -18,6 +19,10 @@ import { SatPopoverHoverDirective } from './popover-hover.directive';
     SatPopover,
     SatPopoverAnchor,
     SatPopoverHoverDirective,
+  ],
+  providers: [
+    // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
+    { provide: DEFAULT_TRANSITION, useValue: '200ms cubic-bezier(0.25, 0.8, 0.25, 1)' }
   ],
   exports: [
     SatPopover,

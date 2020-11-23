@@ -39,6 +39,7 @@ import {
   SatPopoverOpenOptions
 } from './types';
 import { SatPopoverAnchoringService } from './popover-anchoring.service';
+import { DEFAULT_TRANSITION } from './tokens';
 
 // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
 const DEFAULT_TRANSITION = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
@@ -249,7 +250,7 @@ export class SatPopover implements OnInit {
       this._openTransition = val;
     }
   }
-  private _openTransition = DEFAULT_TRANSITION;
+  private _openTransition = this._defaultTransition;
 
   /** Custom transition to use while closing. */
   @Input()
@@ -261,7 +262,7 @@ export class SatPopover implements OnInit {
       this._closeTransition = val;
     }
   }
-  private _closeTransition = DEFAULT_TRANSITION;
+  private _closeTransition = this._defaultTransition;
 
   /** Scale value at the start of the :enter animation. */
   @Input()
@@ -336,6 +337,7 @@ export class SatPopover implements OnInit {
     private _focusTrapFactory: FocusTrapFactory,
     _anchoringService: SatPopoverAnchoringService,
     private _viewContainerRef: ViewContainerRef,
+    @Inject(DEFAULT_TRANSITION) private _defaultTransition: string,
     @Optional() @Inject(DOCUMENT) private _document: any
   ) {
     // `@internal` stripping doesn't seem to work if the property is
