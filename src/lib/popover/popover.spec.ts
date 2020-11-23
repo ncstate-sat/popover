@@ -1109,8 +1109,8 @@ class AnchorlessPopoverTestComponent {
   `
 })
 class SimpleDirectiveAnchorPopoverTestComponent {
-  @ViewChild('anchorEl', { static: false }) anchorElement: ElementRef;
-  @ViewChild('anchorEl2', { static: false }) alternateAnchorElement: ElementRef;
+  @ViewChild('anchorEl') anchorElement: ElementRef;
+  @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
   @ViewChild(SatPopoverAnchor, { static: true }) anchor: SatPopoverAnchor;
   @ViewChild(SatPopover, { static: true }) popover: SatPopover;
 }
@@ -1127,8 +1127,8 @@ class SimpleDirectiveAnchorPopoverTestComponent {
   `
 })
 class DirectiveAnchorForPopoverTestComponent {
-  @ViewChild('anchorEl', { static: false }) anchorElement: ElementRef;
-  @ViewChild('anchorEl2', { static: false }) alternateAnchorElement: ElementRef;
+  @ViewChild('anchorEl') anchorElement: ElementRef;
+  @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
   @ViewChild(SatPopoverAnchor, { static: true }) anchor: SatPopoverAnchor;
   @ViewChild(SatPopover, { static: true }) popover: SatPopover;
 }
@@ -1144,7 +1144,7 @@ class DirectiveAnchorForPopoverTestComponent {
   `
 })
 class SimpleHTMLAnchorPopoverTestComponent {
-  @ViewChild('anchorEl', { static: false }) anchorElement: ElementRef;
+  @ViewChild('anchorEl') anchorElement: ElementRef;
   @ViewChild(SatPopover, { static: true }) popover: SatPopover;
 }
 
@@ -1208,9 +1208,9 @@ export class FocusPopoverTestComponent {
   restoreFocus = true;
   autoFocus = true;
 
-  @ViewChild('b1', { static: false }) button1: ElementRef;
-  @ViewChild('b2', { static: false }) button2: ElementRef;
-  @ViewChild('p', { static: false }) popover: SatPopover;
+  @ViewChild('b1') button1: ElementRef;
+  @ViewChild('b2') button2: ElementRef;
+  @ViewChild('p') popover: SatPopover;
 }
 
 /** This component is for testing dynamic positioning behavior. */
@@ -1291,7 +1291,7 @@ export class ServiceTestComponent {
   `
 })
 export class HoverDirectiveTestComponent {
-  @ViewChild('anchorEl', { static: false }) anchorEl: ElementRef;
+  @ViewChild('anchorEl') anchorEl: ElementRef;
   @ViewChild(SatPopover, { static: true }) popover: SatPopover;
   delay = 0;
 }

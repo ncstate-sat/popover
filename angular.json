@@ -11,7 +11,7 @@
       "prefix": "sat",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/lib/tsconfig.lib.json",
             "project": "src/lib/ng-package.json"
@@ -19,7 +19,8 @@
           "configurations": {
             "production": {
               "project": "src/lib/ng-package.prod.json"
-            }
+            },
+            "tsConfig": "src/lib/tsconfig.lib.prod.json"
           }
         },
         "test": {
@@ -55,6 +56,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/demo",
             "index": "src/demo/index.html",
             "main": "src/demo/main.ts",
@@ -71,6 +73,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/demo/environments/environment.ts",
@@ -80,7 +88,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
