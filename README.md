@@ -224,6 +224,16 @@ If used, the default backdrop will be transparent. You can add any custom backdr
 > keep in mind that a backdrop will block pointer events once it is open, immediately triggering
 > a `mouseleave` event.
 
+### Overlay panel
+
+You can add custom css classes to the overlay panel that wraps the popover.
+
+```html
+<sat-popover panelClass="app-fancy-panel">
+  <!-- ... -->
+</sat-popover>
+```
+
 ### Interactive closing
 
 If your popover has a backdrop, it will automatically close when clicked. The popover will also
