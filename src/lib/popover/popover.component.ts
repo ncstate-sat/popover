@@ -291,6 +291,9 @@ export class SatPopover implements OnInit {
   /** Optional backdrop class. */
   @Input() backdropClass = '';
 
+  /** Optional custom class to add to the overlay pane. */
+  @Input() panelClass: string | string[] = '';
+
   /** Emits when the popover is opened. */
   @Output() opened = new EventEmitter<void>();
 
