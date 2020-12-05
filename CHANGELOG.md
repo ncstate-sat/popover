@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 7.1.0 parakeet-bigfeet
+
+### Features
+
+- Added panelClass option
+- Added injection token for default transition
+- Added ability to customizable scale values for animation
+- General cleanup, and added git hook/package script for linting
+
+### Fixes
+
+- Demo build wasn't building
+
 ## 7.0.0 matzah-pasta
 
 ### Breaking Changes (aka Features)

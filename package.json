@@ -1,6 +1,6 @@
 {
   "name": "@ncstate/sat-popover",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "license": "MIT",
   "scripts": {
     "postinstall": "ngcc",
