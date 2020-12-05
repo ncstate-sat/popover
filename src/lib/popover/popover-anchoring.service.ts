@@ -35,6 +35,7 @@ interface PopoverConfig {
   scrollStrategy: SatPopoverScrollStrategy;
   forceAlignment: boolean;
   lockAlignment: boolean;
+  panelClass: string | string[];
 }
 
 @Injectable()
@@ -186,14 +187,15 @@ export class SatPopoverAnchoringService implements OnDestroy {
     if (!this._overlayRef) {
       this._portal = new TemplatePortal(this._popover._templateRef, this._viewContainerRef);
 
-      const popoverConfig = {
+      const popoverConfig: PopoverConfig = {
         horizontalAlign: this._popover.horizontalAlign,
         verticalAlign: this._popover.verticalAlign,
         hasBackdrop: this._popover.hasBackdrop,
         backdropClass: this._popover.backdropClass,
         scrollStrategy: this._popover.scrollStrategy,
         forceAlignment: this._popover.forceAlignment,
-        lockAlignment: this._popover.lockAlignment
+        lockAlignment: this._popover.lockAlignment,
+        panelClass: this._popover.panelClass
       };
 
       const overlayConfig = this._getOverlayConfig(popoverConfig, this._anchor);
@@ -304,7 +306,8 @@ export class SatPopoverAnchoringService implements OnDestroy {
       hasBackdrop: config.hasBackdrop,
       backdropClass: config.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._getScrollStrategyInstance(config.scrollStrategy),
-      direction: this._getDirection()
+      direction: this._getDirection(),
+      panelClass: config.panelClass
     });
   }
 
