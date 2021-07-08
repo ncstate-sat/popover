@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 $info-panel-bg: rgb(83, 83, 83);
 
@@ -7,7 +7,7 @@ $info-panel-bg: rgb(83, 83, 83);
 }
 
 .avatar {
-  @include mat-elevation(1);
+  @include mat.elevation(1);
   background: rgba(77, 204, 255, 0.8);
   color: white;
   display: inline-block;
@@ -20,7 +20,7 @@ $info-panel-bg: rgb(83, 83, 83);
 }
 
 .info {
-  @include mat-elevation(4);
+  @include mat.elevation(4);
   background: $info-panel-bg;
   color: white;
   border-radius: 4px;

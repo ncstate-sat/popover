@@ -1,7 +1,7 @@
-@import '~@angular/cdk/_overlay';
+@use '~@angular/cdk' as cdk;
 
 // Include overlay styles
-@include cdk-overlay();
+@include cdk.overlay();
 
 .sat-popover-container {
   &.sat-popover-before.sat-popover-above {

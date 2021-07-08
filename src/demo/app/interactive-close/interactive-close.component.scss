@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 $error-text: #e63922;
 
@@ -7,7 +7,7 @@ $error-text: #e63922;
 }
 
 .options {
-  @include mat-elevation(8);
+  @include mat.elevation(8);
   display: flex;
   flex-direction: column;
   padding: 24px;
