@@ -3,7 +3,7 @@
     class="sat-popover-container"
     #focusTrapElement
     [ngClass]="_classList"
-    [@transformPopover]="_getAnimation()"
+    [@transformPopover]="{ value: state, params: params }"
     (@transformPopover.done)="_onAnimationDone($event)"
   >
     <ng-content></ng-content>

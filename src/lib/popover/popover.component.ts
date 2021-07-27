@@ -41,8 +41,8 @@ import {
 import { SatPopoverAnchoringService } from './popover-anchoring.service';
 import { DEFAULT_TRANSITION } from './tokens';
 
-const DEFAULT_OPEN_ANIMATION_START_SCALE = 0.625;
-const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.785;
+const DEFAULT_OPEN_ANIMATION_START_SCALE = 0.3;
+const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
 
 @Directive({
   selector: '[satPopoverAnchor]',
@@ -321,6 +321,8 @@ export class SatPopover implements OnInit {
   /** Whether the popover is presently open. */
   _open = false;
 
+  _state: 'enter' | 'void' | 'exit' = 'enter';
+
   /** @internal */
   _anchoringService: SatPopoverAnchoringService;
 
@@ -387,29 +389,33 @@ export class SatPopover implements OnInit {
   }
 
   /** Gets an animation config with customized (or default) transition values. */
-  _getAnimation(): { value: any; params: any } {
+  get state() {
+    return this._state;
+  }
+  get params() {
     return {
-      value: 'visible',
-      params: {
-        openTransition: this.openTransition,
-        closeTransition: this.closeTransition,
-        startAtScale: this.openAnimationStartAtScale,
-        endAtScale: this.closeAnimationEndAtScale
-      }
-    };
+      openTransition: this.openTransition,
+      closeTransition: this.closeTransition,
+      startAtScale: this.openAnimationStartAtScale,
+      endAtScale: this.closeAnimationEndAtScale
+    }
   }
 
   /** Callback for when the popover is finished animating in or out. */
-  _onAnimationDone(event: AnimationEvent) {
-    if (event.toState === 'visible') {
+  _onAnimationDone({toState}: AnimationEvent) {
+    if (toState === 'enter') {
       this._trapFocus();
       this.afterOpen.emit();
-    } else if (event.toState === 'void') {
+    } else if (toState === 'exit' || toState === 'void') {
       this._restoreFocusAndDestroyTrap();
       this.afterClose.emit();
     }
   }
 
+  /** Starts the dialog exit animation. */
+  _startExitAnimation(): void {
+    this._state = 'exit';
+  }
   /** Apply alignment classes based on alignment inputs. */
   _setAlignmentClasses(horizAlign = this.horizontalAlign, vertAlign = this.verticalAlign) {
     this._classList['sat-popover-before'] = horizAlign === 'before' || horizAlign === 'end';
