@@ -7,7 +7,7 @@
     "clean": "rm -rf dist",
     "demo": "ng serve demo",
     "build": "ng build popover && ts-node tools/prepare-package.ts",
-    "build:prod": "ng build popover --configuration production",
+    "build:prod": "ng build popover --configuration production && ts-node tools/prepare-package.ts",
     "build:demo": "ng build demo --configuration production --base-href=\"/popover/\"",
     "gh-pages": "ngh --dir dist/demo",
     "lint": "ng lint popover --type-check",
