@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
+import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory, FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 
 import { transformPopover } from './popover.animations';
@@ -41,8 +41,8 @@ import {
 import { SatPopoverAnchoringService } from './popover-anchoring.service';
 import { DEFAULT_TRANSITION } from './tokens';
 
-const DEFAULT_OPEN_ANIMATION_START_SCALE = 0.3;
-const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
+const DEFAULT_OPEN_ANIMATION_START_SCALE = 0.625;
+const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.785;
 
 @Directive({
   selector: '[satPopoverAnchor]',
@@ -332,10 +332,10 @@ export class SatPopover implements OnInit {
   private _previouslyFocusedElement: HTMLElement;
 
   /** Reference to a focus trap around the popover. */
-  private _focusTrap: FocusTrap;
+  private _focusTrap: ConfigurableFocusTrap;
 
   constructor(
-    private _focusTrapFactory: FocusTrapFactory,
+    private _focusTrapFactory: ConfigurableFocusTrapFactory,
     _anchoringService: SatPopoverAnchoringService,
     private _viewContainerRef: ViewContainerRef,
     @Inject(DEFAULT_TRANSITION) private _defaultTransition: string,

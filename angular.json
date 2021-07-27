@@ -3,6 +3,9 @@
   "version": 1,
   "newProjectRoot": "projects",
   "defaultProject": "popover",
+  "cli": {
+    "packageManager": "npm"
+  },
   "projects": {
     "popover": {
       "root": "src/lib",
