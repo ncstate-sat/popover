@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
+import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory, FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 
 import { transformPopover } from './popover.animations';
@@ -321,6 +321,8 @@ export class SatPopover implements OnInit {
   /** Whether the popover is presently open. */
   _open = false;
 
+  _state: 'enter' | 'void' | 'exit' = 'enter';
+
   /** @internal */
   _anchoringService: SatPopoverAnchoringService;
 
@@ -332,10 +334,10 @@ export class SatPopover implements OnInit {
   private _previouslyFocusedElement: HTMLElement;
 
   /** Reference to a focus trap around the popover. */
-  private _focusTrap: FocusTrap;
+  private _focusTrap: ConfigurableFocusTrap;
 
   constructor(
-    private _focusTrapFactory: FocusTrapFactory,
+    private _focusTrapFactory: ConfigurableFocusTrapFactory,
     _anchoringService: SatPopoverAnchoringService,
     private _viewContainerRef: ViewContainerRef,
     @Inject(DEFAULT_TRANSITION) private _defaultTransition: string,
@@ -387,29 +389,33 @@ export class SatPopover implements OnInit {
   }
 
   /** Gets an animation config with customized (or default) transition values. */
-  _getAnimation(): { value: any; params: any } {
+  get state() {
+    return this._state;
+  }
+  get params() {
     return {
-      value: 'visible',
-      params: {
-        openTransition: this.openTransition,
-        closeTransition: this.closeTransition,
-        startAtScale: this.openAnimationStartAtScale,
-        endAtScale: this.closeAnimationEndAtScale
-      }
-    };
+      openTransition: this.openTransition,
+      closeTransition: this.closeTransition,
+      startAtScale: this.openAnimationStartAtScale,
+      endAtScale: this.closeAnimationEndAtScale
+    }
   }
 
   /** Callback for when the popover is finished animating in or out. */
-  _onAnimationDone(event: AnimationEvent) {
-    if (event.toState === 'visible') {
+  _onAnimationDone({toState}: AnimationEvent) {
+    if (toState === 'enter') {
       this._trapFocus();
       this.afterOpen.emit();
-    } else if (event.toState === 'void') {
+    } else if (toState === 'exit' || toState === 'void') {
       this._restoreFocusAndDestroyTrap();
       this.afterClose.emit();
     }
   }
 
+  /** Starts the dialog exit animation. */
+  _startExitAnimation(): void {
+    this._state = 'exit';
+  }
   /** Apply alignment classes based on alignment inputs. */
   _setAlignmentClasses(horizAlign = this.horizontalAlign, vertAlign = this.verticalAlign) {
     this._classList['sat-popover-before'] = horizAlign === 'before' || horizAlign === 'end';

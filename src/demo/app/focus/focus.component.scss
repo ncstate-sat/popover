@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 :host {
   display: block;
@@ -24,7 +24,7 @@
 }
 
 .form {
-  @include mat-elevation(8);
+  @include mat.elevation(8);
   display: flex;
   flex-direction: column;
   padding: 24px;

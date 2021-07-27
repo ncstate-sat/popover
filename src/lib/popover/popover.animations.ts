@@ -1,9 +1,13 @@
 import { trigger, state, style, animate, transition, AnimationTriggerMetadata } from '@angular/animations';
 
 export const transformPopover: AnimationTriggerMetadata = trigger('transformPopover', [
-  transition(':enter', [
-    style({ opacity: 0, transform: 'scale({{startAtScale}})' }),
+  state('enter', style({ opacity: 1, transform: 'scale(1)' }), { params: { startAtScale: 0.3 } }),
+  state('void, exit', style({ opacity: 0, transform: 'scale({{endAtScale}})' }), { params: { endAtScale: 0.5 } }),
+  transition('* => enter', [
+    style({ opacity: 0, transform: 'scale({{endAtScale}})' }),
     animate('{{openTransition}}', style({ opacity: 1, transform: 'scale(1)' }))
   ]),
-  transition(':leave', [animate('{{closeTransition}}', style({ opacity: 0, transform: 'scale({{endAtScale}})' }))])
+  transition('* => void, * => exit', [
+    animate('{{closeTransition}}', style({ opacity: 0, transform: 'scale({{endAtScale}})' }))
+  ])
 ]);

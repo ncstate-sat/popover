@@ -1,16 +1,16 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 // Material theming
-$ncstate-primary: mat-palette($mat-red, 700);
-$ncstate-accent: mat-palette($mat-blue-grey);
-$ncstate-warn: mat-palette($mat-deep-orange);
+$ncstate-primary: mat.define-palette(mat.$red-palette, 700);
+$ncstate-accent: mat.define-palette(mat.$blue-grey-palette);
+$ncstate-warn: mat.define-palette(mat.$deep-orange-palette);
 
-$ncstate-theme: mat-light-theme($ncstate-primary, $ncstate-accent, $ncstate-warn);
+$ncstate-theme: mat.define-light-theme($ncstate-primary, $ncstate-accent, $ncstate-warn);
 
 $gradient-opacity: 0.48;
 
-@include mat-core();
-@include angular-material-theme($ncstate-theme);
+@include mat.core();
+@include mat.all-component-themes($ncstate-theme);
 
 html,
 body {
