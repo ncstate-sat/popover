@@ -406,7 +406,7 @@ export class SatPopover implements OnInit {
     if (toState === 'enter') {
       this._trapFocus();
       this.afterOpen.emit();
-    } else if (toState === 'exit' || toState === 'void') {
+    } else if (toState === 'exit') {
       this._restoreFocusAndDestroyTrap();
       this.afterClose.emit();
     }
