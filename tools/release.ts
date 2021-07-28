@@ -24,7 +24,7 @@ async function gitTags() {
 async function libBuild() {
   console.log(chalk.green(`Building library`));
 
-  const { stdout: build } = await exec(`npm run build`);
+  const { stdout: build } = await exec(`npm run build:prod`);
 }
 
 async function publish() {

@@ -442,9 +442,10 @@ function getVerticalPopoverAlignment(v: VerticalConnectionPos): SatPopoverVertic
 }
 
 /** Helper function to convert alignment to origin/overlay position pair. */
-function getHorizontalConnectionPosPair(
-  h: SatPopoverHorizontalAlign
-): { originX: HorizontalConnectionPos; overlayX: HorizontalConnectionPos } {
+function getHorizontalConnectionPosPair(h: SatPopoverHorizontalAlign): {
+  originX: HorizontalConnectionPos;
+  overlayX: HorizontalConnectionPos;
+} {
   switch (h) {
     case 'before':
       return { originX: 'start', overlayX: 'end' };
@@ -460,9 +461,10 @@ function getHorizontalConnectionPosPair(
 }
 
 /** Helper function to convert alignment to origin/overlay position pair. */
-function getVerticalConnectionPosPair(
-  v: SatPopoverVerticalAlign
-): { originY: VerticalConnectionPos; overlayY: VerticalConnectionPos } {
+function getVerticalConnectionPosPair(v: SatPopoverVerticalAlign): {
+  originY: VerticalConnectionPos;
+  overlayY: VerticalConnectionPos;
+} {
   switch (v) {
     case 'above':
       return { originY: 'top', overlayY: 'bottom' };

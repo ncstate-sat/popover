@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 8.0.0 fowl-owl
+
+### Breaking Changes (aka Features)
+
+- Peer dependencies of `@angular/{core,common,cdk}` are now set to `^11.0.0`.
+
+### Fixes
+
+- Transitions not firing after first time bug was killed
+
 ## 7.1.0 parakeet-bigfeet
 
 ### Features
