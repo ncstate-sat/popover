@@ -282,9 +282,9 @@ export class SatPopoverAnchoringService implements OnDestroy {
   /** Save the closed state of the popover and emit. */
   private _saveClosedState(value?: any): void {
     if (this._popoverOpen) {
-      this._popover._startExitAnimation();
       this._popover._open = this._popoverOpen = false;
 
+      this._popover._startExitAnimation();
       this.popoverClosed.next(value);
       this._popover.closed.emit(value);
     }

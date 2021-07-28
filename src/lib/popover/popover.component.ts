@@ -402,11 +402,11 @@ export class SatPopover implements OnInit {
   }
 
   /** Callback for when the popover is finished animating in or out. */
-  _onAnimationDone({ toState }: AnimationEvent) {
+  _onAnimationDone({ fromState, toState }: AnimationEvent) {
     if (toState === 'enter') {
       this._trapFocus();
       this.afterOpen.emit();
-    } else if (toState === 'exit') {
+    } else if (toState === 'exit' || toState === 'void') {
       this._restoreFocusAndDestroyTrap();
       this.afterClose.emit();
     }
