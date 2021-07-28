@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 8.0.1 stinky-skink
+
+### Breaking Changes (aka Features)
+
+- Specifically excluding suppport for IE 9-11
+
+### Fixes
+
+- Transition firing for afterClose now fires after close ;)
+
 ## 8.0.0 fowl-owl
 
 ### Breaking Changes (aka Features)
