@@ -17,7 +17,7 @@ import {
 import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory, FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
-import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 
 import { transformPopover } from './popover.animations';
 import {
@@ -156,7 +156,7 @@ export class SatPopover implements OnInit {
   get forceAlignment() {
     return this._forceAlignment;
   }
-  set forceAlignment(val: boolean) {
+  set forceAlignment(val: BooleanInput) {
     const coercedVal = coerceBooleanProperty(val);
     if (this._forceAlignment !== coercedVal) {
       this._forceAlignment = coercedVal;
@@ -173,7 +173,7 @@ export class SatPopover implements OnInit {
   get lockAlignment() {
     return this._lockAlignment;
   }
-  set lockAlignment(val: boolean) {
+  set lockAlignment(val: BooleanInput) {
     const coercedVal = coerceBooleanProperty(val);
     if (this._lockAlignment !== coercedVal) {
       this._lockAlignment = coerceBooleanProperty(val);
@@ -187,7 +187,7 @@ export class SatPopover implements OnInit {
   get autoFocus() {
     return this._autoFocus && this._autoFocusOverride;
   }
-  set autoFocus(val: boolean) {
+  set autoFocus(val: BooleanInput) {
     this._autoFocus = coerceBooleanProperty(val);
   }
   private _autoFocus = true;
@@ -198,7 +198,7 @@ export class SatPopover implements OnInit {
   get restoreFocus() {
     return this._restoreFocus && this._restoreFocusOverride;
   }
-  set restoreFocus(val: boolean) {
+  set restoreFocus(val: BooleanInput) {
     this._restoreFocus = coerceBooleanProperty(val);
   }
   private _restoreFocus = true;
@@ -223,7 +223,7 @@ export class SatPopover implements OnInit {
   get hasBackdrop() {
     return this._hasBackdrop;
   }
-  set hasBackdrop(val: boolean) {
+  set hasBackdrop(val: BooleanInput) {
     this._hasBackdrop = coerceBooleanProperty(val);
   }
   private _hasBackdrop = false;
@@ -233,7 +233,7 @@ export class SatPopover implements OnInit {
   get interactiveClose() {
     return this._interactiveClose;
   }
-  set interactiveClose(val: boolean) {
+  set interactiveClose(val: BooleanInput) {
     this._interactiveClose = coerceBooleanProperty(val);
   }
   private _interactiveClose = true;
@@ -267,10 +267,10 @@ export class SatPopover implements OnInit {
   get openAnimationStartAtScale() {
     return this._openAnimationStartAtScale;
   }
-  set openAnimationStartAtScale(val: number) {
+  set openAnimationStartAtScale(val: NumberInput) {
     const coercedVal = coerceNumberProperty(val);
     if (!isNaN(coercedVal)) {
-      this._openAnimationStartAtScale = val;
+      this._openAnimationStartAtScale = coercedVal;
     }
   }
   private _openAnimationStartAtScale = DEFAULT_OPEN_ANIMATION_START_SCALE;
@@ -280,10 +280,10 @@ export class SatPopover implements OnInit {
   get closeAnimationEndAtScale() {
     return this._closeAnimationEndAtScale;
   }
-  set closeAnimationEndAtScale(val: number) {
+  set closeAnimationEndAtScale(val: NumberInput) {
     const coercedVal = coerceNumberProperty(val);
     if (!isNaN(coercedVal)) {
-      this._closeAnimationEndAtScale = val;
+      this._closeAnimationEndAtScale = coercedVal;
     }
   }
   private _closeAnimationEndAtScale = DEFAULT_CLOSE_ANIMATION_END_SCALE;

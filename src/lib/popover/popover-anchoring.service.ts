@@ -12,6 +12,7 @@ import {
 import { Directionality, Direction } from '@angular/cdk/bidi';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil, take, filter, tap } from 'rxjs/operators';
 
@@ -190,11 +191,11 @@ export class SatPopoverAnchoringService implements OnDestroy {
       const popoverConfig: PopoverConfig = {
         horizontalAlign: this._popover.horizontalAlign,
         verticalAlign: this._popover.verticalAlign,
-        hasBackdrop: this._popover.hasBackdrop,
+        hasBackdrop: coerceBooleanProperty(this._popover.hasBackdrop),
         backdropClass: this._popover.backdropClass,
         scrollStrategy: this._popover.scrollStrategy,
-        forceAlignment: this._popover.forceAlignment,
-        lockAlignment: this._popover.lockAlignment,
+        forceAlignment: coerceBooleanProperty(this._popover.forceAlignment),
+        lockAlignment: coerceBooleanProperty(this._popover.lockAlignment),
         panelClass: this._popover.panelClass
       };
 

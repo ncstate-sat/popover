@@ -1,5 +1,5 @@
 import { AfterViewInit, Directive, HostListener, Input, OnDestroy } from '@angular/core';
-import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { of, Subject } from 'rxjs';
 import { delay, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -17,7 +17,7 @@ export class SatPopoverHoverDirective implements AfterViewInit, OnDestroy {
   get satPopoverHover() {
     return this._satPopoverHover;
   }
-  set satPopoverHover(val: number) {
+  set satPopoverHover(val: NumberInput) {
     this._satPopoverHover = coerceNumberProperty(val);
   }
   private _satPopoverHover = 0;
