@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 8.0.2 funky-monkey
+
+### Breaking Changes (aka Features)
+
+- Peer dependencies of @angular/{**} are now set to ^13.3.3.
+
 ## 8.0.1 stinky-skink
 
 ### Breaking Changes (aka Features)
