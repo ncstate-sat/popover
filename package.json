@@ -2,9 +2,9 @@
   "name": "@ncstate/sat-popover",
   "version": "9.0.0",
   "license": "MIT",
-  "engines" : { 
-    "npm" : ">=8.5.0",
-    "node" : ">=16.15.0"
+  "engines": {
+    "npm": ">=8.5.0",
+    "node": ">=16.15.0"
   },
   "scripts": {
     "postinstall": "ngcc",
@@ -56,7 +56,7 @@
     "@types/jasminewd2": "^2.0.10",
     "@types/node": "^17.0.31",
     "angular-cli-ghpages": "^1.0.0",
-    "chalk": "^5.0.1",
+    "chalk": "^4.1.2",
     "codelyzer": "^6.0.2",
     "core-js": "^3.22.4",
     "jasmine-core": "~3.8.0",
