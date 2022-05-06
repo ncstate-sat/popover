@@ -23,7 +23,7 @@ export class SatPopoverHoverDirective implements AfterViewInit, OnDestroy {
   private _satPopoverHover = 0;
 
   /** Emits when the directive is destroyed. */
-  private _onDestroy = new Subject();
+  private _onDestroy = new Subject<void>();
 
   /** Emits when the user's mouse enters the element. */
   private _onMouseEnter = new Subject<void>();
