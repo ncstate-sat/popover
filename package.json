@@ -6,6 +6,7 @@
     "npm" : ">=8.5.0",
     "node" : ">=16.15.0"
   },
+  "type": "module",
   "scripts": {
     "postinstall": "ngcc",
     "clean": "rm -rf dist",
