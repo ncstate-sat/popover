@@ -37,8 +37,14 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["src/lib/tsconfig.lib.json", "src/lib/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**", "**/*.spec.ts"]
+            "tsConfig": [
+              "src/lib/tsconfig.lib.json",
+              "src/lib/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "**/*.spec.ts"
+            ]
           }
         }
       }
@@ -58,8 +64,13 @@
             "main": "src/demo/main.ts",
             "polyfills": "src/demo/polyfills.ts",
             "tsConfig": "src/demo/tsconfig.app.json",
-            "assets": ["src/demo/favicon.ico", "src/demo/assets"],
-            "styles": ["src/demo/styles.scss"],
+            "assets": [
+              "src/demo/favicon.ico",
+              "src/demo/assets"
+            ],
+            "styles": [
+              "src/demo/styles.scss"
+            ],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -87,8 +98,7 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "vendorChunk": false
             }
           },
           "defaultConfiguration": ""
@@ -117,16 +127,26 @@
             "polyfills": "src/demo/polyfills.ts",
             "tsConfig": "src/demo/tsconfig.spec.json",
             "karmaConfig": "src/demo/karma.conf.js",
-            "styles": ["styles.scss"],
+            "styles": [
+              "styles.scss"
+            ],
             "scripts": [],
-            "assets": ["src/demo/favicon.ico", "src/demo/assets"]
+            "assets": [
+              "src/demo/favicon.ico",
+              "src/demo/assets"
+            ]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["src/demo/tsconfig.app.json", "src/demo/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "src/demo/tsconfig.app.json",
+              "src/demo/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
