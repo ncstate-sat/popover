@@ -1,10 +1,17 @@
 # CHANGELOG
 
+## 9.0.1 webpack-schmwebpack
+
+### Fixes
+
+- Webpack issues introduced in v9.0.0
+
 ## 9.0.0 funky-monkey
 
 ### Breaking Changes (aka Features)
 
 - Peer dependencies of @angular/{**} are now set to ^13.3.6.
+
 
 ## 8.0.1 stinky-skink
 
