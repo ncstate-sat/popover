@@ -3,12 +3,16 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
     "importHelpers": true,
-
     "types": []
   },
   "angularCompilerOptions": {
     "enableIvy": true
   },
-  "files": ["main.ts", "polyfills.ts"],
-  "include": ["src/demo/**/*.d.ts"]
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "src/demo/**/*.d.ts"
+  ]
 }

@@ -4,7 +4,7 @@
     "outDir": "../../out-tsc/lib",
     "declarationMap": true,
     "target": "es2015",
-    "module": "commonjs",
+    "module": "es2015",
     "moduleResolution": "node",
     "declaration": true,
     "sourceMap": true,
@@ -13,7 +13,10 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "types": [],
-    "lib": ["dom", "es2015"]
+    "lib": [
+      "dom",
+      "es2015"
+    ]
   },
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,
@@ -22,5 +25,8 @@
     "strictInjectionParameters": true,
     "enableIvy": true
   },
-  "exclude": ["test.ts", "**/*.spec.ts"]
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
 }
