@@ -40,7 +40,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.0.4",
     "@angular/animations": "^14.0.4",
-    "@angular/cdk": "^13.3.7",
+    "@angular/cdk": "^14.0.4",
     "@angular/cli": "^14.0.4",
     "@angular/common": "^14.0.4",
     "@angular/compiler": "^14.0.4",
@@ -48,7 +48,7 @@
     "@angular/core": "^14.0.4",
     "@angular/forms": "^14.0.4",
     "@angular/language-service": "^14.0.4",
-    "@angular/material": "^13.3.7",
+    "@angular/material": "^14.0.4",
     "@angular/platform-browser": "^14.0.4",
     "@angular/platform-browser-dynamic": "^14.0.4",
     "@angular/router": "^14.0.4",
