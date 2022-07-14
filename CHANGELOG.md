@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 10.0.0
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ^14.0.4.
+
 ## 9.0.1 webpack-schmwebpack
 
 ### Fixes
@@ -10,8 +16,7 @@
 
 ### Breaking Changes (aka Features)
 
-- Peer dependencies of @angular/{**} are now set to ^13.3.6.
-
+- Peer dependencies of @angular/{\*\*} are now set to ^13.3.6.
 
 ## 8.0.1 stinky-skink
 
