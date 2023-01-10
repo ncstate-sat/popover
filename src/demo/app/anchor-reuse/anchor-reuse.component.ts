@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SatPopover } from '@ncstate/sat-popover';
 
 @Component({
@@ -35,14 +35,21 @@ import { SatPopover } from '@ncstate/sat-popover';
     </mat-card>
   `
 })
-export class AnchorReuseComponent {
+export class AnchorReuseComponent implements AfterViewInit {
   @ViewChild('a') aPopover: SatPopover;
   @ViewChild('b') bPopover: SatPopover;
 
   activePopover = 'a';
-  showAnchor = true;
+  showAnchor = false;
 
   getActivePopover(): SatPopover {
     return this.activePopover === 'a' ? this.aPopover : this.bPopover;
+  }
+
+  ngAfterViewInit() {
+    // Wait for SatPopover references before showing the button
+    setTimeout(() => {
+      this.showAnchor = true;
+    });
   }
 }
