@@ -1,18 +1,17 @@
 # Popover Component for Angular
 
-[![npm version](https://badge.fury.io/js/%40ncstate%2Fsat-popover.svg)](https://badge.fury.io/js/%40ncstate%2Fsat-popover)
-[![Build Status](https://travis-ci.org/ncstate-sat/popover.svg?branch=master)](https://travis-ci.org/ncstate-sat/popover)
+[![npm version](https://badge.fury.io/js/%40wjaspers%2Fsat-popover.svg)](https://badge.fury.io/js/%40wjaspers%2Fsat-popover)
+[![Build Status](https://travis-ci.org/wjaspers/popover.svg?branch=master)](https://travis-ci.org/wjaspers/popover)
 
 [Demo](https://stackblitz.com/edit/ncstate-sat-popover-examples) |
 [StackBlitz Template](https://stackblitz.com/edit/ncstate-sat-popover-issues) |
-[Development App](https://ncstate-sat.github.io/popover/)
 
 ## Installation
 
 `sat-popover` has a peer dependency on the Angular CDK to leverage its overlay API.
 
 ```bash
-npm install --save @ncstate/sat-popover @angular/cdk
+npm install --save @wjaspers/sat-popover @angular/cdk
 ```
 
 If you want the popover animations to work, you must include `BrowserAnimationsModule` in your app.
@@ -44,7 +43,7 @@ export class AppModule { }
 Finally, import the `SatPopoverModule` to provide the necessary components and directives.
 
 ```ts
-import { SatPopoverModule } from '@ncstate/sat-popover';
+import { SatPopoverModule } from '@wjaspers/sat-popover';
 
 @NgModule({
   ...
@@ -295,7 +294,7 @@ You can also modify the default transition globally by adding a custom value to 
 `DEFAULT_TRANSITION` provider.
 
 ```ts
-import { SatPopoverModule, DEFAULT_TRANSITION } from '@ncstate/sat-popover';
+import { SatPopoverModule, DEFAULT_TRANSITION } from '@wjaspers/sat-popover';
 
 @NgModule({
   ...

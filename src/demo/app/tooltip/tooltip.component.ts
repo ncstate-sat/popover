@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { SatPopover } from '@ncstate/sat-popover';
+import { SatPopover } from '@wjaspers/sat-popover';
 import { Subject, of } from 'rxjs';
 import { switchMap, takeUntil, delay } from 'rxjs/operators';
 

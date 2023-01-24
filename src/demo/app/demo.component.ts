@@ -7,8 +7,8 @@ import { environment } from '../environments/environment';
   host: { class: 'mat-app-background' },
   template: `
     <mat-toolbar color="primary" class="mat-elevation-z2">
-      <a class="repo-link mat-title" href="https://github.com/ncstate-sat/popover">
-        @ncstate/sat-popover <span class="version mat-body-2">{{ version }}</span>
+      <a class="repo-link mat-title" href="https://github.com/wjaspers/popover">
+        @wjaspers/sat-popover <span class="version mat-body-2">{{ version }}</span>
       </a>
       <button mat-button title="Toggle all content" (click)="showContent = !showContent">
         {{ showContent ? 'Hide' : 'Show' }} content
