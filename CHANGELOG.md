@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 10.2.0 silly-vanilly
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ^15.1.1.
+
 ## 10.1.0 rhyme-thyme
 
 ### Breaking Changes
