@@ -1,6 +1,6 @@
 {
-  "name": "@ncstate/sat-popover",
-  "version": "10.2.1",
+  "name": "@wjaspers/sat-popover",
+  "version": "10.2.4",
   "license": "MIT",
   "engines": {
     "npm": ">=8.5.0",
@@ -31,7 +31,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ncstate-sat/popover.git"
+    "url": "git+https://github.com/wjaspers/popover.git"
   },
   "bugs": {
     "url": "https://github.com/ncstate-sat/popover/issues"
