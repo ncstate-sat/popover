@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 10.3.0 wobbly-bobbly
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ^16.2.4
+- `ngcc` removed from `postinstall` hook, as it is no longer required.
+
 ## 10.2.0 silly-vanilly
 
 ### Breaking Changes
