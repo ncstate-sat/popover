@@ -46,7 +46,7 @@ function replacePackageValues(): void {
   const src = getSourceData(PEER_DEPENDENCIES, PACKAGE_PROPERTIES);
   return replaceDistData({
     version: src.version,
-    peerDependencies: src.dependencies,
+    peerDependencies: undefined, // Removing to allow longer release cycles
     ...src.properties
   });
 }
