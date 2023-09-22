@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 10.3.2 thrice-asnice
+
+- Updated other packages
+
 ## 10.3.1 bibbidy-bobbidy
 
 ### Breaking Changes

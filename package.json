@@ -1,9 +1,9 @@
 {
   "name": "@ncstate/sat-popover",
-  "version": "10.3.1",
+  "version": "10.3.2",
   "license": "MIT",
   "engines": {
-    "npm": ">=9.8.0",
+    "npm": ">=10.0.0",
     "node": ">=18.0.0"
   },
   "scripts": {
@@ -58,15 +58,15 @@
     "chalk": "^4.1.2",
     "codelyzer": "^6.0.2",
     "core-js": "^3.32.2",
-    "jasmine-core": "~4.5.0",
+    "jasmine-core": "~5.1.1",
     "jasmine-spec-reporter": "~7.0.0",
-    "karma": "^6.4.1",
-    "karma-chrome-launcher": "~3.1.1",
+    "karma": "^6.4.2",
+    "karma-chrome-launcher": "~3.2.0",
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "^2.0.0",
+    "karma-jasmine-html-reporter": "^2.1.0",
     "ng-packagr": "^16.2.3",
-    "prettier": "^2.8.3",
+    "prettier": "^3.0.3",
     "rxjs": "^7.8.1",
     "ts-node": "~10.9.1",
     "tslint": "~6.1.2",
@@ -88,6 +88,6 @@
   },
   "volta": {
     "node": "18.18.0",
-    "npm": "9.8.1"
+    "npm": "10.1.0"
   }
 }
