@@ -10,9 +10,9 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "target": "es2020",
+    "target": "es2022",
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2015", "dom"],
+    "lib": ["es2022", "dom"],
     "paths": {
       "@ncstate/sat-popover": ["dist/popover"],
       "core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata", "node_modules/core-js/es/reflect"],

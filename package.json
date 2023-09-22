@@ -3,8 +3,8 @@
   "version": "10.1.0",
   "license": "MIT",
   "engines": {
-    "npm": ">=8.5.0",
-    "node": ">=16.15.0"
+    "npm": ">=9.8.0",
+    "node": ">=18.0.0"
   },
   "scripts": {
     "postinstall": "ngcc",
@@ -89,6 +89,6 @@
   },
   "volta": {
     "node": "18.18.0",
-    "npm": "10.1.0"
+    "npm": "9.8.1"
   }
 }
