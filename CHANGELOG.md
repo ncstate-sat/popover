@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 10.2.2 freaky-deaky
+
+Tagging got screwed up.  10.2.2 is good.
+
 ## 10.2.1 silly-vanilly
 
 ### Breaking Changes
