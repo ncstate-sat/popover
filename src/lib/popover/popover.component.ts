@@ -248,7 +248,7 @@ export class SatPopover implements OnInit {
       this._openTransition = val;
     }
   }
-  private _openTransition = this._defaultTransition;
+  private _openTransition;
 
   /** Custom transition to use while closing. */
   @Input()
@@ -260,7 +260,7 @@ export class SatPopover implements OnInit {
       this._closeTransition = val;
     }
   }
-  private _closeTransition = this._defaultTransition;
+  private _closeTransition;
 
   /** Scale value at the start of the :enter animation. */
   @Input()
@@ -346,6 +346,8 @@ export class SatPopover implements OnInit {
     // `@internal` stripping doesn't seem to work if the property is
     // declared inside the constructor
     this._anchoringService = _anchoringService;
+    this._openTransition = _defaultTransition;
+    this._closeTransition = _defaultTransition;
   }
 
   ngOnInit() {
