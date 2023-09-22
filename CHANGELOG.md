@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 10.3.1 bibbidy-bobbidy
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ^16.2.6
+
 ## 10.3.0 wobbly-bobbly
 
 ### Breaking Changes
