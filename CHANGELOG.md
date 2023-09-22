@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 10.2.0 silly-vanilly
+## 10.2.1 silly-vanilly
 
 ### Breaking Changes
 
