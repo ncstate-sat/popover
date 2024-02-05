@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { SatPopover } from '@ncstate/sat-popover';
+import { SatPopoverComponent } from '@ncstate/sat-popover';
 import { Subject, of } from 'rxjs';
 import { switchMap, takeUntil, delay } from 'rxjs/operators';
 
@@ -54,8 +54,8 @@ import { switchMap, takeUntil, delay } from 'rxjs/operators';
     </mat-card>
   `
 })
-export class TooltipDemo implements AfterViewInit {
-  @ViewChild('poDelayed') delayed: SatPopover;
+export class DemoTooltipComponent implements AfterViewInit {
+  @ViewChild('poDelayed') delayed: SatPopoverComponent;
 
   mouseenter = new Subject<void>();
   mouseleave = new Subject<void>();

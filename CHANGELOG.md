@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 11.0.0 jimny-cricket
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ^17.1.2
+- Any reference to `SatPopover` must be changed to `SatPopoverComponent`.
+  This complies with the [Angular style guide](https://angular.io/guide/styleguide#style-02-03).
+- tslint is removed in favor of eslint.
+- ivy build options are removed and no longer supported, as they are the default.
+
 ## 10.3.2 thrice-asnice
 
 - Updated other packages
@@ -19,7 +29,7 @@
 
 ## 10.2.2 freaky-deaky
 
-Tagging got screwed up.  10.2.2 is good.
+Tagging got screwed up. 10.2.2 is good.
 
 ## 10.2.1 silly-vanilly
 

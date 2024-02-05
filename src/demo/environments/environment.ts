@@ -1,6 +1,4 @@
-const { version } = require('../../../package.json');
-
-declare const require: any;
+import package = require('../../../package.json');
 
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
@@ -8,7 +6,7 @@ declare const require: any;
 
 export const environment = {
   production: false,
-  version
+  version: package.version
 };
 
 /*

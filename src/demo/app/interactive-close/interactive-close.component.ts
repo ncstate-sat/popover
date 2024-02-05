@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ESCAPE } from '@angular/cdk/keycodes';
-import { SatPopover } from '@ncstate/sat-popover';
+import { SatPopoverComponent } from '@ncstate/sat-popover';
 import { Subject, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
@@ -42,8 +42,8 @@ import { filter, takeUntil } from 'rxjs/operators';
     </sat-popover>
   `
 })
-export class InteractiveCloseDemo implements AfterViewInit, OnDestroy {
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+export class DemoInteractiveCloseComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
   @ViewChild('optionsPanel') optionsPanel: ElementRef;
 
   showError = false;

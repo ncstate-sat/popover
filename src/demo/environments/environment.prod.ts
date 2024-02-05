@@ -1,8 +1,6 @@
-const { version } = require('../../../package.json');
-
-declare const require: any;
+import package = require('../../../package.json');
 
 export const environment = {
   production: true,
-  version
+  version: package.version
 };
