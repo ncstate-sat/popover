@@ -35,5 +35,5 @@ export class DemoRootComponent {
   direction = 'ltr';
   showContent = true;
   version = environment.version;
-  @HostBinding('class.mat-app-background') background;
+  @HostBinding('class.mat-app-background') background = true;
 }
