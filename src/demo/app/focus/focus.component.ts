@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SatPopover } from '@ncstate/sat-popover';
+import { SatPopoverComponent } from '@ncstate/sat-popover';
 
 @Component({
   selector: 'demo-focus',
@@ -55,8 +55,8 @@ import { SatPopover } from '@ncstate/sat-popover';
     </mat-card>
   `
 })
-export class FocusDemo {
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+export class DemoFocusComponent {
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
   autoFocus = true;
   restoreFocus = true;
   form: FormGroup;

@@ -12,7 +12,7 @@ import {
 import { ESCAPE, A } from '@angular/cdk/keycodes';
 
 import { SatPopoverModule } from './popover.module';
-import { SatPopover, SatPopoverAnchor } from './popover.component';
+import { SatPopoverComponent, SatPopoverAnchorDirective } from './popover.component';
 import { SatPopoverAnchoringService } from './popover-anchoring.service';
 import {
   getUnanchoredPopoverError,
@@ -26,8 +26,6 @@ import { DEFAULT_TRANSITION } from './tokens';
 
 describe('SatPopover', () => {
   describe('passing an anchor', () => {
-    let fixture: ComponentFixture<any>;
-
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [SatPopoverModule],
@@ -42,7 +40,7 @@ describe('SatPopover', () => {
     });
 
     it('should throw an error if an invalid object is provided', () => {
-      fixture = TestBed.createComponent(InvalidPopoverTestComponent);
+      const fixture = TestBed.createComponent(InvalidPopoverTestComponent);
 
       expect(() => {
         fixture.detectChanges();
@@ -50,7 +48,7 @@ describe('SatPopover', () => {
     });
 
     it('should not throw an error if a valid "setPopoverAnchor" anchor is provided', () => {
-      fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
+      const fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
 
       expect(() => {
         fixture.detectChanges();
@@ -58,7 +56,7 @@ describe('SatPopover', () => {
     });
 
     it('should not throw an error if a valid ElementRef anchor is provided', () => {
-      fixture = TestBed.createComponent(SimpleHTMLAnchorPopoverTestComponent);
+      const fixture = TestBed.createComponent(SimpleHTMLAnchorPopoverTestComponent);
 
       expect(() => {
         fixture.detectChanges();
@@ -66,25 +64,25 @@ describe('SatPopover', () => {
     });
 
     it('should update the anchor if a valid new anchor is provided', () => {
-      fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
+      const fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
 
       fixture.detectChanges();
 
       const comp = fixture.componentInstance as SimpleDirectiveAnchorPopoverTestComponent;
 
       expect(comp.popover.anchor).toBe(comp.anchor);
-      expect((comp.popover._anchoringService as any)._anchor).toBe(comp.anchor.elementRef.nativeElement);
+      expect(comp.popover._anchoringService.getAnchorElement()).toBe(comp.anchor.elementRef.nativeElement);
 
       expect(() => {
         comp.popover.anchor = comp.alternateAnchorElement;
       }).not.toThrowError();
 
       expect(comp.popover.anchor).toBe(comp.alternateAnchorElement);
-      expect((comp.popover._anchoringService as any)._anchor).toBe(comp.alternateAnchorElement.nativeElement);
+      expect(comp.popover._anchoringService.getAnchorElement()).toBe(comp.alternateAnchorElement.nativeElement);
     });
 
     it('should throw an error if open is called on a popover with no anchor', () => {
-      fixture = TestBed.createComponent(AnchorlessPopoverTestComponent);
+      const fixture = TestBed.createComponent(AnchorlessPopoverTestComponent);
 
       // should not throw when just initializing
       expect(() => {
@@ -98,7 +96,7 @@ describe('SatPopover', () => {
     });
 
     it('should throw an error if an anchor is not associated with a popover', () => {
-      fixture = TestBed.createComponent(InvalidAnchorTestComponent);
+      const fixture = TestBed.createComponent(InvalidAnchorTestComponent);
 
       expect(() => {
         fixture.detectChanges();
@@ -1090,7 +1088,7 @@ class InvalidPopoverTestComponent {}
   template: ` <sat-popover horizontalAlign="after">Anchorless</sat-popover> `
 })
 class AnchorlessPopoverTestComponent {
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
 }
 
 /**
@@ -1107,8 +1105,8 @@ class AnchorlessPopoverTestComponent {
 class SimpleDirectiveAnchorPopoverTestComponent {
   @ViewChild('anchorEl') anchorElement: ElementRef;
   @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
-  @ViewChild(SatPopoverAnchor, { static: true }) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverAnchorDirective, { static: true }) anchor: SatPopoverAnchorDirective;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
 }
 
 /**
@@ -1125,8 +1123,8 @@ class SimpleDirectiveAnchorPopoverTestComponent {
 class DirectiveAnchorForPopoverTestComponent {
   @ViewChild('anchorEl') anchorElement: ElementRef;
   @ViewChild('anchorEl2') alternateAnchorElement: ElementRef;
-  @ViewChild(SatPopoverAnchor, { static: true }) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverAnchorDirective, { static: true }) anchor: SatPopoverAnchorDirective;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
 }
 
 /**
@@ -1141,7 +1139,7 @@ class DirectiveAnchorForPopoverTestComponent {
 })
 class SimpleHTMLAnchorPopoverTestComponent {
   @ViewChild('anchorEl') anchorElement: ElementRef;
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
 }
 
 /**
@@ -1162,7 +1160,7 @@ class SimpleHTMLAnchorPopoverTestComponent {
   `
 })
 class BackdropPopoverTestComponent {
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
   backdrop = false;
   clicks = 0;
   klass: string;
@@ -1183,7 +1181,7 @@ class BackdropPopoverTestComponent {
   `
 })
 export class KeyboardPopoverTestComponent {
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
   lastKeyCode: number;
 }
 
@@ -1206,7 +1204,7 @@ export class FocusPopoverTestComponent {
 
   @ViewChild('b1') button1: ElementRef;
   @ViewChild('b2') button2: ElementRef;
-  @ViewChild('p') popover: SatPopover;
+  @ViewChild('p') popover: SatPopoverComponent;
 }
 
 /** This component is for testing dynamic positioning behavior. */
@@ -1225,8 +1223,8 @@ export class FocusPopoverTestComponent {
   `
 })
 export class PositioningTestComponent {
-  @ViewChild(SatPopoverAnchor, { static: true }) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverAnchorDirective, { static: true }) anchor: SatPopoverAnchorDirective;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
   hAlign = 'center';
   vAlign = 'center';
   forceAlignment = false;
@@ -1241,8 +1239,8 @@ export class PositioningTestComponent {
   `
 })
 export class PositioningAliasTestComponent {
-  @ViewChild(SatPopoverAnchor, { static: true }) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverAnchorDirective, { static: true }) anchor: SatPopoverAnchorDirective;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
   xAlign = 'center';
   yAlign = 'center';
 }
@@ -1255,8 +1253,8 @@ export class PositioningAliasTestComponent {
   `
 })
 export class ScrollingTestComponent {
-  @ViewChild(SatPopoverAnchor, { static: true }) anchor: SatPopoverAnchor;
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverAnchorDirective, { static: true }) anchor: SatPopoverAnchorDirective;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
   strategy = 'reposition';
 }
 
@@ -1270,9 +1268,12 @@ export class ScrollingTestComponent {
 })
 export class ServiceTestComponent {
   @ViewChild('customAnchor', { static: true }) customAnchor: ElementRef;
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
 
-  constructor(public anchoring: SatPopoverAnchoringService, public container: ViewContainerRef) {}
+  constructor(
+    public anchoring: SatPopoverAnchoringService,
+    public container: ViewContainerRef
+  ) {}
 }
 
 /** This component is for testing the hover directive behavior. */
@@ -1284,7 +1285,7 @@ export class ServiceTestComponent {
 })
 export class HoverDirectiveTestComponent {
   @ViewChild('anchorEl') anchorEl: ElementRef;
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
   delay = 0;
 }
 
@@ -1303,9 +1304,8 @@ const overlayContainerFactory = () => {
 
 /** Dispatches a keydown event from an element. From angular/material2 */
 export function createKeyboardEvent(type: string, keyCode: number, target?: Element, key?: string) {
-  const event = document.createEvent('KeyboardEvent') as any;
-  // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
-  const initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
+  const event = new KeyboardEvent(key);
+  const initEventFn = event.initKeyboardEvent.bind(event);
   const originalPreventDefault = event.preventDefault;
 
   initEventFn(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
@@ -1319,9 +1319,9 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
   });
 
   // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
-  event.preventDefault = function () {
+  event.preventDefault = function (...args: unknown[]) {
     Object.defineProperty(event, 'defaultPrevented', { get: () => true });
-    return originalPreventDefault.apply(this, arguments);
+    return originalPreventDefault.apply(this, args);
   };
 
   return event;

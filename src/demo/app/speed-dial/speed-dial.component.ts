@@ -52,7 +52,7 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
     </sat-popover>
   `
 })
-export class SpeedDialDemo {
+export class DemoSpeedDialComponent {
   actions = [
     { name: 'Add attachment', icon: 'attachment' },
     { name: 'New folder', icon: 'folder' },

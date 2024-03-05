@@ -30,7 +30,7 @@ import { Component } from '@angular/core';
           </div>
         </div>
 
-        <div satPopoverAnchor #popoverAnchor="satPopoverAnchor" class="anchor" (click)="p.toggle()"></div>
+        <div satPopoverAnchor #popoverAnchor="satPopoverAnchor" class="anchor" tabindex="0" (click)="p.toggle()" (keydown.enter)="p.toggle()"></div>
 
         <sat-popover
           #p
@@ -52,7 +52,7 @@ import { Component } from '@angular/core';
     </mat-card>
   `
 })
-export class TransitionsDemo {
+export class DemoTransitionsComponent {
   openTransition = '2000ms ease';
   closeTransition = '2000ms ease';
   startAtScale = 0.3;

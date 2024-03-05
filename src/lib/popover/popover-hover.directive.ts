@@ -3,7 +3,7 @@ import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { of, Subject } from 'rxjs';
 import { delay, switchMap, takeUntil } from 'rxjs/operators';
 
-import { SatPopoverAnchor } from './popover.component';
+import { SatPopoverAnchorDirective } from './popover.component';
 
 @Directive({
   selector: '[satPopoverHover]'
@@ -31,7 +31,7 @@ export class SatPopoverHoverDirective implements AfterViewInit, OnDestroy {
   /** Emits when the user's mouse leaves the element. */
   private _onMouseLeave = new Subject<void>();
 
-  constructor(public anchor: SatPopoverAnchor) {}
+  constructor(public anchor: SatPopoverAnchorDirective) {}
 
   ngAfterViewInit() {
     // Whenever the user hovers this host element, delay the configured

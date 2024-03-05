@@ -27,4 +27,4 @@ import { Component } from '@angular/core';
     </mat-card>
   `
 })
-export class ActionAPIDemo {}
+export class DemoActionAPIComponent {}

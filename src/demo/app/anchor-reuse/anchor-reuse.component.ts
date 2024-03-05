@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { SatPopover } from '@ncstate/sat-popover';
+import { SatPopoverComponent } from '@ncstate/sat-popover';
 
 @Component({
   selector: 'demo-anchor-reuse',
@@ -35,14 +35,14 @@ import { SatPopover } from '@ncstate/sat-popover';
     </mat-card>
   `
 })
-export class AnchorReuseComponent implements AfterViewInit {
-  @ViewChild('a') aPopover: SatPopover;
-  @ViewChild('b') bPopover: SatPopover;
+export class DemoAnchorReuseComponent implements AfterViewInit {
+  @ViewChild('a') aPopover: SatPopoverComponent;
+  @ViewChild('b') bPopover: SatPopoverComponent;
 
   activePopover = 'a';
   showAnchor = false;
 
-  getActivePopover(): SatPopover {
+  getActivePopover(): SatPopoverComponent {
     return this.activePopover === 'a' ? this.aPopover : this.bPopover;
   }
 

@@ -5,9 +5,6 @@
     "importHelpers": true,
     "types": []
   },
-  "angularCompilerOptions": {
-    "enableIvy": true
-  },
   "files": ["main.ts", "polyfills.ts"],
   "include": ["src/demo/**/*.d.ts"]
 }

@@ -65,7 +65,7 @@ import { Component } from '@angular/core';
     </mat-card>
   `
 })
-export class PositioningDemo {
+export class DemoPositioningComponent {
   horizontalAlign = 'after';
   verticalAlign = 'center';
   margin = 0;

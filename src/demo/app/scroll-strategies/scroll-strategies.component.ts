@@ -34,7 +34,7 @@ import { Component } from '@angular/core';
     </mat-card>
   `
 })
-export class ScrollStrategiesDemo {
+export class DemoScrollStrategiesComponent {
   strategy = 'reposition';
 
   scrollOptions = [

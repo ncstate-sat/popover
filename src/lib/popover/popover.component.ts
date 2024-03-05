@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory, FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
+import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 
 import { transformPopover } from './popover.animations';
@@ -48,13 +48,13 @@ const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
   selector: '[satPopoverAnchor]',
   exportAs: 'satPopoverAnchor'
 })
-export class SatPopoverAnchor implements AfterViewInit {
+export class SatPopoverAnchorDirective implements AfterViewInit {
   @Input('satPopoverAnchor')
   get popover() {
     return this._popover;
   }
-  set popover(val: SatPopover) {
-    if (val instanceof SatPopover) {
+  set popover(val: SatPopoverComponent) {
+    if (val instanceof SatPopoverComponent) {
       val.anchor = this;
     } else {
       // when a directive is added with no arguments,
@@ -66,9 +66,12 @@ export class SatPopoverAnchor implements AfterViewInit {
   }
 
   /** @internal */
-  _popover: SatPopover;
+  _popover: SatPopoverComponent;
 
-  constructor(public elementRef: ElementRef, public viewContainerRef: ViewContainerRef) {}
+  constructor(
+    public elementRef: ElementRef,
+    public viewContainerRef: ViewContainerRef
+  ) {}
 
   ngAfterViewInit() {
     if (!this.popover) {
@@ -85,14 +88,14 @@ export class SatPopoverAnchor implements AfterViewInit {
   templateUrl: './popover.component.html',
   providers: [SatPopoverAnchoringService]
 })
-export class SatPopover implements OnInit {
+export class SatPopoverComponent implements OnInit {
   /** Anchor element. */
   @Input()
   get anchor() {
     return this._anchor;
   }
-  set anchor(val: SatPopoverAnchor | ElementRef<HTMLElement> | HTMLElement) {
-    if (val instanceof SatPopoverAnchor) {
+  set anchor(val: SatPopoverAnchorDirective | ElementRef<HTMLElement> | HTMLElement) {
+    if (val instanceof SatPopoverAnchorDirective) {
       val._popover = this;
       this._anchoringService.anchor(this, val.viewContainerRef, val.elementRef);
       this._anchor = val;
@@ -103,7 +106,7 @@ export class SatPopover implements OnInit {
       throw getInvalidPopoverAnchorError();
     }
   }
-  private _anchor: SatPopoverAnchor | ElementRef<HTMLElement> | HTMLElement;
+  private _anchor: SatPopoverAnchorDirective | ElementRef<HTMLElement> | HTMLElement;
 
   /** Alignment of the popover on the horizontal axis. */
   @Input()
@@ -298,7 +301,7 @@ export class SatPopover implements OnInit {
   @Output() opened = new EventEmitter<void>();
 
   /** Emits when the popover is closed. */
-  @Output() closed = new EventEmitter<any>();
+  @Output() closed = new EventEmitter<unknown | void>();
 
   /** Emits when the popover has finished opening. */
   @Output() afterOpen = new EventEmitter<void>();
@@ -313,10 +316,10 @@ export class SatPopover implements OnInit {
   @Output() overlayKeydown = new EventEmitter<KeyboardEvent>();
 
   /** Reference to template so it can be placed within a portal. */
-  @ViewChild(TemplateRef, { static: true }) _templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef, { static: true }) _templateRef: TemplateRef<unknown>;
 
   /** Classes to be added to the popover for setting the correct transform origin. */
-  _classList: any = {};
+  _classList: { [className: string]: boolean } = {};
 
   /** Whether the popover is presently open. */
   _open = false;
@@ -341,7 +344,7 @@ export class SatPopover implements OnInit {
     _anchoringService: SatPopoverAnchoringService,
     private _viewContainerRef: ViewContainerRef,
     @Inject(DEFAULT_TRANSITION) private _defaultTransition: string,
-    @Optional() @Inject(DOCUMENT) private _document: any
+    @Optional() @Inject(DOCUMENT) private _document = document
   ) {
     // `@internal` stripping doesn't seem to work if the property is
     // declared inside the constructor
@@ -365,7 +368,7 @@ export class SatPopover implements OnInit {
   }
 
   /** Close this popover. */
-  close(value?: any): void {
+  close(value?: unknown): void {
     this._anchoringService.closePopover(value);
   }
 

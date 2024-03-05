@@ -16,7 +16,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil, take, filter, tap } from 'rxjs/operators';
 
-import { SatPopover } from './popover.component';
+import { SatPopoverComponent } from './popover.component';
 import {
   SatPopoverHorizontalAlign,
   SatPopoverVerticalAlign,
@@ -45,13 +45,13 @@ export class SatPopoverAnchoringService implements OnDestroy {
   popoverOpened = new Subject<void>();
 
   /** Emits when the popover is closed. */
-  popoverClosed = new Subject<void>();
+  popoverClosed = new Subject<unknown>();
 
   /** Reference to the overlay containing the popover component. */
   _overlayRef: OverlayRef;
 
   /** Reference to the target popover. */
-  private _popover: SatPopover;
+  private _popover: SatPopoverComponent;
 
   /** Reference to the view container for the popover template. */
   private _viewContainerRef: ViewContainerRef;
@@ -60,7 +60,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   private _anchor: HTMLElement;
 
   /** Reference to a template portal where the overlay will be attached. */
-  private _portal: TemplatePortal<any>;
+  private _portal: TemplatePortal<unknown>;
 
   /** Single subscription to notifications service events. */
   private _notificationsSubscription: Subscription;
@@ -74,7 +74,11 @@ export class SatPopoverAnchoringService implements OnDestroy {
   /** Emits when the service is destroyed. */
   private _onDestroy = new Subject<void>();
 
-  constructor(private _overlay: Overlay, private _ngZone: NgZone, @Optional() private _dir: Directionality) {}
+  constructor(
+    private _overlay: Overlay,
+    private _ngZone: NgZone,
+    @Optional() private _dir: Directionality
+  ) {}
 
   ngOnDestroy() {
     // Destroy popover before terminating subscriptions so that any resulting
@@ -96,7 +100,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Anchor a popover instance to a view and connection element. */
-  anchor(popover: SatPopover, viewContainerRef: ViewContainerRef, anchor: ElementRef | HTMLElement): void {
+  anchor(popover: SatPopoverComponent, viewContainerRef: ViewContainerRef, anchor: ElementRef | HTMLElement): void {
     // If we're just changing the anchor element and the overlayRef already exists,
     // simply update the existing _overlayRef's anchor.
     if (this._popover === popover && this._viewContainerRef === viewContainerRef && this._overlayRef) {
@@ -140,7 +144,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Closes the popover. */
-  closePopover(value?: any): void {
+  closePopover(value?: unknown): void {
     if (this._overlayRef) {
       this._saveClosedState(value);
       this._overlayRef.detach();
@@ -281,7 +285,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   }
 
   /** Save the closed state of the popover and emit. */
-  private _saveClosedState(value?: any): void {
+  private _saveClosedState(value?: unknown): void {
     if (this._popoverOpen) {
       this._popover._open = this._popoverOpen = false;
 

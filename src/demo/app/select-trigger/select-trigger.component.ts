@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { SatPopover } from '@ncstate/sat-popover';
+import { SatPopoverComponent } from '@ncstate/sat-popover';
 
 @Component({
   selector: 'demo-select-trigger',
@@ -23,8 +23,8 @@ import { SatPopover } from '@ncstate/sat-popover';
     </sat-popover>
   `
 })
-export class SelectTriggerDemo {
-  @ViewChild(SatPopover, { static: true }) popover: SatPopover;
+export class DemoSelectTriggerComponent {
+  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
 
   updateSelectValue(val: string) {
     if (val === 'fancy') {
