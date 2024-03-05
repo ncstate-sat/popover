@@ -1,6 +1,6 @@
-import package = require('../../../package.json');
+import pkg = require('../../../package.json');
 
 export const environment = {
   production: true,
-  version: package.version
+  version: pkg.version
 };
