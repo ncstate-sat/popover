@@ -1,4 +1,4 @@
-import package = require('../../../package.json');
+import pkg = require('../../../package.json');
 
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
@@ -6,7 +6,7 @@ import package = require('../../../package.json');
 
 export const environment = {
   production: false,
-  version: package.version
+  version: pkg.version
 };
 
 /*
