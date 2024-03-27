@@ -58,7 +58,7 @@ export class DemoMaterialModule {}
     DemoSelectTriggerComponent,
     DemoSpeedDialComponent,
     DemoTooltipComponent,
-    DemoTransitionsComponent,
+    DemoTransitionsComponent
   ],
   imports: [
     BrowserModule,

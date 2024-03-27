@@ -5,7 +5,17 @@ $ncstate-primary: mat.define-palette(mat.$red-palette, 700);
 $ncstate-accent: mat.define-palette(mat.$blue-grey-palette);
 $ncstate-warn: mat.define-palette(mat.$deep-orange-palette);
 
-$ncstate-theme: mat.define-light-theme($ncstate-primary, $ncstate-accent, $ncstate-warn);
+$ncstate-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $ncstate-primary,
+      accent: $ncstate-accent,
+      warn: $ncstate-warn
+    ),
+    typography: mat.define-typography-config(),
+    density: 0
+  )
+);
 
 $gradient-opacity: 0.48;
 

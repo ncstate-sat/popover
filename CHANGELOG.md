@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 12.0.0 peirz-peers
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ~17.3
+- Peer dependencies are re-established in the published `package.json`
+  - Constraints are adjusted from patch versions to major versions.
+
 ## 11.0.0 jimny-cricket
 
 ### Breaking Changes
