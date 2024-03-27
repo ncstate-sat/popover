@@ -1,6 +1,7 @@
+const dynamicImportChalk = import('chalk');
+let chalk: any;
 import * as childProcess from 'child_process';
 import * as util from 'util';
-import chalk from 'chalk';
 import { readFileSync } from 'fs';
 import { DIST_PATH, DIST_PACKAGE_PATH } from './constants';
 const exec = util.promisify(childProcess.exec);
@@ -41,4 +42,7 @@ async function release() {
   await publish();
 }
 
-release();
+dynamicImportChalk.then((chalkModule) => {
+  chalk = new chalkModule.Chalk();
+  release();
+});

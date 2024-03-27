@@ -1,4 +1,5 @@
-import chalk from 'chalk';
+const dynamicImportChalk = import('chalk');
+let chalk: any;
 import { readFileSync, writeFileSync, copyFileSync } from 'fs';
 import {
   DIST_PACKAGE_PATH,
@@ -44,9 +45,14 @@ function replaceDistData(properties: { [key: string]: any }): void {
 function replacePackageValues(): void {
   console.log(chalk.cyan('Overwriting package.json properties in dist'));
   const src = getSourceData(PEER_DEPENDENCIES, PACKAGE_PROPERTIES);
+  for (const [packageName, packageVersion] of Object.entries(src.dependencies)) {
+    const versionParts = packageVersion.replace(/^[\^~]/, '~').split('.');
+    // Widen version constraints so we only release on major @angular changes
+    src.dependencies[packageName] = versionParts[0];
+  }
   return replaceDistData({
     version: src.version,
-    peerDependencies: undefined, // Removing to allow longer release cycles
+    peerDependencies: src.dependencies,
     ...src.properties
   });
 }
@@ -57,5 +63,8 @@ function copyReadme(): void {
   return copyFileSync(SOURCE_README_PATH, DIST_README_PATH);
 }
 
-replacePackageValues();
-copyReadme();
+dynamicImportChalk.then((chalkModule) => {
+  chalk = new chalkModule.Chalk();
+  replacePackageValues();
+  copyReadme();
+});

@@ -30,7 +30,14 @@ import { Component } from '@angular/core';
           </div>
         </div>
 
-        <div satPopoverAnchor #popoverAnchor="satPopoverAnchor" class="anchor" tabindex="0" (click)="p.toggle()" (keydown.enter)="p.toggle()"></div>
+        <div
+          satPopoverAnchor
+          #popoverAnchor="satPopoverAnchor"
+          class="anchor"
+          tabindex="0"
+          (click)="p.toggle()"
+          (keydown.enter)="p.toggle()"
+        ></div>
 
         <sat-popover
           #p

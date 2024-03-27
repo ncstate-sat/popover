@@ -7,7 +7,7 @@ import { environment } from '../environments/environment';
   template: `
     <mat-toolbar color="primary" class="mat-elevation-z2">
       <a class="repo-link mat-title" href="https://github.com/ncstate-sat/popover">
-      &#64;ncstate/sat-popover <span class="version mat-body-2">{{ version }}</span>
+        &#64;ncstate/sat-popover <span class="version mat-body-2">{{ version }}</span>
       </a>
       <button mat-button title="Toggle all content" (click)="showContent = !showContent">
         {{ showContent ? 'Hide' : 'Show' }} content
