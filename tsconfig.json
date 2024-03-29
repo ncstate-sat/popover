@@ -7,7 +7,7 @@
     "sourceMap": true,
     "declaration": false,
     "stripInternal": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "target": "es2022",
