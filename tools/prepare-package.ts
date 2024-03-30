@@ -1,5 +1,4 @@
-const dynamicImportChalk = import('chalk');
-let chalk: any;
+import pc from 'picocolors';
 import { readFileSync, writeFileSync, copyFileSync } from 'fs';
 import {
   DIST_PACKAGE_PATH,
@@ -43,7 +42,7 @@ function replaceDistData(properties: { [key: string]: any }): void {
 
 /** Replace values from the src package to the dist. */
 function replacePackageValues(): void {
-  console.log(chalk.cyan('Overwriting package.json properties in dist'));
+  console.log(pc.cyan('Overwriting package.json properties in dist'));
   const src = getSourceData(PEER_DEPENDENCIES, PACKAGE_PROPERTIES);
   for (const [packageName, packageVersion] of Object.entries(src.dependencies)) {
     const versionParts = packageVersion.replace(/^[\^~]/, '~').split('.');
@@ -59,12 +58,9 @@ function replacePackageValues(): void {
 
 /** Copy README to dist. */
 function copyReadme(): void {
-  console.log(chalk.cyan('Copying README.md to dist package'));
+  console.log(pc.cyan('Copying README.md to dist package'));
   return copyFileSync(SOURCE_README_PATH, DIST_README_PATH);
 }
 
-dynamicImportChalk.then((chalkModule) => {
-  chalk = new chalkModule.Chalk();
-  replacePackageValues();
-  copyReadme();
-});
+replacePackageValues();
+copyReadme();

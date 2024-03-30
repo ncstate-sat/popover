@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 12.0.1 mellow-hello
+
+### Breaking Changes
+
+- None
+
+### Notes
+
+- @angular/cdk and @angular/material are updated from 17.3.1 to 17.3.2
+
 ## 12.0.0 peirz-peers
 
 ### Breaking Changes
