@@ -3,6 +3,7 @@ import * as util from 'util';
 import pc from 'picocolors';
 import { readFileSync } from 'fs';
 import { DIST_PATH, DIST_PACKAGE_PATH } from './constants';
+import readline from 'readline';
 const exec = util.promisify(childProcess.exec);
 
 async function gitTags() {
@@ -24,21 +25,36 @@ async function gitTags() {
 async function libBuild() {
   console.log(pc.green(`Building library`));
 
-  const { stdout: build } = await exec(`npm run build:prod`);
+  await exec(`npm run build:prod`);
 }
 
-async function publish() {
+async function publish(otp: string | null) {
   console.log(pc.green(`Publishing`));
 
-  const { stdout } = await exec(`npm publish ${DIST_PATH}`);
+  const otpOpt = otp != null ? `--otp=${otp}` : '';
+  const { stdout } = await exec(`npm publish ${DIST_PATH} ${otpOpt}`);
 
   console.log(pc.gray(stdout));
 }
 
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 async function release() {
+  const otpRaw = await new Promise<string>((resolve) => {
+    rl.question('Enter your OTP here, or enter for none: ', resolve);
+  });
+
+  const isValidOtp = otpRaw.length === 6 && otpRaw.search(/\d{6}/) === 0;
+  const otp = isValidOtp ? otpRaw : null;
+
+  rl.close();
+
   await libBuild();
   await gitTags();
-  await publish();
+  await publish(otp);
 }
 
 release();
