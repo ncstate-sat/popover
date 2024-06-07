@@ -1,7 +1,8 @@
 dist: trusty
 language: node_js
 node_js:
-  - '16'
+  - '18'
+  - 'lts/*'
 
 before_install:
   - export CHROME_BIN=chromium-browser
