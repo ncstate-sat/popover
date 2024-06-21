@@ -1328,23 +1328,22 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
 }
 
 export function createMouseEvent(type: string) {
-  const event = document.createEvent('MouseEvent');
-  event.initMouseEvent(
-    type,
-    true, // canBubble
-    false, // cancelable
-    window, // view
-    0, // detail
-    0, // screenX
-    0, // screenY
-    0, // clientX
-    0, // clientY
-    false, // ctrlKey
-    false, // altKey
-    false, // shiftKey
-    false, // metaKey
-    0, // button
-    null // relatedTarget
-  );
+  const event = new MouseEvent(type, {
+    view: window,
+    bubbles: true,
+    cancelable: false,
+    detail: 0,
+    screenX: 0,
+    screenY: 0,
+    clientX: 0,
+    clientY: 0,
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    metaKey: false,
+    button: 0,
+    relatedTarget: null
+  });
+
   return event;
 }
