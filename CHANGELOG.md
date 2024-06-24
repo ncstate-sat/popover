@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 13.0.2 submarine-plumbing
+
+### Breaking Changes
+
+- None
+
+### Notes
+
+- Correcting the npm account for the latest release
+
 ## 13.0.1 plain-plane
 
 ### Breaking Changes
