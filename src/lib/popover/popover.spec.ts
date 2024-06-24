@@ -805,7 +805,10 @@ describe('SatPopover', () => {
       comp.popover.open();
       fixture.detectChanges();
 
-      const getCenter = (clientRect) => clientRect.x + clientRect.width / 2;
+      const getCenter = (clientRect) => {
+        const value = clientRect.x + clientRect.width / 2;
+        return Math.round((value + Number.EPSILON) * 100) / 100;
+      };
       const centerOfAnchor = () => getCenter(anchorEl.getBoundingClientRect());
       const centerOfPopover = () =>
         getCenter(overlayContainerElement.querySelector('.sat-popover-container').getBoundingClientRect());
