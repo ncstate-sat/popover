@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 13.0.0 plain-plane
+
+### Breaking Changes
+
+- None
+
+### Notes
+
+- Peer dependencies of @angular/{\*\*} are now set to ~18.0
+
 ## 12.0.1 mellow-hello
 
 ### Breaking Changes

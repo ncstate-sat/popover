@@ -1,18 +1,18 @@
 @use '@angular/material' as mat;
 
 // Material theming
-$ncstate-primary: mat.define-palette(mat.$red-palette, 700);
-$ncstate-accent: mat.define-palette(mat.$blue-grey-palette);
-$ncstate-warn: mat.define-palette(mat.$deep-orange-palette);
+$ncstate-primary: mat.m2-define-palette(mat.$m2-red-palette, 700);
+$ncstate-accent: mat.m2-define-palette(mat.$m2-blue-grey-palette);
+$ncstate-warn: mat.m2-define-palette(mat.$m2-deep-orange-palette);
 
-$ncstate-theme: mat.define-light-theme(
+$ncstate-theme: mat.m2-define-light-theme(
   (
     color: (
       primary: $ncstate-primary,
       accent: $ncstate-accent,
       warn: $ncstate-warn
     ),
-    typography: mat.define-typography-config(),
+    typography: mat.m2-define-typography-config(),
     density: 0
   )
 );
