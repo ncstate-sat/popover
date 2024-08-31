@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/ncstate-sat/popover#readme",
   "devDependencies": {
-    "@angular-devkit/build-angular": "~18.0.3",
+    "@angular-devkit/build-angular": "~18.2.2",
     "@angular-eslint/builder": "~18.0.1",
     "@angular-eslint/eslint-plugin": "~18.0.1",
     "@angular-eslint/eslint-plugin-template": "~18.0.1",
