@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 13.1.0 their-there
+
+### Breaking Changes
+
+- None
+
+### Notes
+
+- Peer dependencies of @angular/{\*\*} are now set to ~18.2 or higher
+- Addresses some vulnerabilities in dependencies used by Angular's build system.
+
 ## 13.0.2 submarine-plumbing
 
 ### Breaking Changes
