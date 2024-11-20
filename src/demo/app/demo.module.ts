@@ -1,21 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SatPopoverModule } from '@ncstate/sat-popover';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { BidiModule } from '@angular/cdk/bidi';
-
+import { BrowserModule } from '@angular/platform-browser';
 import { DemoActionAPIComponent } from './action-api/action-api.component';
 import { DemoAnchorReuseComponent } from './anchor-reuse/anchor-reuse.component';
 import { DemoFocusComponent } from './focus/focus.component';
@@ -27,27 +11,14 @@ import { DemoSelectTriggerComponent } from './select-trigger/select-trigger.comp
 import { DemoSpeedDialComponent } from './speed-dial/speed-dial.component';
 import { DemoTooltipComponent } from './tooltip/tooltip.component';
 import { DemoTransitionsComponent } from './transitions/transitions.component';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  exports: [
-    MatToolbarModule,
-    MatCardModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatInputModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatRadioModule,
-    MatSlideToggleModule,
-    BidiModule
-  ]
-})
-export class DemoMaterialModule {}
-
-@NgModule({
-  declarations: [
+  imports: [
+    BrowserAnimationsModule,
+    BrowserModule,
+    FormsModule,
     DemoActionAPIComponent,
     DemoAnchorReuseComponent,
     DemoFocusComponent,
@@ -58,14 +29,7 @@ export class DemoMaterialModule {}
     DemoSelectTriggerComponent,
     DemoSpeedDialComponent,
     DemoTooltipComponent,
-    DemoTransitionsComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    DemoMaterialModule,
-    SatPopoverModule,
-    FormsModule,
+    DemoTransitionsComponent,
     ReactiveFormsModule
   ],
   providers: [],

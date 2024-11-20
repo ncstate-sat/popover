@@ -28,13 +28,13 @@ describe('SatPopover', () => {
   describe('passing an anchor', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule],
-        declarations: [
+        imports: [
           InvalidPopoverTestComponent,
           SimpleDirectiveAnchorPopoverTestComponent,
           SimpleHTMLAnchorPopoverTestComponent,
           AnchorlessPopoverTestComponent,
-          InvalidAnchorTestComponent
+          InvalidAnchorTestComponent,
+          SatPopoverModule
         ]
       });
     });
@@ -111,8 +111,7 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [SimpleDirectiveAnchorPopoverTestComponent],
+        imports: [SatPopoverModule, SimpleDirectiveAnchorPopoverTestComponent, NoopAnimationsModule],
         providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
       });
 
@@ -247,8 +246,7 @@ describe('SatPopover', () => {
 
       beforeEach(() => {
         TestBed.configureTestingModule({
-          imports: [SatPopoverModule, NoopAnimationsModule],
-          declarations: [DirectiveAnchorForPopoverTestComponent],
+          imports: [DirectiveAnchorForPopoverTestComponent, SatPopoverModule, NoopAnimationsModule],
           providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
         });
 
@@ -294,8 +292,7 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [BackdropPopoverTestComponent],
+        imports: [BackdropPopoverTestComponent, SatPopoverModule, NoopAnimationsModule],
         providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
       });
 
@@ -394,8 +391,7 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [KeyboardPopoverTestComponent],
+        imports: [KeyboardPopoverTestComponent, SatPopoverModule, NoopAnimationsModule],
         providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
       });
 
@@ -493,8 +489,7 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [FocusPopoverTestComponent],
+        imports: [FocusPopoverTestComponent, SatPopoverModule, NoopAnimationsModule],
         providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
       });
 
@@ -610,8 +605,7 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [PositioningTestComponent, PositioningAliasTestComponent],
+        imports: [PositioningTestComponent, PositioningAliasTestComponent, SatPopoverModule, NoopAnimationsModule],
         providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
       });
 
@@ -835,8 +829,7 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [ScrollingTestComponent],
+        imports: [SatPopoverModule, ScrollingTestComponent, NoopAnimationsModule],
         providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
       });
 
@@ -920,8 +913,7 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [ServiceTestComponent],
+        imports: [SatPopoverModule, ServiceTestComponent, NoopAnimationsModule],
         providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
       });
 
@@ -976,8 +968,7 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [HoverDirectiveTestComponent],
+        imports: [HoverDirectiveTestComponent, SatPopoverModule, NoopAnimationsModule],
         providers: [{ provide: OverlayContainer, useFactory: overlayContainerFactory }]
       });
 
@@ -1040,9 +1031,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SatPopoverModule, NoopAnimationsModule],
-        declarations: [SimpleDirectiveAnchorPopoverTestComponent],
-        providers: [{ provide: DEFAULT_TRANSITION, useValue: '300ms ease' }]
+        imports: [SatPopoverModule, SimpleDirectiveAnchorPopoverTestComponent, NoopAnimationsModule]
+      });
+      TestBed.overrideProvider(DEFAULT_TRANSITION, {
+        useValue: '300ms ease'
       });
 
       fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
@@ -1067,6 +1059,7 @@ describe('SatPopover', () => {
  * a popover will throw an error.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: ` <div satPopoverAnchor></div> `
 })
 class InvalidAnchorTestComponent {}
@@ -1076,6 +1069,7 @@ class InvalidAnchorTestComponent {}
  * to a popover will throw an error.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <sat-popover #invalid>Dummy</sat-popover>
     <sat-popover [anchor]="invalid">Dummy</sat-popover>
@@ -1088,6 +1082,7 @@ class InvalidPopoverTestComponent {}
  * a popover with no anchor will throw an error.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: ` <sat-popover horizontalAlign="after">Anchorless</sat-popover> `
 })
 class AnchorlessPopoverTestComponent {
@@ -1099,6 +1094,7 @@ class AnchorlessPopoverTestComponent {
  * popover attached to a simple satPopoverAnchor anchor.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div #anchorEl satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
     <div #anchorEl2>Alternate anchor</div>
@@ -1117,6 +1113,7 @@ class SimpleDirectiveAnchorPopoverTestComponent {
  * `SatPopoverAnchor#satPopoverAnchor` input setter.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div #anchorEl [satPopoverAnchor]="p">Anchor</div>
     <div #anchorEl2>Alternate anchor</div>
@@ -1135,6 +1132,7 @@ class DirectiveAnchorForPopoverTestComponent {
  * popover attached to a simple ElementRef anchor.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div #anchorEl>Anchor</div>
     <sat-popover [anchor]="anchor">Popover</sat-popover>
@@ -1150,6 +1148,7 @@ class SimpleHTMLAnchorPopoverTestComponent {
  * popover attached to a simple anchor.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
     <sat-popover
@@ -1174,6 +1173,7 @@ class BackdropPopoverTestComponent {
  * inside the popover.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
     <sat-popover [anchor]="anchor" (overlayKeydown)="lastKeyCode = $event.keyCode">
@@ -1192,6 +1192,7 @@ export class KeyboardPopoverTestComponent {
  * This component is for testing focus behavior in the popover.
  */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <button #b1 satPopoverAnchor #anchor="satPopoverAnchor" (click)="p.open()">Button 1</button>
     <button #b2>Button 2</button>
@@ -1212,6 +1213,7 @@ export class FocusPopoverTestComponent {
 
 /** This component is for testing dynamic positioning behavior. */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
     <sat-popover
@@ -1236,6 +1238,7 @@ export class PositioningTestComponent {
 
 /** This component is for testing position aliases. */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
     <sat-popover [anchor]="anchor" [xAlign]="xAlign" [yAlign]="yAlign"> Popover </sat-popover>
@@ -1250,6 +1253,7 @@ export class PositioningAliasTestComponent {
 
 /** This component is for testing scroll behavior. */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div satPopoverAnchor #anchor="satPopoverAnchor">Anchor</div>
     <sat-popover [anchor]="anchor" [scrollStrategy]="strategy"> Popover </sat-popover>
@@ -1263,6 +1267,7 @@ export class ScrollingTestComponent {
 
 /** This component is for testing the isolated anchoring service. */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div #customAnchor>Anchor</div>
     <sat-popover #p>Popover</sat-popover>
@@ -1281,6 +1286,7 @@ export class ServiceTestComponent {
 
 /** This component is for testing the hover directive behavior. */
 @Component({
+  imports: [SatPopoverModule],
   template: `
     <div #anchorEl satPopoverAnchor #anchor="satPopoverAnchor" [satPopoverHover]="delay">Anchor</div>
     <sat-popover [anchor]="anchor">Popover</sat-popover>

@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 14.0.0 hoarse-horse
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ~19 or higher.
+
+### Notes
+
+Recommended reading:
+
+- [Angular 19 Introduction](https://blog.angular.dev/meet-angular-v19-7b29dfd05b84)
+- [Angular 18-19 Update Guide](https://angular.dev/update-guide?v=18.0-19.0&l=1)
+
 ## 13.1.0 their-there
 
 ### Breaking Changes

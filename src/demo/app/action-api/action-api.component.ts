@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { SatPopoverModule } from '../../../lib/public_api';
 
 @Component({
+  imports: [MatCardModule, SatPopoverModule],
   selector: 'demo-action-api',
   styleUrls: ['./action-api.component.scss'],
   template: `

@@ -1,8 +1,31 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { SatPopoverComponent } from '@ncstate/sat-popover';
+import { CommonModule } from '@angular/common';
+import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { SatPopoverModule, SatPopoverComponent } from '../../../lib/public_api';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    SatPopoverModule,
+    ReactiveFormsModule
+  ],
+  providers: [provideNativeDateAdapter()],
   selector: 'demo-focus',
   styleUrls: ['./focus.component.scss'],
   template: `

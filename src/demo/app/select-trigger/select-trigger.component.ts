@@ -1,7 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { SatPopoverComponent } from '@ncstate/sat-popover';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { SatPopoverComponent, SatPopoverModule } from '../../../lib/public_api';
 
 @Component({
+  imports: [CommonModule, MatCardModule, MatFormFieldModule, MatSelectModule, SatPopoverModule],
   selector: 'demo-select-trigger',
   styleUrls: ['./select-trigger.component.scss'],
   template: `

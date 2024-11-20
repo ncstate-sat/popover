@@ -1,7 +1,22 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { SatPopoverComponent } from '@ncstate/sat-popover';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { SatPopoverModule, SatPopoverComponent } from '../../../lib/public_api';
 
 @Component({
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatRadioModule,
+    MatSlideToggleModule,
+    SatPopoverModule
+  ],
   selector: 'demo-anchor-reuse',
   styleUrls: ['anchor-reuse.component.scss'],
   template: `

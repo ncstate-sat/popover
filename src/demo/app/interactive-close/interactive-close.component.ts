@@ -1,10 +1,16 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ESCAPE } from '@angular/cdk/keycodes';
-import { SatPopoverComponent } from '@ncstate/sat-popover';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SatPopoverComponent, SatPopoverModule } from '../../../lib/public_api';
 import { Subject, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [CommonModule, FormsModule, MatButtonModule, MatCardModule, MatCheckboxModule, SatPopoverModule],
   selector: 'demo-interactive-close',
   styleUrls: ['./interactive-close.component.scss'],
   template: `
