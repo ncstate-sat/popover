@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { SatPopoverComponent, SatPopoverModule } from '@ncstate/sat-popover';
+import { SatPopoverComponent, SatPopoverModule } from '../../../lib/public_api';
 import { Subject, of } from 'rxjs';
 import { switchMap, takeUntil, delay } from 'rxjs/operators';
 
