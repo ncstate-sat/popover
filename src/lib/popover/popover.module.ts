@@ -9,8 +9,15 @@ import { SatPopoverHoverDirective } from './popover-hover.directive';
 import { DEFAULT_TRANSITION } from './tokens';
 
 @NgModule({
-  imports: [CommonModule, OverlayModule, A11yModule, BidiModule],
-  declarations: [SatPopoverComponent, SatPopoverAnchorDirective, SatPopoverHoverDirective],
+  imports: [
+    CommonModule,
+    OverlayModule,
+    A11yModule,
+    BidiModule,
+    SatPopoverComponent,
+    SatPopoverAnchorDirective,
+    SatPopoverHoverDirective
+  ],
   providers: [
     // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
     { provide: DEFAULT_TRANSITION, useValue: '200ms cubic-bezier(0.25, 0.8, 0.25, 1)' }

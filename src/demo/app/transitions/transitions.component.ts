@@ -1,6 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { SatPopoverModule } from '../../../lib/public_api';
 
 @Component({
+  imports: [CommonModule, FormsModule, MatCardModule, MatFormFieldModule, MatInputModule, SatPopoverModule],
   selector: 'demo-transitions',
   styleUrls: ['./transitions.component.scss'],
   template: `

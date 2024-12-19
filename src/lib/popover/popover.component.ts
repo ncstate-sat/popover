@@ -15,7 +15,7 @@ import {
   AfterViewInit
 } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
-import { DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 
@@ -81,12 +81,13 @@ export class SatPopoverAnchorDirective implements AfterViewInit {
 }
 
 @Component({
-  selector: 'sat-popover',
-  encapsulation: ViewEncapsulation.None,
   animations: [transformPopover],
+  encapsulation: ViewEncapsulation.None,
+  imports: [CommonModule],
+  providers: [SatPopoverAnchoringService],
+  selector: 'sat-popover',
   styleUrls: ['./popover.component.scss'],
-  templateUrl: './popover.component.html',
-  providers: [SatPopoverAnchoringService]
+  templateUrl: './popover.component.html'
 })
 export class SatPopoverComponent implements OnInit {
   /** Anchor element. */

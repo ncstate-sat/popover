@@ -1,9 +1,12 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { SatPopoverComponent } from '@ncstate/sat-popover';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { SatPopoverComponent, SatPopoverModule } from '../../../lib/public_api';
 import { Subject, of } from 'rxjs';
 import { switchMap, takeUntil, delay } from 'rxjs/operators';
 
 @Component({
+  imports: [CommonModule, MatCardModule, SatPopoverModule],
   selector: 'demo-tooltip',
   styleUrls: ['./tooltip.component.scss'],
   template: `

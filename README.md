@@ -15,43 +15,47 @@
 npm install --save @ncstate/sat-popover @angular/cdk
 ```
 
-If you want the popover animations to work, you must include `BrowserAnimationsModule` in your app.
-
 ```ts
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-@NgModule({
-  ...
-  imports: [ BrowserAnimationsModule ],
-  ...
-})
-export class AppModule { }
-```
-
-If you prefer to not have animations, you can include `NoopAnimationsModule`.
-
-```ts
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
-@NgModule({
-  ...
-  imports: [ NoopAnimationsModule ],
-  ...
-})
-export class AppModule { }
-```
-
-Finally, import the `SatPopoverModule` to provide the necessary components and directives.
-
-```ts
+import { AppRootComponent } from './app-root.component';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { importProvidersFrom } from '@angular/core';
+import { provideAnimations, provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 
-@NgModule({
-  ...
-  imports: [ SatPopoverModule ],
-  ...
+bootstrapApplication(AppRootComponent, {
+  // AppConfig
+  providers: [
+    // If you want the popover animations to work, you must use `provideAnimations` or `provideAnimationsAsync`.
+    provideAnimationsAsync(),
+
+    // If your application depends has animations on immediate load, use `provideAnimations` instead.
+    // provideAnimations(),
+
+    // If you prefer to not have animations, you can use `provideNoopAnimations`.
+    // provideNoopAnimations(),
+
+    importProvidersFrom(SatPopoverModule)
+  ]
+});
+```
+
+Finally, import the `SatPopoverModule` as needed to provide the necessary components and directives.
+
+```ts
+import { Component } from '@angular/core';
+import { SatPopoverAnchorDirective, SatPopoverComponent } from '@ncstate/sat-popover';
+
+@Component({
+  imports: [ SatPopoverAnchorDirective, SatPopoverComponent ],
+  selector: 'my-component',
+  template: `
+    <button [satPopoverAnchor]="myPopover"
+      (mouseenter)="myPopover.open()"
+      (mouseleave)="myPopover.close()">Hover me</button>
+    <sat-popover #myPopover>Hello!</sat-popover>
+  `
 })
-export class AppModule { }
 ```
 
 ## Usage

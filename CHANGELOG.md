@@ -1,5 +1,84 @@
 # CHANGELOG
 
+## 14.0.0 hoarse-horse
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ~19 or higher.
+- Angular 19 has made `standalone` components the default, which significantly affects how SatPopover is loaded.
+
+### Notes
+
+Recommended reading:
+
+- [Angular 19 Introduction](https://blog.angular.dev/meet-angular-v19-7b29dfd05b84)
+- [Angular 18-19 Update Guide](https://angular.dev/update-guide?v=18.0-19.0&l=1)
+
+**_Bootstrapping has changed!_**
+
+If you want the popover animations to work, you must use `provideAnimations` in your `AppConfig`;
+or, if you prefer to not have animations, you can use `provideNoopAnimations` in your `AppConfig`.
+
+```ts
+import { provideAnimations, provideNoopAnimations } from '@angular/platform-browser/animations';
+
+bootstrapApplication(AppComponent, {
+  // AppConfig
+  providers: [
+    provideAnimations()
+    /* provideNoopAnimations() /* Use if you want to disable animations */
+  ]
+});
+```
+
+Alteranatively, if you still use `bootstrapModule`, you can continue to import `BrowserAnimationsModule` in this manner.
+
+```ts
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+@NgModule({
+  ...
+  imports: [
+    BrowserAnimationsModule, // Use if you want to enable animations
+    /* NoopAnimationsModule  /* Use if you want to disable animations */
+  ],
+  ...
+})
+export class AppModule { }
+```
+
+**Can I still use modules to import SatPopover?**
+
+Yes. SatPopoverModule can still be imported, although you may still have to import `SatPopoverComponent`,
+`SatPopoverAnchorDirective`, or `SatPopoverHoverDirective` as necessary.
+
+```ts
+// my-component.module.ts
+import { SatPopoverModule } from '@ncstate/sat-popover';
+
+@NgModule({
+  ...
+  imports: [
+    SatPopoverModule,
+  ],
+  exports: [
+    MyComponent
+  ],
+  ...
+})
+export class MyComponentModule { }
+
+// my-component.component.ts
+import { Component, ViewChild } from '@angular/core';
+import { SatPopoverAnchorDirective, SatPopoverComponent } from '@ncstate/sat-popover';
+
+@Component({
+  standalone: false,
+  selector: 'my-component',
+  template: '<button [satPopoverAnchor]="p" (click)="p.toggle()">Click me</button> <sat-popover #p>Hello!</sat-popover>'
+})
+export class MyComponent {}
+```
+
 ## 13.1.0 their-there
 
 ### Breaking Changes
