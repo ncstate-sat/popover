@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 14.3.0 pale-pale
+
+### Breaking Changes
+
+- None
+
+### Notes
+
+- Updated dependencies to resolve moderate build chain vulnerabilities.
+
 ## 14.2.0 overdue-overdo
 
 ### Breaking Changes
