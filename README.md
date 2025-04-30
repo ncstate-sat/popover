@@ -29,7 +29,7 @@ bootstrapApplication(AppRootComponent, {
     // If you want the popover animations to work, you must use `provideAnimations` or `provideAnimationsAsync`.
     provideAnimationsAsync(),
 
-    // If your application depends has animations on immediate load, use `provideAnimations` instead.
+    // If your application requires animations on immediate load, use `provideAnimations` instead.
     // provideAnimations(),
 
     // If you prefer to not have animations, you can use `provideNoopAnimations`.
