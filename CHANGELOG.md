@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 14.4.0 car-czar
+
+### Breaking Changes
+
+- None
+
+### Notes
+
+- Updated dependencies to resolve moderate build chain vulnerabilities.
+- node to 20.17.0
+- npm to 11.3.0
+
 ## 14.3.0 pale-pale
 
 ### Breaking Changes
