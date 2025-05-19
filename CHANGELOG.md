@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 14.5.0 doubt-drought
+
+### Breaking Changes
+
+- None
+
+### Notes
+
+- Updated dependencies to resolve moderate build chain vulnerabilities.
+
 ## 14.4.0 car-czar
 
 ### Breaking Changes
