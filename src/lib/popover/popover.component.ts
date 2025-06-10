@@ -12,10 +12,11 @@ import {
   Output,
   Directive,
   ViewContainerRef,
-  AfterViewInit
+  AfterViewInit,
+  DOCUMENT
 } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 
