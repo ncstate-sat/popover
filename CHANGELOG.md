@@ -1,3 +1,5 @@
+<!-- markdownlint-disable -->
+
 # CHANGELOG
 
 ## 15.0.0 stuff-gruff
@@ -610,3 +612,4 @@ import { SatPopoverModule } from '@ncstate/sat-popover';
 
 - Ships cdk/overlay component css - needed to properly position the popover
 - Cleans up the README and moves a bunch of TODOs to Github's issue tracker
+<!-- markdownlint-enable -->
