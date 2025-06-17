@@ -9,15 +9,15 @@
   "scripts": {
     "clean": "rm -rf dist",
     "demo": "ng serve demo",
-    "build": "ng build popover && ts-node tools/prepare-package.ts",
-    "build:prod": "ng build popover --configuration production && ts-node tools/prepare-package.ts",
+    "build": "ng build popover && tsx tools/prepare-package.ts",
+    "build:prod": "ng build popover --configuration production && tsx tools/prepare-package.ts",
     "build:demo": "ng build demo --configuration production --base-href=\"/popover/\"",
     "gh-pages": "ngh --dir dist/demo",
     "lint": "ng lint popover",
     "format": "prettier --write *",
     "test": "ng test popover",
     "test:once": "ng test popover --watch=false",
-    "release": "ts-node tools/release.ts"
+    "release": "tsx tools/release.ts"
   },
   "private": true,
   "keywords": [
@@ -76,6 +76,7 @@
     "prettier": "^3.5.3",
     "rxjs": "^7.8.2",
     "ts-node": "~10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "~5.8.3",
     "zone.js": "~0.15.1"
   },
