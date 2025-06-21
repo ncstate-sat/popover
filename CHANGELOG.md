@@ -1,4 +1,25 @@
+<!-- markdownlint-disable -->
+
 # CHANGELOG
+
+## 15.0.0 stuff-gruff
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ~20 or higher.
+- Some of the highlights:
+  - Stabilizing APIs such as effect, linkedSignal, toSignal, incremental hydration, route-level render mode config and promoting zoneless to developer preview
+  - Improved debugging with Angular DevTools and partnering with Chrome for custom Angular reporting directly in Chrome DevTools
+  - Polishing developer experience with style guide updates, type checking and language service support for host bindings, support for untagged template literal expressions in templates, template hot module replacement by default, and more.
+  - Advancements in GenAI development with llms.txt and angular.dev guides and videos for building Generative AI applications
+  - Launching a request for comments for an official mascot for Angular
+
+### Notes
+
+Recommended reading:
+
+- [Announcing Angular v20](https://blog.angular.dev/announcing-angular-v20-b5c9c06cf301)
+- [Angular 19-20 Update Guide](https://angular.dev/update-guide?v=19.0-20.0&l=2)
 
 ## 14.5.0 doubt-drought
 
@@ -591,3 +612,4 @@ import { SatPopoverModule } from '@ncstate/sat-popover';
 
 - Ships cdk/overlay component css - needed to properly position the popover
 - Cleans up the README and moves a bunch of TODOs to Github's issue tracker
+<!-- markdownlint-enable -->

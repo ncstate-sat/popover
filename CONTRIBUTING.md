@@ -12,7 +12,7 @@ npm run build
 npm run demo
 ```
 
-Open the server [here](http://localhost:4200)
+Open the server [using this link to the localhost](http://localhost:4200)
 
 ## Testing
 

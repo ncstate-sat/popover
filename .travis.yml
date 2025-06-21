@@ -1,7 +1,7 @@
 dist: trusty
 language: node_js
 node_js:
-  - '18'
+  - '22'
   - 'lts/*'
 
 before_install:
