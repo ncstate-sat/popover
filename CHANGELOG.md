@@ -272,7 +272,7 @@ Tagging got screwed up. 10.2.2 is good.
 
 ### Breaking Changes (aka Features)
 
-- Peer dependencies of `@angular/{core,common,cdk}` are now set to `^11.0.0`.
+- Peer dependencies of `@angular/{core,common,cdk}` are now set to `^12.1.3`.
 
 ### Fixes
 
