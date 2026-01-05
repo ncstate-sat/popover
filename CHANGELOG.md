@@ -2,6 +2,12 @@
 
 # CHANGELOG
 
+## 15.1.0 hey-hay
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ~20 or higher.
+
 ## 15.0.0 stuff-gruff
 
 ### Breaking Changes
