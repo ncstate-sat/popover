@@ -2,6 +2,13 @@
 
 # CHANGELOG
 
+## 15.1.1 hey-hay
+
+### Breaking Changes
+
+- Peer dependencies of @angular/{\*\*} are now set to ~20 or higher.
+- Fixed linting errors due to newer injector syntax and updated ngIf/ngFor structural directives to newer control flow operators.
+
 ## 15.0.0 stuff-gruff
 
 ### Breaking Changes

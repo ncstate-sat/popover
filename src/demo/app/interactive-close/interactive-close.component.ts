@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +9,7 @@ import { Subject, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
-  imports: [CommonModule, FormsModule, MatButtonModule, MatCardModule, MatCheckboxModule, SatPopoverModule],
+  imports: [FormsModule, MatButtonModule, MatCardModule, MatCheckboxModule, SatPopoverModule],
   selector: 'demo-interactive-close',
   styleUrls: ['./interactive-close.component.scss'],
   template: `
@@ -18,14 +17,17 @@ import { filter, takeUntil } from 'rxjs/operators';
       <mat-card-title>Interactive Close Behavior</mat-card-title>
       <mat-card-content>
         <mat-checkbox [(ngModel)]="interactiveClose">Allow Interactive Closing</mat-checkbox>
-        <p *ngIf="!interactiveClose">
-          You must select one of the options in the popover. Pressing ESC or clicking outside the popover will not close
-          it.
-        </p>
-        <p *ngIf="interactiveClose">
-          You don't necessarily need to select an option. You can press ESC or click on the backdrop to close the
-          popover.
-        </p>
+        @if (!interactiveClose) {
+          <p>
+            You don't necessarily need to select an option. You can press ESC or click on the backdrop to close the
+            popover.
+          </p>
+        } @else {
+          <p>
+            You must select one of the options in the popover. Pressing ESC or clicking outside the popover will not
+            close it.
+          </p>
+        }
         <button mat-raised-button satPopoverAnchor #anchor="satPopoverAnchor" color="accent" (click)="p.open()">
           Open
         </button>

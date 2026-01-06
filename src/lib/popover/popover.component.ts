@@ -1,14 +1,13 @@
 import {
+  inject,
   Component,
   ElementRef,
   EventEmitter,
-  Inject,
   Input,
   ViewChild,
   ViewEncapsulation,
   TemplateRef,
   OnInit,
-  Optional,
   Output,
   Directive,
   ViewContainerRef,
@@ -50,6 +49,9 @@ const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
   exportAs: 'satPopoverAnchor'
 })
 export class SatPopoverAnchorDirective implements AfterViewInit {
+  elementRef: ElementRef = inject(ElementRef);
+  viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+
   @Input('satPopoverAnchor')
   get popover() {
     return this._popover;
@@ -68,11 +70,6 @@ export class SatPopoverAnchorDirective implements AfterViewInit {
 
   /** @internal */
   _popover: SatPopoverComponent;
-
-  constructor(
-    public elementRef: ElementRef,
-    public viewContainerRef: ViewContainerRef
-  ) {}
 
   ngAfterViewInit() {
     if (!this.popover) {
@@ -253,7 +250,7 @@ export class SatPopoverComponent implements OnInit {
       this._openTransition = val;
     }
   }
-  private _openTransition;
+  private _openTransition: string = inject(DEFAULT_TRANSITION);
 
   /** Custom transition to use while closing. */
   @Input()
@@ -265,7 +262,7 @@ export class SatPopoverComponent implements OnInit {
       this._closeTransition = val;
     }
   }
-  private _closeTransition;
+  private _closeTransition: string = inject(DEFAULT_TRANSITION);
 
   /** Scale value at the start of the :enter animation. */
   @Input()
@@ -323,13 +320,17 @@ export class SatPopoverComponent implements OnInit {
   /** Classes to be added to the popover for setting the correct transform origin. */
   _classList: { [className: string]: boolean } = {};
 
+  _defaultTransition: string = inject(DEFAULT_TRANSITION);
+
+  _document = inject(DOCUMENT, { optional: true });
+
   /** Whether the popover is presently open. */
   _open = false;
 
   _state: 'enter' | 'void' | 'exit' = 'enter';
 
   /** @internal */
-  _anchoringService: SatPopoverAnchoringService;
+  _anchoringService: SatPopoverAnchoringService = inject(SatPopoverAnchoringService);
 
   /** Reference to the element to build a focus trap around. */
   @ViewChild('focusTrapElement')
@@ -341,19 +342,9 @@ export class SatPopoverComponent implements OnInit {
   /** Reference to a focus trap around the popover. */
   private _focusTrap: ConfigurableFocusTrap;
 
-  constructor(
-    private _focusTrapFactory: ConfigurableFocusTrapFactory,
-    _anchoringService: SatPopoverAnchoringService,
-    private _viewContainerRef: ViewContainerRef,
-    @Inject(DEFAULT_TRANSITION) private _defaultTransition: string,
-    @Optional() @Inject(DOCUMENT) private _document = document
-  ) {
-    // `@internal` stripping doesn't seem to work if the property is
-    // declared inside the constructor
-    this._anchoringService = _anchoringService;
-    this._openTransition = _defaultTransition;
-    this._closeTransition = _defaultTransition;
-  }
+  private _focusTrapFactory: ConfigurableFocusTrapFactory = inject(ConfigurableFocusTrapFactory);
+
+  private _viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
   ngOnInit() {
     this._setAlignmentClasses();
