@@ -27,9 +27,9 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
       [@preventInitialAnimation]
       (click)="dialPopover.toggle()"
     >
-      @if(dialPopover.isOpen()) {
+      @if (dialPopover.isOpen()) {
         <mat-icon [@spinInOut]="'in'">close</mat-icon>
-      } else {
+      } @else {
         <mat-icon [@spinInOut]="'in'">edit</mat-icon>
       }
     </button>
@@ -37,7 +37,7 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
     <!-- Actions -->
     <sat-popover #dialPopover [anchor]="dialAnchor" verticalAlign="above">
       <div class="dial">
-        <ng-container *ngFor="let a of actions">
+        @for (action of actions; track action.name) {
           <button
             mat-mini-fab
             satPopoverAnchor
@@ -47,15 +47,15 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
             (mouseleave)="tooltip.close()"
             (click)="dialPopover.close()"
           >
-            <mat-icon>{{ a.icon }}</mat-icon>
+            <mat-icon>{{ action.icon }}</mat-icon>
           </button>
 
           <sat-popover #tooltip [anchor]="tooltipAnchor" horizontalAlign="before">
             <div class="tooltip mat-body-1">
-              {{ a.name }}
+              {{ action.name }}
             </div>
           </sat-popover>
-        </ng-container>
+        }
       </div>
     </sat-popover>
   `

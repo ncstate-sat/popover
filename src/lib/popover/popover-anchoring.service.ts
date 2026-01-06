@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, NgZone, OnDestroy, Optional, ViewContainerRef } from '@angular/core';
+import { ElementRef, Injectable, NgZone, OnDestroy, ViewContainerRef, inject } from '@angular/core';
 import {
   ConnectionPositionPair,
   FlexibleConnectedPositionStrategy,
@@ -50,6 +50,9 @@ export class SatPopoverAnchoringService implements OnDestroy {
   /** Reference to the overlay containing the popover component. */
   _overlayRef: OverlayRef;
 
+  /** Right-to-left support, if needed */
+  private _dir: Directionality = inject(Directionality, { optional: true });
+
   /** Reference to the target popover. */
   private _popover: SatPopoverComponent;
 
@@ -71,14 +74,12 @@ export class SatPopoverAnchoringService implements OnDestroy {
   /** Whether the popover is presently open. */
   private _popoverOpen = false;
 
+  private _ngZone: NgZone = inject(NgZone);
+
   /** Emits when the service is destroyed. */
   private _onDestroy = new Subject<void>();
 
-  constructor(
-    private _overlay: Overlay,
-    private _ngZone: NgZone,
-    @Optional() private _dir: Directionality
-  ) {}
+  private _overlay: Overlay = inject(Overlay);
 
   ngOnDestroy() {
     // Destroy popover before terminating subscriptions so that any resulting

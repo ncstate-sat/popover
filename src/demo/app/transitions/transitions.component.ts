@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -7,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { SatPopoverModule } from '../../../lib/public_api';
 
 @Component({
-  imports: [CommonModule, FormsModule, MatCardModule, MatFormFieldModule, MatInputModule, SatPopoverModule],
+  imports: [FormsModule, MatCardModule, MatFormFieldModule, MatInputModule, SatPopoverModule],
   selector: 'demo-transitions',
   styleUrls: ['./transitions.component.scss'],
   template: `
@@ -32,9 +31,11 @@ import { SatPopoverModule } from '../../../lib/public_api';
         </div>
 
         <div class="indicators">
-          <div class="indicator" *ngFor="let indicator of callbackIndicators" [class.active]="indicator.active">
-            {{ indicator.name }}
-          </div>
+          @for (indicator of callbackIndicators; track indicator.name) {
+            <div class="indicator" [class.active]="indicator.active">
+              {{ indicator.name }}
+            </div>
+          }
         </div>
 
         <div

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -8,15 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { SatPopoverModule } from '../../../lib/public_api';
 
 @Component({
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    SatPopoverModule
-  ],
+  imports: [FormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatSelectModule, SatPopoverModule],
   selector: 'demo-scroll-strategies',
   styleUrls: ['./scroll-strategies.component.scss'],
   template: `
@@ -25,10 +16,12 @@ import { SatPopoverModule } from '../../../lib/public_api';
       <mat-card-content>
         <mat-form-field>
           <mat-select [(ngModel)]="strategy">
-            <mat-option *ngFor="let option of scrollOptions" [value]="option.value">
-              {{ option.name }} (<code>{{ option.value }}</code
-              >)
-            </mat-option>
+            @for (option of scrollOptions; track option.value) {
+              <mat-option [value]="option.value">
+                {{ option.name }} (<code>{{ option.value }}</code
+                >)
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
 

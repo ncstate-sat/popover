@@ -17,17 +17,17 @@ import { filter, takeUntil } from 'rxjs/operators';
       <mat-card-title>Interactive Close Behavior</mat-card-title>
       <mat-card-content>
         <mat-checkbox [(ngModel)]="interactiveClose">Allow Interactive Closing</mat-checkbox>
-	@if(!interactiveClose) {
-	  <p>
-	    You don't necessarily need to select an option. You can press ESC or click on the backdrop to close the
-            popover.
-      	  </p>
-	} else {
+        @if (!interactiveClose) {
           <p>
-            You must select one of the options in the popover. Pressing ESC or clicking outside the popover will not close
-            it.
+            You don't necessarily need to select an option. You can press ESC or click on the backdrop to close the
+            popover.
           </p>
-	}
+        } @else {
+          <p>
+            You must select one of the options in the popover. Pressing ESC or clicking outside the popover will not
+            close it.
+          </p>
+        }
         <button mat-raised-button satPopoverAnchor #anchor="satPopoverAnchor" color="accent" (click)="p.open()">
           Open
         </button>
