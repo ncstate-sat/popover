@@ -45,7 +45,7 @@
     "@angular/animations": "~20.0.2",
     "@angular/build": "^20.0.1",
     "@angular/cdk": "~20.0.2",
-    "@angular/cli": "~20.0.1",
+    "@angular/cli": "~20.3.16",
     "@angular/common": "~20.3.14",
     "@angular/compiler": "~20.0.2",
     "@angular/compiler-cli": "~20.0.2",
