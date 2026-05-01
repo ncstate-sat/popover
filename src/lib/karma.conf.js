@@ -25,12 +25,16 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'ChromeHeadless'],
     singleRun: false,
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',
         flags: ['--no-sandbox']
+      },
+      Chromium: {
+        base: 'Chrome',
+        flags: ['--headless', '--disable-gpu', '--remote-debugging-port=9222']
       }
     }
   };
@@ -38,6 +42,11 @@ module.exports = function (config) {
   // Run with --no-sandbox mode on Travis
   if (process.env.TRAVIS) {
     configuration.browsers = ['Chrome_travis_ci'];
+  }
+
+  // Run in Headless mode on GitHub Actions
+  if (process.env.GITHUB_ACTIONS) {
+    configuration.browsers = ['ChromeHeadless'];
   }
 
   config.set(configuration);

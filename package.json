@@ -4,7 +4,7 @@
   "license": "MIT",
   "engines": {
     "npm": ">=11.3.0",
-    "node": ">=22.12.0"
+    "node": ">=22.22.2"
   },
   "scripts": {
     "clean": "rm -rf dist",
@@ -17,7 +17,9 @@
     "format": "prettier --write *",
     "test": "ng test popover",
     "test:once": "ng test popover --watch=false",
-    "release": "tsx tools/release.ts"
+    "release": "tsx tools/release.ts",
+    "version:bump": "changeset version",
+    "version:publish": "changeset publish"
   },
   "private": true,
   "keywords": [
@@ -37,31 +39,32 @@
   },
   "homepage": "https://github.com/ncstate-sat/popover#readme",
   "devDependencies": {
-    "@angular-eslint/builder": "~20.0.0",
-    "@angular-eslint/eslint-plugin": "~20.0.0",
-    "@angular-eslint/eslint-plugin-template": "~20.0.0",
-    "@angular-eslint/schematics": "~20.0.0",
-    "@angular-eslint/template-parser": "~20.0.0",
-    "@angular/animations": "~20.0.2",
-    "@angular/build": "^20.0.1",
-    "@angular/cdk": "~20.0.2",
-    "@angular/cli": "~20.0.1",
-    "@angular/common": "~20.3.14",
-    "@angular/compiler": "~20.0.2",
-    "@angular/compiler-cli": "~20.0.2",
-    "@angular/core": "~20.0.2",
-    "@angular/forms": "~20.0.2",
-    "@angular/language-service": "~20.0.2",
-    "@angular/material": "~20.0.2",
-    "@angular/platform-browser": "~20.0.2",
-    "@angular/platform-browser-dynamic": "~20.0.2",
-    "@angular/router": "~20.0.2",
+    "@angular-eslint/builder": "^20.0.0",
+    "@angular-eslint/eslint-plugin": "^20.0.0",
+    "@angular-eslint/eslint-plugin-template": "^20.0.0",
+    "@angular-eslint/schematics": "^20.0.0",
+    "@angular-eslint/template-parser": "^20.0.0",
+    "@angular/animations": "^20.0.0",
+    "@angular/build": "^20.0.0",
+    "@angular/cdk": "^20.0.0",
+    "@angular/cli": "^20.0.0",
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/compiler-cli": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/forms": "^20.0.0",
+    "@angular/language-service": "^20.0.0",
+    "@angular/material": "^20.0.0",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular/platform-browser-dynamic": "^20.0.0",
+    "@angular/router": "^20.0.0",
+    "@changesets/cli": "^2.31.0",
     "@types/jasmine": "~5.1.8",
     "@types/jasminewd2": "^2.0.13",
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.12.2",
     "@typescript-eslint/eslint-plugin": "8.34.0",
     "@typescript-eslint/parser": "8.34.0",
-    "angular-cli-ghpages": "^2.0.3",
+    "angular-cli-ghpages": "^3.0.3",
     "core-js": "^3.43.0",
     "eslint": "~9.28.0",
     "jasmine-core": "~5.8.0",
@@ -96,7 +99,7 @@
     "gh-pages": "^5.0.0"
   },
   "volta": {
-    "node": "22.12.0",
+    "node": "22.22.2",
     "npm": "11.3.0"
   }
 }
