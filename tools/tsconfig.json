@@ -2,7 +2,6 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "module": "es2022",
-    "types": ["node"],
-    "ignoreDeprecations": "6.0"
+    "types": ["node"]
   }
 }
