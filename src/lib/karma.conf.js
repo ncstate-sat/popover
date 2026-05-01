@@ -44,5 +44,10 @@ module.exports = function (config) {
     configuration.browsers = ['Chrome_travis_ci'];
   }
 
+  // Run in Headless mode on GitHub Actions
+  if (process.env.GITHUB_ACTIONS) {
+    configuration.browsers = ['ChromeHeadless'];
+  }
+
   config.set(configuration);
 };
