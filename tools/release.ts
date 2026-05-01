@@ -6,6 +6,17 @@ import { DIST_PATH, DIST_PACKAGE_PATH } from './constants';
 import readline from 'readline';
 const exec = util.promisify(childProcess.exec);
 
+async function bumpVersion() {
+  console.log(pc.green(`Bumping version with changesets`));
+  try {
+    await exec(`npx changeset version`);
+    await exec(`git add .`);
+    await exec(`git commit -m "chore: bump version and update changelog"`);
+  } catch (e) {
+    console.log(pc.yellow('No changesets found or error during version bump. Skipping...'));
+  }
+}
+
 async function gitTags() {
   const { version } = JSON.parse(readFileSync(DIST_PACKAGE_PATH, 'utf8'));
   console.log(pc.green(`Tagging with ${version}`));
@@ -52,6 +63,7 @@ async function release() {
 
   rl.close();
 
+  await bumpVersion();
   await libBuild();
   await gitTags();
   await publish(otp);
