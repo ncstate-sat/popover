@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+## 15.1.1
+
+### Patch Changes
+
+- 9882659: fix: add push statement during the release process
+
 ## 15.1.0
 
 ### Minor Changes
