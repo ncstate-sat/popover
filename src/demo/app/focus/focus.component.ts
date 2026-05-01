@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -84,7 +84,7 @@ export class DemoFocusComponent {
   restoreFocus = true;
   form: FormGroup;
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder = inject(FormBuilder)) {
     this.form = fb.group({
       first: 'Monty',
       last: 'Python',

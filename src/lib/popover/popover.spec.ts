@@ -1,4 +1,4 @@
-import { ElementRef, Component, ViewChild, ViewContainerRef, importProvidersFrom } from '@angular/core';
+import { inject, ElementRef, Component, ViewChild, ViewContainerRef, importProvidersFrom } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -1304,13 +1304,11 @@ export class ScrollingTestComponent {
   providers: [SatPopoverAnchoringService]
 })
 export class ServiceTestComponent {
+  anchoring: SatPopoverAnchoringService = inject(SatPopoverAnchoringService);
+  container: ViewContainerRef = inject(ViewContainerRef);
+
   @ViewChild('customAnchor', { static: true }) customAnchor: ElementRef;
   @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
-
-  constructor(
-    public anchoring: SatPopoverAnchoringService,
-    public container: ViewContainerRef
-  ) {}
 }
 
 /** This component is for testing the hover directive behavior. */

@@ -1,21 +1,19 @@
 import {
+  inject,
   Component,
   ElementRef,
   EventEmitter,
-  Inject,
   Input,
   ViewChild,
   ViewEncapsulation,
   TemplateRef,
   OnInit,
-  Optional,
   Output,
   Directive,
   ViewContainerRef,
   AfterViewInit,
   DOCUMENT
 } from '@angular/core';
-import { AnimationEvent } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
@@ -50,6 +48,9 @@ const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
   exportAs: 'satPopoverAnchor'
 })
 export class SatPopoverAnchorDirective implements AfterViewInit {
+  elementRef: ElementRef = inject(ElementRef);
+  viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+
   @Input('satPopoverAnchor')
   get popover() {
     return this._popover;
@@ -67,12 +68,7 @@ export class SatPopoverAnchorDirective implements AfterViewInit {
   }
 
   /** @internal */
-  _popover: SatPopoverComponent;
-
-  constructor(
-    public elementRef: ElementRef,
-    public viewContainerRef: ViewContainerRef
-  ) {}
+  _popover!: SatPopoverComponent;
 
   ngAfterViewInit() {
     if (!this.popover) {
@@ -108,7 +104,7 @@ export class SatPopoverComponent implements OnInit {
       throw getInvalidPopoverAnchorError();
     }
   }
-  private _anchor: SatPopoverAnchorDirective | ElementRef<HTMLElement> | HTMLElement;
+  private _anchor!: SatPopoverAnchorDirective | ElementRef<HTMLElement> | HTMLElement;
 
   /** Alignment of the popover on the horizontal axis. */
   @Input()
@@ -253,7 +249,7 @@ export class SatPopoverComponent implements OnInit {
       this._openTransition = val;
     }
   }
-  private _openTransition;
+  private _openTransition: string = inject(DEFAULT_TRANSITION);
 
   /** Custom transition to use while closing. */
   @Input()
@@ -265,7 +261,7 @@ export class SatPopoverComponent implements OnInit {
       this._closeTransition = val;
     }
   }
-  private _closeTransition;
+  private _closeTransition: string = inject(DEFAULT_TRANSITION);
 
   /** Scale value at the start of the :enter animation. */
   @Input()
@@ -318,10 +314,15 @@ export class SatPopoverComponent implements OnInit {
   @Output() overlayKeydown = new EventEmitter<KeyboardEvent>();
 
   /** Reference to template so it can be placed within a portal. */
-  @ViewChild(TemplateRef, { static: true }) _templateRef: TemplateRef<unknown>;
+  @ViewChild(TemplateRef, { static: true })
+  _templateRef!: TemplateRef<unknown>;
 
   /** Classes to be added to the popover for setting the correct transform origin. */
   _classList: { [className: string]: boolean } = {};
+
+  _defaultTransition: string = inject(DEFAULT_TRANSITION);
+
+  _document = inject(DOCUMENT, { optional: true });
 
   /** Whether the popover is presently open. */
   _open = false;
@@ -329,31 +330,21 @@ export class SatPopoverComponent implements OnInit {
   _state: 'enter' | 'void' | 'exit' = 'enter';
 
   /** @internal */
-  _anchoringService: SatPopoverAnchoringService;
+  _anchoringService: SatPopoverAnchoringService = inject(SatPopoverAnchoringService);
 
   /** Reference to the element to build a focus trap around. */
   @ViewChild('focusTrapElement')
-  private _focusTrapElement: ElementRef;
+  private _focusTrapElement!: ElementRef;
 
   /** Reference to the element that was focused before opening. */
-  private _previouslyFocusedElement: HTMLElement;
+  private _previouslyFocusedElement!: HTMLElement | undefined;
 
   /** Reference to a focus trap around the popover. */
-  private _focusTrap: ConfigurableFocusTrap;
+  private _focusTrap!: ConfigurableFocusTrap | undefined;
 
-  constructor(
-    private _focusTrapFactory: ConfigurableFocusTrapFactory,
-    _anchoringService: SatPopoverAnchoringService,
-    private _viewContainerRef: ViewContainerRef,
-    @Inject(DEFAULT_TRANSITION) private _defaultTransition: string,
-    @Optional() @Inject(DOCUMENT) private _document = document
-  ) {
-    // `@internal` stripping doesn't seem to work if the property is
-    // declared inside the constructor
-    this._anchoringService = _anchoringService;
-    this._openTransition = _defaultTransition;
-    this._closeTransition = _defaultTransition;
-  }
+  private _focusTrapFactory: ConfigurableFocusTrapFactory = inject(ConfigurableFocusTrapFactory);
+
+  private _viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
   ngOnInit() {
     this._setAlignmentClasses();
@@ -409,7 +400,8 @@ export class SatPopoverComponent implements OnInit {
   }
 
   /** Callback for when the popover is finished animating in or out. */
-  _onAnimationDone({ toState }: AnimationEvent) {
+  _onAnimationDone(event: any) {
+    const toState = event?.toState;
     if (toState === 'enter') {
       this._trapFocus();
       this.afterOpen.emit();
@@ -448,7 +440,9 @@ export class SatPopoverComponent implements OnInit {
     }
 
     if (this.autoFocus) {
-      this._focusTrap.focusInitialElementWhenReady();
+      if (this._focusTrap) {
+        this._focusTrap.focusInitialElementWhenReady();
+      }
     }
   }
 
@@ -458,10 +452,10 @@ export class SatPopoverComponent implements OnInit {
 
     // Must check active element is focusable for IE sake
     if (toFocus && 'focus' in toFocus && this.restoreFocus) {
-      this._previouslyFocusedElement.focus();
+      toFocus.focus();
     }
 
-    this._previouslyFocusedElement = null;
+    this._previouslyFocusedElement = undefined;
 
     if (this._focusTrap) {
       this._focusTrap.destroy();
