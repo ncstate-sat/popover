@@ -60,15 +60,12 @@ npm run test:once
 
 ## Releases
 
-- Check out a branch and edit package version and add changelog entry
-- Run `npm install` again to update `package-lock.json`
-- Open PR and merge into `master`
+Ensure that the GitHub Actions pipeline passes before merging your PR.
+
+Once the PR is merged into `master`:
 - Run `git checkout master && git pull origin master`
-- Make sure everything is 👌
-- Run this script via `npm run release`
-
-  > Note: If you have 2FA configured for npm.js (and you should), run: `npm run release --otp=XXXXXX`
-
-- Build and publish the demo app `npm run build:demo && npm run gh-pages`
+- Run the release script: `npm run release`
+  > Note: If you have 2FA configured for npm.js (you should), run: `npm run release --otp=XXXXXX`
+- Build and publish the demo app: `npm run build:demo && npm run gh-pages`
 - Update all the official StackBlitz demos
-- Edit release on Github
+- Edit the release on GitHub
