@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+## 16.0.0
+
+### Major Changes
+
+- 3469f0c: Update to Angular v21
+
 ## 15.1.1
 
 ### Patch Changes
