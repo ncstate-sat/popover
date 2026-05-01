@@ -19,7 +19,9 @@ jobs:
           cache: 'npm'
 
       - name: Update npm
-        run: npm install -g npm@latest
+        run: |
+          corepack enable
+          corepack prepare npm@latest --activate
 
       - name: Install dependencies
         run: npm install
