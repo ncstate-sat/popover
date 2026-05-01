@@ -1,9 +1,10 @@
-import * as childProcess from 'child_process';
 import * as util from 'util';
 import pc from 'picocolors';
 import { readFileSync } from 'fs';
 import { DIST_PATH, DIST_PACKAGE_PATH } from './constants';
 import readline from 'readline';
+import * as childProcess from 'child_process';
+
 const exec = util.promisify(childProcess.exec);
 
 async function bumpVersion() {
@@ -17,26 +18,19 @@ async function bumpVersion() {
   }
 }
 
-async function gitTags() {
-  const { version } = JSON.parse(readFileSync(DIST_PACKAGE_PATH, 'utf8'));
-  console.log(pc.green(`Tagging with ${version}`));
-
-  const { stdout: tag } = await exec(`git tag v${version}`);
-  const { stdout: push } = await exec(`git push --tags`);
-
-  if (tag) {
-    console.log(pc.gray(tag));
-  }
-
-  if (push) {
-    console.log(pc.gray(push));
-  }
-}
-
 async function libBuild() {
   console.log(pc.green(`Building library`));
 
   await exec(`npm run build:prod`);
+}
+
+async function gitTags() {
+  console.log(pc.green(`Tagging release`));
+
+  const version = JSON.parse(readFileSync(DIST_PACKAGE_PATH, 'utf8')).version;
+
+  await exec(`git tag v${version}`);
+  await exec(`git push --tags`);
 }
 
 async function publish(otp: string | null) {
@@ -54,6 +48,8 @@ const rl = readline.createInterface({
 });
 
 async function release() {
+  await bumpVersion();
+
   const otpRaw = await new Promise<string>((resolve) => {
     rl.question('Enter your OTP here, or enter for none: ', resolve);
   });
@@ -63,7 +59,6 @@ async function release() {
 
   rl.close();
 
-  await bumpVersion();
   await libBuild();
   await gitTags();
   await publish(otp);
