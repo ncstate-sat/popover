@@ -39,8 +39,10 @@ import { SatPopoverModule, SatPopoverComponent } from '../../../lib/public_api';
   `
 })
 export class DemoAnchorReuseComponent implements AfterViewInit {
-  @ViewChild('a') aPopover: SatPopoverComponent;
-  @ViewChild('b') bPopover: SatPopoverComponent;
+  @ViewChild('a')
+  aPopover!: SatPopoverComponent;
+  @ViewChild('b')
+  bPopover!: SatPopoverComponent;
 
   activePopover = 'a';
   showAnchor = false;
