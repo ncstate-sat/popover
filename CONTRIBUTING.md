@@ -2,7 +2,21 @@
 
 ## Build the library
 
+Ensure you are using the correct Node.js version. This project uses `.node-version` to specify the required version. If you use [fnm](https://github.com/Schniz/fnm), you can run:
+
 ```bash
+fnm use
+```
+
+Then install dependencies and build the library:
+
+```bash
+# Standard installation
+npm install
+
+# If you encounter peer dependency conflicts (ERESOLVE), use:
+npm install --legacy-peer-deps
+
 npm run build
 ```
 
