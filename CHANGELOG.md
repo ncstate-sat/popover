@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+## 15.1.0
+
+### Minor Changes
+
+- d35ed99: update Node.js version and modernize release flow, Angular v20.3.19
+
 # CHANGELOG
 
 ## 15.0.0 stuff-gruff
