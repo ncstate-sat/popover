@@ -17,7 +17,9 @@
     "format": "prettier --write *",
     "test": "ng test popover",
     "test:once": "ng test popover --watch=false",
-    "release": "tsx tools/release.ts"
+    "release": "tsx tools/release.ts",
+    "version:bump": "changeset version",
+    "version:publish": "changeset publish"
   },
   "private": true,
   "keywords": [
@@ -56,9 +58,10 @@
     "@angular/platform-browser": "^20.0.0",
     "@angular/platform-browser-dynamic": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@changesets/cli": "^2.31.0",
     "@types/jasmine": "~5.1.8",
     "@types/jasminewd2": "^2.0.13",
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.12.2",
     "@typescript-eslint/eslint-plugin": "8.34.0",
     "@typescript-eslint/parser": "8.34.0",
     "angular-cli-ghpages": "^3.0.3",
