@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, HostBinding } from '@angular/core';
 import { DemoActionAPIComponent } from './action-api/action-api.component';
 import { DemoAnchorReuseComponent } from './anchor-reuse/anchor-reuse.component';
@@ -16,7 +15,6 @@ import { environment } from '../environments/environment';
 
 @Component({
   imports: [
-    CommonModule,
     DemoActionAPIComponent,
     DemoAnchorReuseComponent,
     DemoFocusComponent,
@@ -40,23 +38,25 @@ import { environment } from '../environments/environment';
       <button mat-button title="Toggle all content" (click)="showContent = !showContent">
         {{ showContent ? 'Hide' : 'Show' }} content
       </button>
-      <button mat-button title="Toggle between RTL and LTR" (click)="direction = direction == 'rtl' ? 'ltr' : 'rtl'">
+      <button mat-button title="Toggle between RTL and LTR" (click)="direction = direction === 'rtl' ? 'ltr' : 'rtl'">
         {{ direction.toUpperCase() }}
       </button>
     </mat-toolbar>
 
-    <div *ngIf="showContent" [dir]="direction" class="page-content">
-      <demo-positioning></demo-positioning>
-      <demo-action-api></demo-action-api>
-      <demo-scroll-strategies></demo-scroll-strategies>
-      <demo-select-trigger></demo-select-trigger>
-      <demo-focus></demo-focus>
-      <demo-transitions></demo-transitions>
-      <demo-tooltip></demo-tooltip>
-      <demo-interactive-close></demo-interactive-close>
-      <demo-anchor-reuse></demo-anchor-reuse>
-      <demo-speed-dial></demo-speed-dial>
-    </div>
+    @if (showContent) {
+      <div [dir]="direction" class="page-content">
+        <demo-positioning></demo-positioning>
+        <demo-action-api></demo-action-api>
+        <demo-scroll-strategies></demo-scroll-strategies>
+        <demo-select-trigger></demo-select-trigger>
+        <demo-focus></demo-focus>
+        <demo-transitions></demo-transitions>
+        <demo-tooltip></demo-tooltip>
+        <demo-interactive-close></demo-interactive-close>
+        <demo-anchor-reuse></demo-anchor-reuse>
+        <demo-speed-dial></demo-speed-dial>
+      </div>
+    }
   `
 })
 export class DemoRootComponent {

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,7 +6,7 @@ import { SatPopoverModule } from '../../../lib/public_api';
 import { trigger, state, style, animate, transition, query } from '@angular/animations';
 
 @Component({
-  imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, SatPopoverModule],
+  imports: [FormsModule, MatButtonModule, MatIconModule, SatPopoverModule],
   selector: 'demo-speed-dial',
   styleUrls: ['./speed-dial.component.scss'],
   animations: [
@@ -28,14 +27,17 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
       [@preventInitialAnimation]
       (click)="dialPopover.toggle()"
     >
-      <mat-icon [@spinInOut]="'in'" *ngIf="dialPopover.isOpen()">close</mat-icon>
-      <mat-icon [@spinInOut]="'in'" *ngIf="!dialPopover.isOpen()">edit</mat-icon>
+      @if (dialPopover.isOpen()) {
+        <mat-icon [@spinInOut]="'in'">close</mat-icon>
+      } @else {
+        <mat-icon [@spinInOut]="'in'">edit</mat-icon>
+      }
     </button>
 
     <!-- Actions -->
     <sat-popover #dialPopover [anchor]="dialAnchor" verticalAlign="above">
       <div class="dial">
-        <ng-container *ngFor="let a of actions">
+        @for (action of actions; track action.name) {
           <button
             mat-mini-fab
             satPopoverAnchor
@@ -45,15 +47,15 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
             (mouseleave)="tooltip.close()"
             (click)="dialPopover.close()"
           >
-            <mat-icon>{{ a.icon }}</mat-icon>
+            <mat-icon>{{ action.icon }}</mat-icon>
           </button>
 
           <sat-popover #tooltip [anchor]="tooltipAnchor" horizontalAlign="before">
             <div class="tooltip mat-body-1">
-              {{ a.name }}
+              {{ action.name }}
             </div>
           </sat-popover>
-        </ng-container>
+        }
       </div>
     </sat-popover>
   `

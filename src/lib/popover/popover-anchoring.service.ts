@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, NgZone, OnDestroy, Optional, ViewContainerRef } from '@angular/core';
+import { ElementRef, Injectable, NgZone, OnDestroy, ViewContainerRef, inject } from '@angular/core';
 import {
   ConnectionPositionPair,
   FlexibleConnectedPositionStrategy,
@@ -48,37 +48,38 @@ export class SatPopoverAnchoringService implements OnDestroy {
   popoverClosed = new Subject<unknown>();
 
   /** Reference to the overlay containing the popover component. */
-  _overlayRef: OverlayRef;
+  _overlayRef: OverlayRef | null = null;
+
+  /** Right-to-left support, if needed */
+  private _dir: Directionality | null = inject(Directionality, { optional: true });
 
   /** Reference to the target popover. */
-  private _popover: SatPopoverComponent;
+  private _popover!: SatPopoverComponent;
 
   /** Reference to the view container for the popover template. */
-  private _viewContainerRef: ViewContainerRef;
+  private _viewContainerRef!: ViewContainerRef;
 
   /** Reference to the anchor element. */
-  private _anchor: HTMLElement;
+  private _anchor!: HTMLElement;
 
   /** Reference to a template portal where the overlay will be attached. */
-  private _portal: TemplatePortal<unknown>;
+  private _portal!: TemplatePortal<unknown>;
 
   /** Single subscription to notifications service events. */
-  private _notificationsSubscription: Subscription;
+  private _notificationsSubscription!: Subscription;
 
   /** Single subscription to position changes. */
-  private _positionChangeSubscription: Subscription;
+  private _positionChangeSubscription!: Subscription;
 
   /** Whether the popover is presently open. */
   private _popoverOpen = false;
 
+  private _ngZone: NgZone = inject(NgZone);
+
   /** Emits when the service is destroyed. */
   private _onDestroy = new Subject<void>();
 
-  constructor(
-    private _overlay: Overlay,
-    private _ngZone: NgZone,
-    @Optional() private _dir: Directionality
-  ) {}
+  private _overlay: Overlay = inject(Overlay);
 
   ngOnDestroy() {
     // Destroy popover before terminating subscriptions so that any resulting
@@ -145,10 +146,12 @@ export class SatPopoverAnchoringService implements OnDestroy {
 
   /** Closes the popover. */
   closePopover(value?: unknown): void {
-    if (this._overlayRef) {
-      this._saveClosedState(value);
-      this._overlayRef.detach();
+    if (!this._overlayRef) {
+      return;
     }
+
+    this._saveClosedState(value);
+    this._overlayRef.detach();
   }
 
   /** TODO: implement when the overlay's position can be dynamically changed */
@@ -163,11 +166,13 @@ export class SatPopoverAnchoringService implements OnDestroy {
 
   /** Realign the popover to the anchor. */
   realignPopoverToAnchor(): void {
-    if (this._overlayRef) {
-      const config = this._overlayRef.getConfig();
-      const strategy = config.positionStrategy as FlexibleConnectedPositionStrategy;
-      strategy.reapplyLastPosition();
+    if (!this._overlayRef) {
+      return;
     }
+
+    const config = this._overlayRef.getConfig();
+    const strategy = config.positionStrategy as FlexibleConnectedPositionStrategy;
+    strategy.reapplyLastPosition();
   }
 
   /** Get a reference to the anchor element. */
@@ -240,6 +245,10 @@ export class SatPopoverAnchoringService implements OnDestroy {
 
   /** Close popover when backdrop is clicked. */
   private _subscribeToBackdrop(): void {
+    if (!this._overlayRef) {
+      return;
+    }
+
     this._overlayRef
       .backdropClick()
       .pipe(
@@ -253,6 +262,10 @@ export class SatPopoverAnchoringService implements OnDestroy {
 
   /** Close popover when escape keydown event occurs. */
   private _subscribeToEscape(): void {
+    if (!this._overlayRef) {
+      return;
+    }
+
     this._overlayRef
       .keydownEvents()
       .pipe(
@@ -267,6 +280,10 @@ export class SatPopoverAnchoringService implements OnDestroy {
 
   /** Set state back to closed when detached. */
   private _subscribeToDetachments(): void {
+    if (!this._overlayRef) {
+      return;
+    }
+
     this._overlayRef
       .detachments()
       .pipe(takeUntil(this._onDestroy))
@@ -504,18 +521,18 @@ function prioritizeAroundTarget<T>(target: T, options: T[]): T[] {
 
   // Alternate between stacks until one is empty
   while (left.length && right.length) {
-    reordered.push(right.pop());
-    reordered.push(left.pop());
+    reordered.push(right.pop()!);
+    reordered.push(left.pop()!);
   }
 
   // Flush out right side
   while (right.length) {
-    reordered.push(right.pop());
+    reordered.push(right.pop()!);
   }
 
   // Flush out left side
   while (left.length) {
-    reordered.push(left.pop());
+    reordered.push(left.pop()!);
   }
 
   return reordered;

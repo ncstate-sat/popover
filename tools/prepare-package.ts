@@ -45,9 +45,9 @@ function replacePackageValues(): void {
   console.log(pc.cyan('Overwriting package.json properties in dist'));
   const src = getSourceData(PEER_DEPENDENCIES, PACKAGE_PROPERTIES);
   for (const [packageName, packageVersion] of Object.entries(src.dependencies)) {
-    const versionParts = packageVersion.replace(/^[\^~]/, '~').split('.');
+    const versionParts = packageVersion.replace(/^[\^~]/, '').split('.');
     // Widen version constraints so we only release on major @angular changes
-    src.dependencies[packageName] = versionParts[0];
+    src.dependencies[packageName] = `^${versionParts[0]}`;
   }
   return replaceDistData({
     version: src.version,
