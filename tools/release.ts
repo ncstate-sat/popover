@@ -13,7 +13,7 @@ async function bumpVersion() {
     await exec(`npx changeset version`);
     await exec(`git add .`);
     await exec(`git commit -m "chore: bump version and update changelog"`);
-    await exec(`git push"`);
+    await exec(`git push`);
     console.log(pc.green('Version bump and changelog commit completed'));
   } catch (e) {
     console.error(pc.red('Error during version bump. Release aborted.'));
