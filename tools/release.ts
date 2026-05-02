@@ -9,6 +9,22 @@ const exec = util.promisify(childProcess.exec);
 
 async function bumpVersion() {
   console.log(pc.green(`Bumping version with changesets`));
+
+  // Check if master branch is checked out
+  const { stdout: currentBranch } = await exec(`git branch --show-current`);
+  if (currentBranch.trim() !== 'master') {
+    throw new Error('Error: Not on master branch. Please checkout master branch before running release.');
+  }
+
+  // Pull latest changes
+  await exec(`git pull`);
+
+  // Clean up node_modules and package-lock.json
+  await exec(`rm -rf node_modules package-lock.json`);
+
+  // Rebuild to generate new package-lock.json
+  await exec(`npm install`);
+
   try {
     await exec(`npx changeset version`);
     await exec(`git add .`);
