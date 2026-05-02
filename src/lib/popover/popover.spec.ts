@@ -1320,8 +1320,10 @@ export class ServiceTestComponent {
   `
 })
 export class HoverDirectiveTestComponent {
-  @ViewChild('anchorEl') anchorEl: ElementRef;
-  @ViewChild(SatPopoverComponent, { static: true }) popover: SatPopoverComponent;
+  @ViewChild('anchorEl')
+  anchorEl!: ElementRef;
+  @ViewChild(SatPopoverComponent, { static: true })
+  popover!: SatPopoverComponent;
   delay = 0;
 }
 
