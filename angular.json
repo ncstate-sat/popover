@@ -26,15 +26,6 @@
             }
           }
         },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "main": "src/lib/test.ts",
-            "tsConfig": "src/lib/tsconfig.spec.json",
-            "karmaConfig": "src/lib/karma.conf.js",
-            "polyfills": ["zone.js", "zone.js/testing"]
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
@@ -106,18 +97,6 @@
           "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "demo:build"
-          }
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "main": "src/demo/test.ts",
-            "polyfills": "src/demo/polyfills.ts",
-            "tsConfig": "src/demo/tsconfig.spec.json",
-            "karmaConfig": "src/demo/karma.conf.js",
-            "styles": ["styles.scss"],
-            "scripts": [],
-            "assets": ["src/demo/favicon.ico", "src/demo/assets"]
           }
         },
         "lint": {
