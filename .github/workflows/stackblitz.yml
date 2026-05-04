@@ -2,7 +2,7 @@ name: Publish StackBlitz Demo
 
 on:
   push:
-    branches: [master]
+    branches: [master, fix/*]
 
 jobs:
   publish:
