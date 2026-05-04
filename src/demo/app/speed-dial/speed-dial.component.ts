@@ -3,20 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SatPopoverModule } from '../../../lib/public_api';
-import { trigger, state, style, animate, transition, query } from '@angular/animations';
 
 @Component({
   imports: [FormsModule, MatButtonModule, MatIconModule, SatPopoverModule],
   selector: 'demo-speed-dial',
   styleUrls: ['./speed-dial.component.scss'],
-  animations: [
-    trigger('spinInOut', [
-      state('in', style({ transform: 'rotate(0)', opacity: '1' })),
-      transition(':enter', [style({ transform: 'rotate(-180deg)', opacity: '0' }), animate('150ms ease')]),
-      transition(':leave', [animate('150ms ease', style({ transform: 'rotate(180deg)', opacity: '0' }))])
-    ]),
-    trigger('preventInitialAnimation', [transition(':enter', [query(':enter', [], { optional: true })])])
-  ],
   template: `
     <!-- Fab -->
     <button
@@ -24,13 +15,12 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
       satPopoverAnchor
       #dialAnchor="satPopoverAnchor"
       color="primary"
-      [@preventInitialAnimation]
       (click)="dialPopover.toggle()"
     >
       @if (dialPopover.isOpen()) {
-        <mat-icon [@spinInOut]="'in'">close</mat-icon>
+        <mat-icon animate.enter="spin-enter" animate.leave="spin-leave">close</mat-icon>
       } @else {
-        <mat-icon [@spinInOut]="'in'">edit</mat-icon>
+        <mat-icon animate.enter="spin-enter" animate.leave="spin-leave">edit</mat-icon>
       }
     </button>
 
