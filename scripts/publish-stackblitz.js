@@ -51,11 +51,26 @@ const req = https.request(options, (res) => {
   const location = res.headers.location;
   if (location) {
     console.log(`✅ StackBlitz project URL: ${location}`);
-  } else {
-    console.log(`Status: ${res.statusCode}`);
-    console.error('❌ No redirect URL returned from StackBlitz');
+    res.resume();
+    return;
   }
-  res.resume();
+
+  let body = '';
+  res.setEncoding('utf8');
+  res.on('data', (chunk) => { body += chunk; });
+  res.on('end', () => {
+    // StackBlitz embeds the project URL in the HTML response
+    const match = body.match(/stackblitz\.com\/edit\/([a-z0-9-]+)/i);
+    if (match) {
+      console.log(`✅ StackBlitz project URL: https://stackblitz.com/edit/${match[1]}`);
+    } else {
+      console.log(`Status: ${res.statusCode}`);
+      console.log('Response headers:', res.headers);
+      console.log('Body snippet:', body.slice(0, 500));
+      console.error('❌ Could not determine StackBlitz project URL');
+      process.exit(1);
+    }
+  });
 });
 
 req.on('error', (err) => {
