@@ -3,8 +3,8 @@
 [![npm version](https://badge.fury.io/js/%40ncstate%2Fsat-popover.svg)](https://badge.fury.io/js/%40ncstate%2Fsat-popover)
 [![Build Status](https://travis-ci.org/ncstate-sat/popover.svg?branch=master)](https://travis-ci.org/ncstate-sat/popover)
 
-[Demo](https://stackblitz.com/edit/ncstate-sat-popover-examples) |
-[StackBlitz Template](https://stackblitz.com/edit/ncstate-sat-popover-issues) |
+[Demo](https://stackblitz.com/github/ncstate-sat/popover?file=src/lib/popover/popover.component.ts) |
+[StackBlitz Template](https://stackblitz.com/github/ncstate-sat/popover) |
 [Development App](https://ncstate-sat.github.io/popover/)
 
 ## Installation
