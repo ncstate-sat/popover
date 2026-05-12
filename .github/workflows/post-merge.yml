@@ -1,0 +1,43 @@
+name: After PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+jobs:
+  post-merge-job:
+    # Only run this job if the PR was merged, not just closed
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Update npm
+        run: |
+          corepack enable
+          corepack prepare npm@latest --activate
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build demo
+        run: npm run build:demo
+
+      - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          npm run gh-pages
+
+      - name: Publish StackBlitz Demo
+        run: node scripts/publish-stackblitz.js
