@@ -94,7 +94,7 @@ This script (defined in tools/release.ts) will:
 > 💡 To dry-run (no commit/push/tag):
 >
 > ```bash
-> npm run release -- --skip-commit
+> npm run release -- --dry-run
 > ```
 
 3. **Watch the automated pipeline**
