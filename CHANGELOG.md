@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+## 16.1.1
+
+### Patch Changes
+
+- cbdba55: fixing failed release of 16.1.0
+
 ## 16.1.0
 
 ### Minor Changes
