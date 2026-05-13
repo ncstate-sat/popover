@@ -4,7 +4,7 @@
   "license": "MIT",
   "engines": {
     "npm": ">=11.3.0",
-    "node": ">=22.22.2"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "clean": "rm -rf dist",
@@ -98,7 +98,7 @@
     "gh-pages": "^5.0.0"
   },
   "volta": {
-    "node": "22.22.2",
+    "node": "24.0.0",
     "npm": "11.3.0"
   }
 }
