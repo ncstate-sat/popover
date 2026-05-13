@@ -72,6 +72,13 @@ async function createGitHubRelease(version: string) {
   }
 }
 
+async function deployGhPages() {
+  console.log(pc.green('Building and deploying demo to GitHub Pages'));
+  await exec(`npm run build:demo`);
+  await exec(`npm run gh-pages`);
+  console.log(pc.green('GitHub Pages deploy completed'));
+}
+
 async function publish(otp: string | null) {
   console.log(pc.green(`Publishing`));
 
@@ -107,6 +114,9 @@ async function release() {
 
   await gitTags();
   console.log(pc.green('Tagging step completed'));
+
+  await deployGhPages();
+  console.log(pc.green('GitHub Pages step completed'));
 
   await publish(otp);
   console.log(pc.green('Publish step completed'));

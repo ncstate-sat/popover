@@ -1,37 +1,16 @@
-const sdk = require('@stackblitz/sdk');
-const fs = require('fs');
-const path = require('path');
+const { execSync } = require('child_process');
 
-// Root of the project (adjust if script placed elsewhere)
-const projectDir = path.resolve(__dirname, '..');
+const remoteUrl = execSync('git remote get-url origin').toString().trim();
 
-// Recursively collect files, ignoring large directories
-function walk(dir) {
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  const files = {};
-  for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      if (['node_modules', '.git', 'dist', 'coverage', 'tmp'].includes(entry.name)) continue;
-      Object.assign(files, walk(fullPath));
-    } else {
-      const rel = path.relative(projectDir, fullPath);
-      files[rel] = fs.readFileSync(fullPath, 'utf8');
-    }
-  }
-  return files;
+// Support both SSH (git@github.com:org/repo.git) and HTTPS formats
+const match = remoteUrl.match(/github\.com[:/](.+?)(\.git)?$/);
+if (!match) {
+  console.error(`❌ Could not parse GitHub remote URL: ${remoteUrl}`);
+  process.exit(1);
 }
 
-const projectFiles = walk(projectDir);
+const repoPath = match[1];
+const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+const url = `https://stackblitz.com/github/${repoPath}/tree/${branch}`;
 
-sdk.openProject(projectFiles, {
-  title: 'ncstate-sat-popover-demo',
-  description: 'Auto-generated demo for the Sat Popover library',
-  template: 'angular-cli',
-  // Optional: open a key file after loading
-  // openFile: 'src/lib/popover/popover.component.ts'
-}).then(() => {
-  console.log('✅ StackBlitz project opened/updated');
-}).catch(err => {
-  console.error('❌ StackBlitz error:', err);
-});
+console.log(`✅ StackBlitz demo: ${url}`);
