@@ -82,7 +82,7 @@ async function main() {
     }
 
     console.log(pc.blue(`🚀 Pushing to origin/main and tags...`));
-    await execa('git', ['push', 'origin', 'main', '--tags', '--force-with-lease'], { stdio: 'inherit' });
+    await execa('git', ['push', 'origin', 'master', '--tags', '--force-with-lease'], { stdio: 'inherit' });
   }
 
   // Step 4: Create GitHub release (optional: --skip-release)
