@@ -1,5 +1,18 @@
 <!-- markdownlint-disable -->
 
+## 16.1.0
+
+### Minor Changes
+
+- 91e5fdf: Switch from Karma to Vitest
+- fcc3766: update workflows for Node 24, GitHub Actions, and post-merge deployment
+- 7e39b69: chore: automate the stackblitz update process
+- 7cb5ee0: Update the demo speed-dial component to remove deprecations
+
+### Patch Changes
+
+- 1333852: gh pages work
+
 ## 16.0.0
 
 ### Major Changes
