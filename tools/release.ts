@@ -48,30 +48,28 @@ async function createGitHubRelease(version: string) {
 
 async function main() {
   const args = process.argv.slice(2);
-  const skipCommit = args.includes('--skip-commit'); // Dry-run
+  const dryRun = args.includes('--dry-run'); // Dry-run
   const skipTag = args.includes('--skip-tag');
   const skipRelease = args.includes('--skip-release'); // Skip gh release create
 
-  // Step 1: Run checks
+  // Step 1: Version with Changesets
+  console.log(pc.blue('📝 Running `npx changeset version`...'));
+  await execa('npx', ['changeset', 'version'], { stdio: 'inherit' });
+  const tagName = `v${JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf8')).version}`;
+  const version = tagName.replace('v', '');
+
+  console.log(pc.blue(`🏷️  New tag: ${tagName} for new version ${version}...`));
+
+  // Step 2: Run checks
   console.log(pc.blue('🔍 Running lint and tests...'));
   await execa('npm', ['run', 'lint'], { stdio: 'inherit' });
   await execa('npm', ['run', 'test'], { stdio: 'inherit' });
   await execa('npm', ['run', 'build'], { stdio: 'inherit' });
 
-  // Step 2: Version with Changesets
-  console.log(pc.blue('📝 Running `npx changeset version`...'));
-  await execa('npx', ['changeset', 'version'], { stdio: 'inherit' });
-
-  // Step 3: Commit + Tag (if not --skip-commit)
-  if (!skipCommit) {
+  // Step 3: Commit + Tag (if not --dry-run)
+  if (!dryRun) {
     console.log(pc.blue('📝 Committing version + changelog...'));
     await execa('git', ['add', '.'], { stdio: 'inherit' });
-
-    const { stdout: tag } = await execa('git', ['describe', '--tags', '--abbrev=0'], { stdio: 'pipe' }).catch(() => ({
-      stdout: ''
-    }));
-    const tagName =
-      tag.trim() || `v${JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf8')).version}`;
 
     const commitMsg = `chore(release): ${tagName} [skip ci]\n\nSee .changeset/*.md for details.`;
     await execa('git', ['commit', '-m', commitMsg], { stdio: 'inherit' });
@@ -86,10 +84,7 @@ async function main() {
   }
 
   // Step 4: Create GitHub release (optional: --skip-release)
-  const pkg = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf8'));
-  const version = pkg.version;
-
-  if (!skipRelease) {
+  if (!skipRelease && !dryRun) {
     try {
       await createGitHubRelease(version);
     } catch (e) {
@@ -98,7 +93,7 @@ async function main() {
     }
   }
 
-  console.log('\n✅ Release v' + version + ' prepared' + (skipCommit ? ' (dry-run)' : '') + '!');
+  console.log('\n✅ Release v' + version + ' prepared' + (dryRun ? ' (dry-run)' : '') + '!');
   console.log('\n🌐 Deployment will auto-start via GitHub Actions:');
   console.log('   🔗 https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22');
   console.log('\n📦 Live at: https://ncstate-sat.github.io/popover/\n');
