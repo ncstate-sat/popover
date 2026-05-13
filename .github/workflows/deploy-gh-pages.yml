@@ -1,0 +1,36 @@
+# .github/workflows/deploy-gh-pages.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # paths-ignore:
+    #   - 'README.md'
+    #   - 'LICENSE'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/demo

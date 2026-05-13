@@ -6,7 +6,9 @@ import {
   PEER_DEPENDENCIES,
   PACKAGE_PROPERTIES,
   DIST_README_PATH,
-  SOURCE_README_PATH
+  SOURCE_README_PATH,
+  SOURCE_INDEX_PATH,
+  DIST_INDEX_PATH
 } from './constants';
 
 interface PackageData {
@@ -62,5 +64,12 @@ function copyReadme(): void {
   return copyFileSync(SOURCE_README_PATH, DIST_README_PATH);
 }
 
+/** Copy index.html to dist. */
+function copyIndexHtml(): void {
+  console.log(pc.cyan('Copying public/index.html to dist package'));
+  return copyFileSync(SOURCE_INDEX_PATH, DIST_INDEX_PATH);
+}
+
 replacePackageValues();
 copyReadme();
+copyIndexHtml();
