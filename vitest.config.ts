@@ -1,7 +1,12 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vitest/config';
 import angular from '@analogjs/vite-plugin-angular';
-import { resolve } from 'path';
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+// ESM-safe __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default defineConfig({
   plugins: [angular({ tsconfig: resolve(__dirname, 'src/lib/tsconfig.spec.json') })],
@@ -13,7 +18,7 @@ export default defineConfig({
     reporters: ['default'],
     coverage: {
       reportsDirectory: 'coverage',
-      reporter: ['html', 'lcov'],
-    },
-  },
+      reporter: ['html', 'lcov']
+    }
+  }
 });

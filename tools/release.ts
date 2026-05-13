@@ -1,8 +1,13 @@
 // tools/release.ts
 import { execa } from 'execa';
-import { resolve } from 'path';
+import { dirname, resolve } from 'path';
 import { readFileSync } from 'fs';
 import pc from 'picocolors';
+import { fileURLToPath } from 'url';
+
+// ESM-safe __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function createGitHubRelease(version: string) {
   console.log(pc.green(`Creating GitHub release for v${version}`));
