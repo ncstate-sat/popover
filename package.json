@@ -71,6 +71,7 @@
     "angular-cli-ghpages": "^3.0.3",
     "core-js": "^3.47.0",
     "eslint": "~9.39.2",
+    "execa": "^9.6.1",
     "jsdom": "^29.1.1",
     "ng-packagr": "^21.0.1",
     "picocolors": "1.1.1",

@@ -1,14 +1,13 @@
+# .github/workflows/deploy-gh-pages.yml
 name: Deploy to GitHub Pages
 
 on:
-  # Run on pushes to main (or your default branch)
   push:
     branches:
       - main
-    # Optional: also allow manual trigger
     # paths-ignore:
-    #   - '*.md'
-  # Allow manual dispatch (via GitHub UI "Run workflow" button)
+    #   - 'README.md'
+    #   - 'LICENSE'
   workflow_dispatch:
 
 jobs:
@@ -22,20 +21,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: '24' # adjust if your project uses LTS elsewhere (e.g., 18, 22)
+          node-version: '24'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build the project
-        run: npm run build # ⚠️ Confirm this command outputs to dist/demo
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          # This pushes the *contents* of dist/demo/ to the gh-pages branch
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist/demo
-          # Optional: if you want custom CNAME or keep history
-          # force_orphan: true
-          # cname: yourdomain.com

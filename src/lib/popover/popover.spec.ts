@@ -822,7 +822,7 @@ describe('SatPopover', () => {
       // Assert that the strategy is new
       expect(firstStrategy).not.toBe(secondStrategy);
 
-      // Emulate scrolling agin. Assert the last position is used.
+      // Emulate scrolling again. Assert the last position is used.
       expect(secondSpy).not.toHaveBeenCalled();
       secondStrategy.apply();
       expect(secondSpy).toHaveBeenCalled();
@@ -1409,7 +1409,7 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
   // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
   event.preventDefault = function (...args: unknown[]) {
     Object.defineProperty(event, 'defaultPrevented', { get: () => true });
-    return originalPreventDefault.apply(this, args as any);
+    return originalPreventDefault.apply(this, args as unknown as []);
   };
 
   return event;

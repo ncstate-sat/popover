@@ -43,6 +43,14 @@ import { DEFAULT_TRANSITION } from './tokens';
 const DEFAULT_OPEN_ANIMATION_START_SCALE = 0.3;
 const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
 
+/** Possible animation states for the popover. */
+type PopoverAnimationState = 'enter' | 'void' | 'exit';
+
+/** Minimal event shape for animation done callbacks. */
+interface PopoverAnimationEvent {
+  toState: string;
+}
+
 @Directive({
   selector: '[satPopoverAnchor]',
   exportAs: 'satPopoverAnchor'
@@ -168,7 +176,7 @@ export class SatPopoverComponent implements OnInit {
 
   /**
    * Whether the popover's alignment is locked after opening. This prevents the popover
-   * from changing its alignement when scrolling or changing the size of the viewport.
+   * from changing its alignment when scrolling or changing the size of the viewport.
    */
   @Input()
   get lockAlignment() {
@@ -327,7 +335,7 @@ export class SatPopoverComponent implements OnInit {
   /** Whether the popover is presently open. */
   _open = false;
 
-  _state: 'enter' | 'void' | 'exit' = 'enter';
+  _state: PopoverAnimationState = 'enter';
 
   /** @internal */
   _anchoringService: SatPopoverAnchoringService = inject(SatPopoverAnchoringService);
@@ -400,12 +408,16 @@ export class SatPopoverComponent implements OnInit {
   }
 
   /** Callback for when the popover is finished animating in or out. */
-  _onAnimationDone(event: any) {
-    const toState = event?.toState;
+  _onAnimationDone(event: PopoverAnimationEvent): void {
+    const { toState } = event;
+
     if (toState === 'enter') {
       this._trapFocus();
       this.afterOpen.emit();
-    } else if (toState === 'exit' || toState === 'void') {
+      return;
+    }
+
+    if (toState === 'exit' || toState === 'void') {
       this._restoreFocusAndDestroyTrap();
       this.afterClose.emit();
     }
