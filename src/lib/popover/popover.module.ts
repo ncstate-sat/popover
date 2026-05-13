@@ -21,7 +21,6 @@ import { DEFAULT_TRANSITION } from './tokens';
   providers: [
     // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
     { provide: DEFAULT_TRANSITION, useValue: '200ms cubic-bezier(0.25, 0.8, 0.25, 1)' },
-    provideZoneChangeDetection()
   ],
   exports: [SatPopoverComponent, SatPopoverAnchorDirective, SatPopoverHoverDirective, BidiModule]
 })

@@ -35,6 +35,10 @@ bootstrapApplication(AppRootComponent, {
     // If you prefer to not have animations, you can use `provideNoopAnimations`.
     // provideNoopAnimations(),
 
+    // If your application requires specific zone change detection behavior,
+    // you can add `provideZoneChangeDetection()` to your providers.
+    // provideZoneChangeDetection(),
+
     importProvidersFrom(SatPopoverModule)
   ]
 });

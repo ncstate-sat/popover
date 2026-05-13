@@ -186,23 +186,27 @@ export class SatPopoverComponent implements OnInit {
   /** Whether the first focusable element should be focused on open. */
   @Input()
   get autoFocus() {
-    return this._autoFocus && this._autoFocusOverride;
+    return this._autoFocus;
   }
   set autoFocus(val: BooleanInput) {
     this._autoFocus = coerceBooleanProperty(val);
   }
   private _autoFocus = true;
-  _autoFocusOverride = true;
 
   /** Whether the popover should return focus to the previously focused element after closing. */
   @Input()
   get restoreFocus() {
-    return this._restoreFocus && this._restoreFocusOverride;
+    return this._restoreFocus;
   }
   set restoreFocus(val: BooleanInput) {
     this._restoreFocus = coerceBooleanProperty(val);
   }
   private _restoreFocus = true;
+
+  /** @internal */
+  _autoFocusOverride = true;
+
+  /** @internal */
   _restoreFocusOverride = true;
 
   /** How the popover should handle scrolling. */
@@ -320,8 +324,6 @@ export class SatPopoverComponent implements OnInit {
   /** Classes to be added to the popover for setting the correct transform origin. */
   _classList: { [className: string]: boolean } = {};
 
-  _defaultTransition: string = inject(DEFAULT_TRANSITION);
-
   _document = inject(DOCUMENT, { optional: true });
 
   /** Whether the popover is presently open. */
@@ -400,7 +402,7 @@ export class SatPopoverComponent implements OnInit {
   }
 
   /** Callback for when the popover is finished animating in or out. */
-  _onAnimationDone(event: any) {
+  _onAnimationDone(event: { toState: string }) {
     const toState = event?.toState;
     if (toState === 'enter') {
       this._trapFocus();
