@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 async function createGitHubRelease(version: string) {
-  console.log(pc.green(`Creating GitHub release for v${version}`));
+  console.log(pc.green(`\nCreating GitHub release for v${version}`));
 
   try {
     // Use Changesets-generated CHANGELOG.md for release notes
@@ -81,6 +81,8 @@ async function main() {
 
     console.log(pc.blue(`🚀 Pushing to origin/main and tags...`));
     await execa('git', ['push', 'origin', 'master', '--tags', '--force-with-lease'], { stdio: 'inherit' });
+
+    console.log('\n✅ New tag pushed!');
   }
 
   // Step 4: Create GitHub release (optional: --skip-release)
