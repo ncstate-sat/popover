@@ -71,7 +71,7 @@ async function main() {
     console.log(pc.blue('📝 Committing version + changelog...'));
     await execa('git', ['add', '.'], { stdio: 'inherit' });
 
-    const commitMsg = `chore(release): ${tagName} [skip ci]\n\nSee .changeset/*.md for details.`;
+    const commitMsg = `chore(release): ${tagName}\n\nSee .changeset/*.md for details.`;
     await execa('git', ['commit', '-m', commitMsg], { stdio: 'inherit' });
 
     if (!skipTag) {

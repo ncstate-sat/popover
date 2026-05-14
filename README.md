@@ -3,9 +3,8 @@
 [![npm version](https://badge.fury.io/js/%40ncstate%2Fsat-popover.svg)](https://badge.fury.io/js/%40ncstate%2Fsat-popover)
 [![Build Status](https://github.com/ncstate-sat/popover/actions/workflows/build.yml/badge.svg)](https://github.com/ncstate-sat/popover/actions/workflows/build.yml)
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/ncstate-sat/popover)
-
-[Development App](https://ncstate-sat.github.io/popover/)
+[![Open in StackBlitz](https://img.shields.io/badge/Open%20in-StackBlitz-1269D3?style=for-the-badge&logo=github&logoColor=white)](https://stackblitz.com/github/ncstate-sat/popover/)
+[![Open in GitHub Pages](https://img.shields.io/badge/Open%20in-GitHub%20Pages-181717?style=for-the-badge&logo=github&logoColor=white)](https://ncstate-sat.github.io/popover/)
 
 ## Installation
 
