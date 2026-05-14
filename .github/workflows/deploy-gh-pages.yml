@@ -9,6 +9,10 @@ on:
     #   - 'LICENSE'
   workflow_dispatch:
 
+concurrency:
+  group: deploy-gh-pages
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
