@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+## 16.2.0
+
+### Minor Changes
+
+- cc90442: Fix to GitHub Pages workflow, again
+
 ## 16.1.1
 
 ### Patch Changes
