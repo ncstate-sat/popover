@@ -1,6 +1,6 @@
 {
   "name": "@ncstate/sat-popover",
-  "version": "16.2.0",
+  "version": "16.3.0",
   "license": "MIT",
   "engines": {
     "npm": ">=11.3.0",

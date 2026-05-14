@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+## 16.3.0
+
+### Minor Changes
+
+- 6359db3: correct GitHub Pages workflow and add StackBlitz badge to README
+
 ## 16.2.0
 
 ### Minor Changes
