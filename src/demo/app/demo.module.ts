@@ -1,4 +1,3 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { DemoActionAPIComponent } from './action-api/action-api.component';
 import { DemoAnchorReuseComponent } from './anchor-reuse/anchor-reuse.component';
@@ -16,7 +15,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
-    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     DemoActionAPIComponent,
