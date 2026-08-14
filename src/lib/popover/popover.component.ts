@@ -1,55 +1,53 @@
-import {
-  inject,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  ViewChild,
-  ViewEncapsulation,
-  TemplateRef,
-  OnInit,
-  Output,
-  Directive,
-  ViewContainerRef,
-  AfterViewInit,
-  DOCUMENT
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { CommonModule } from '@angular/common';
+import {
+  afterNextRender,
+  AfterViewInit,
+  AnimationCallbackEvent,
+  ApplicationRef,
+  Component,
+  DestroyRef,
+  Directive,
+  DOCUMENT,
+  ElementRef,
+  EnvironmentInjector,
+  EventEmitter,
+  inject,
+  Input,
+  NgZone,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation
+} from '@angular/core';
 
-import { transformPopover } from './popover.animations';
-import {
-  getUnanchoredPopoverError,
-  getInvalidHorizontalAlignError,
-  getInvalidVerticalAlignError,
-  getInvalidScrollStrategyError,
-  getInvalidPopoverAnchorError,
-  getInvalidSatPopoverAnchorError,
-  getInvalidPopoverError
-} from './popover.errors';
-import {
-  SatPopoverScrollStrategy,
-  SatPopoverHorizontalAlign,
-  SatPopoverVerticalAlign,
-  VALID_SCROLL,
-  VALID_HORIZ_ALIGN,
-  VALID_VERT_ALIGN,
-  SatPopoverOpenOptions
-} from './types';
+import { popoverAnimationsDisabled, popoverAnimationsSupported } from './animations-disabled';
 import { SatPopoverAnchoringService } from './popover-anchoring.service';
+import {
+  getInvalidHorizontalAlignError,
+  getInvalidPopoverAnchorError,
+  getInvalidPopoverError,
+  getInvalidSatPopoverAnchorError,
+  getInvalidScrollStrategyError,
+  getInvalidVerticalAlignError,
+  getUnanchoredPopoverError
+} from './popover.errors';
 import { DEFAULT_TRANSITION } from './tokens';
+import {
+  SatPopoverHorizontalAlign,
+  SatPopoverOpenOptions,
+  SatPopoverScrollStrategy,
+  SatPopoverVerticalAlign,
+  VALID_HORIZ_ALIGN,
+  VALID_SCROLL,
+  VALID_VERT_ALIGN
+} from './types';
 
 const DEFAULT_OPEN_ANIMATION_START_SCALE = 0.3;
 const DEFAULT_CLOSE_ANIMATION_END_SCALE = 0.5;
-
-/** Possible animation states for the popover. */
-type PopoverAnimationState = 'enter' | 'void' | 'exit';
-
-/** Minimal event shape for animation done callbacks. */
-interface PopoverAnimationEvent {
-  toState: string;
-}
 
 @Directive({
   selector: '[satPopoverAnchor]',
@@ -86,7 +84,6 @@ export class SatPopoverAnchorDirective implements AfterViewInit {
 }
 
 @Component({
-  animations: [transformPopover],
   encapsulation: ViewEncapsulation.None,
   imports: [CommonModule],
   providers: [SatPopoverAnchoringService],
@@ -335,7 +332,26 @@ export class SatPopoverComponent implements OnInit {
   /** Whether the popover is presently open. */
   _open = false;
 
-  _state: PopoverAnimationState = 'enter';
+  
+  _animationsSupported = popoverAnimationsSupported();
+
+  _animationsDisabled = popoverAnimationsDisabled();
+
+  private _injector = inject(EnvironmentInjector);
+
+  private _appRef = inject(ApplicationRef);
+
+  private _ngZone = inject(NgZone);
+
+  private _closeCompleted = false;
+
+  private _destroyed = false;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      this._destroyed = true;
+    });
+  }
 
   /** @internal */
   _anchoringService: SatPopoverAnchoringService = inject(SatPopoverAnchoringService);
@@ -394,39 +410,122 @@ export class SatPopoverComponent implements OnInit {
     this._anchoringService.anchor(this, viewContainer, el);
   }
 
-  /** Gets an animation config with customized (or default) transition values. */
-  get state() {
-    return this._state;
-  }
-  get params() {
-    return {
-      openTransition: this.openTransition,
-      closeTransition: this.closeTransition,
-      startAtScale: this.openAnimationStartAtScale,
-      endAtScale: this.closeAnimationEndAtScale
-    };
+  /**
+   * Called by the anchoring service once the popover has been attached.
+   *
+   * When animations run, the `animationend` listener on the container completes
+   * the open sequence. When they do not, nothing else ever will, so do it here.
+   *
+   * @internal
+   */
+  _notifyOpened(): void {
+    this._closeCompleted = false;
+
+    if (this._animationsDisabled) {
+      this._scheduleCompletion(() => this._completeOpen());
+    }
   }
 
-  /** Callback for when the popover is finished animating in or out. */
-  _onAnimationDone(event: PopoverAnimationEvent): void {
-    const { toState } = event;
+  /**
+   * Called by the anchoring service once the popover has started closing.
+   *
+   * When the platform cannot animate, Angular never registers the `animate.leave`
+   * hook, so `_onLeave` will not run and this is the only path to completion.
+   *
+   * @internal
+   */
+  _notifyClosed(): void {
+    if (!this._animationsSupported) {
+      this._scheduleCompletion(() => this._completeClose());
+    }
+  }
 
-    if (toState === 'enter') {
-      this._trapFocus();
-      this.afterOpen.emit();
+  _onAnimationDone(event: AnimationEvent): void {
+    // `animationend` bubbles, so ignore animations on projected content.
+    if (event.animationName === '_sat-popover-enter') {
+      this._completeOpen();
+    }
+  }
+
+  /**
+   * Runs the exit animation, holding the element in the DOM until it finishes.
+   * Angular removes the element once `animationComplete` is called, or after
+   * `MAX_ANIMATION_TIMEOUT` if it never is.
+   */
+  _onLeave(event: AnimationCallbackEvent): void {
+    if (this._animationsDisabled) {
+      event.animationComplete();
+      this._scheduleCompletion(() => this._completeClose());
       return;
     }
 
-    if (toState === 'exit' || toState === 'void') {
-      this._restoreFocusAndDestroyTrap();
-      this.afterClose.emit();
-    }
+    const target = event.target as HTMLElement;
+
+    const done = () => {
+      target.removeEventListener('animationend', done);
+      target.removeEventListener('animationcancel', done);
+      event.animationComplete();
+
+      // These listeners are registered while the view is being torn down, so
+      // they are not patched into Angular's zone. Re-enter it before emitting,
+      // or `afterClose` subscribers run without change detection ever being
+      // scheduled — their state updates, and any timers they start, are never
+      // reflected in the view.
+      this._ngZone.run(() => this._completeClose());
+    };
+
+    // Registered natively rather than through the template, so that it survives
+    // the embedded view's listener cleanup while the element is being removed.
+    target.addEventListener('animationend', done);
+    target.addEventListener('animationcancel', done);
+    target.classList.add('sat-popover-exit');
   }
 
-  /** Starts the dialog exit animation. */
-  _startExitAnimation(): void {
-    this._state = 'exit';
+  /** Traps focus and notifies that the popover has finished opening. */
+  private _completeOpen(): void {
+    this._trapFocus();
+    this.afterOpen.emit();
   }
+
+  /** Restores focus and notifies that the popover has finished closing. */
+  private _completeClose(): void {
+    if (this._closeCompleted) {
+      return;
+    }
+
+    this._closeCompleted = true;
+    this._restoreFocusAndDestroyTrap();
+    this.afterClose.emit();
+  }
+
+  private _scheduleCompletion(fn: () => void): void {
+    if (this._destroyed) {
+      return;
+    }
+
+    queueMicrotask(() => {
+      if (this._destroyed) {
+        return;
+      }
+
+      try {
+        afterNextRender(fn, { injector: this._injector });
+      } catch {
+        return;
+      }
+
+      this._requestRenderSoon();
+    });
+  }
+
+  private _requestRenderSoon(): void {
+    if (this._destroyed || this._appRef.destroyed) {
+      return;
+    }
+
+    this._ngZone.run(() => {});
+  }
+
   /** Apply alignment classes based on alignment inputs. */
   _setAlignmentClasses(horizAlign = this.horizontalAlign, vertAlign = this.verticalAlign) {
     this._classList['sat-popover-before'] = horizAlign === 'before' || horizAlign === 'end';

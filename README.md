@@ -18,25 +18,21 @@ npm install --save @ncstate/sat-popover @angular/cdk
 import { AppRootComponent } from './app-root.component';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { importProvidersFrom } from '@angular/core';
-import { provideAnimations, provideNoopAnimations } from '@angular/platform-browser/animations';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 
 bootstrapApplication(AppRootComponent, {
   // AppConfig
-  providers: [
-    // If you want the popover animations to work, you must use `provideAnimations` or `provideAnimationsAsync`.
-    provideAnimationsAsync(),
-
-    // If your application requires animations on immediate load, use `provideAnimations` instead.
-    // provideAnimations(),
-
-    // If you prefer to not have animations, you can use `provideNoopAnimations`.
-    // provideNoopAnimations(),
-
-    importProvidersFrom(SatPopoverModule)
-  ]
+  providers: [importProvidersFrom(SatPopoverModule)]
 });
+```
+
+Popover animations are plain CSS, so no animation providers are required. Popovers automatically
+skip their animations when the user has requested reduced motion. To turn them off entirely:
+
+```ts
+import { SAT_POPOVER_ANIMATIONS } from '@ncstate/sat-popover';
+
+providers: [{ provide: SAT_POPOVER_ANIMATIONS, useValue: { animationsDisabled: true } }];
 ```
 
 Finally, import the `SatPopoverModule` as needed to provide the necessary components and directives.
@@ -311,7 +307,8 @@ import { SatPopoverModule, DEFAULT_TRANSITION } from '@ncstate/sat-popover';
 export class AppModule { }
 ```
 
-Additionally you can modify the scale values for the opening (`startAtScale`) and closing (`endAtScale`) animations.
+Additionally you can modify the scale values for the opening (`openAnimationStartAtScale`) and
+closing (`closeAnimationEndAtScale`) animations.
 
 ```html
 <!-- very subtle scale animation -->
@@ -319,6 +316,10 @@ Additionally you can modify the scale values for the opening (`startAtScale`) an
   <!-- ... -->
 </sat-popover>
 ```
+
+All four inputs are applied as CSS custom properties on `.sat-popover-container`
+(`--sat-popover-open-transition`, `--sat-popover-close-transition`, `--sat-popover-start-scale` and
+`--sat-popover-end-scale`), so you can also set them from your own stylesheet.
 
 ## Styles
 
