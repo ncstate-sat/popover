@@ -6,10 +6,13 @@ name: Release
 # `changeset version` has bumped package.json and CHANGELOG.md. It can also be
 # run by hand for an existing tag (e.g. to retry a failed publish).
 #
-# Authentication uses npm trusted publishing (OIDC): no NPM_TOKEN secret.
-# One-time setup on npmjs.com → @ncstate/sat-popover → Settings → Trusted
-# Publisher: GitHub Actions, organization `ncstate-sat`, repository `popover`,
-# workflow `release.yml`.
+# Authentication uses the NPM_TOKEN repository secret: an npm granular access
+# token with read and write access to @ncstate/sat-popover.
+#
+# `id-token: write` is deliberately not granted. With it, npm attempts OIDC
+# trusted publishing first and would not fall back to the token. To move to
+# trusted publishing later, add `id-token: write` and `--provenance`, and drop
+# NODE_AUTH_TOKEN.
 
 on:
   push:
@@ -26,7 +29,6 @@ concurrency:
 
 permissions:
   contents: write # create the GitHub release
-  id-token: write # npm trusted publishing + provenance
 
 jobs:
   release:
@@ -47,7 +49,6 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
-      # Trusted publishing needs npm >= 11.5.1.
       - name: Update npm
         run: npm install -g npm@latest
 
@@ -81,7 +82,13 @@ jobs:
           fi
 
       - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::NPM_TOKEN secret is not set (Settings → Secrets and variables → Actions)"
+            exit 1
+          fi
           if npm view "@ncstate/sat-popover@$VERSION" version >/dev/null 2>&1; then
             echo "::notice::@ncstate/sat-popover@$VERSION is already on npm; skipping publish"
             exit 0
@@ -95,7 +102,7 @@ jobs:
             console.log(cmp >= 0 ? "latest" : "previous");
           ' "$VERSION" "$LATEST")"
           echo "Publishing $VERSION with dist-tag '$DIST_TAG' (current latest: ${LATEST:-none})"
-          npm publish ./dist/popover --access public --provenance --tag "$DIST_TAG"
+          npm publish ./dist/popover --access public --tag "$DIST_TAG"
 
       - name: Create GitHub release
         env:

@@ -61,8 +61,8 @@ npm run lint      # runs ESLint + Prettier
 We use Changesets for versioning and GitHub Actions for publishing:
 
 - Changesets combines the pending `.changeset/*.md` files into one semver bump (patch, minor, major) and a `CHANGELOG.md` entry
-- Pushing the version tag runs the [Release workflow](.github/workflows/release.yml), which publishes to npm (with provenance) and creates the GitHub Release
-- No npm token or OTP is needed locally
+- Pushing the version tag runs the [Release workflow](.github/workflows/release.yml), which publishes to npm and creates the GitHub Release
+- No npm token or OTP is needed locally; CI uses the `NPM_TOKEN` repository secret
 
 ### How to Publish a New Release
 
@@ -99,10 +99,10 @@ It is safe to re-run after a partial failure: an existing release commit or tag 
 3. **Watch the automated pipeline**
    After pushing, two workflows run automatically:
 
-   | Workflow                                                                                                                   | Trigger                                         | What Happens                                                                                                                                                                     | Status Link                                                                                                  |
-   | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-   | **[Deploy to GitHub Pages](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22)** | `push` to `main` (includes `dist/demo` changes) | • Checks out code<br>• Installs Node.js & deps (`npm ci`)<br>• Builds project: `npm run build` → outputs `dist/demo/`<br>• Deploys `dist/demo/` to `gh-pages` branch             | [✅ View runs](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22) |
-   | **[Release](https://github.com/ncstate-sat/popover/actions/workflows/release.yml)**                                        | `push` of Git tag matching `v*.*.*`             | • Checks the tag matches `package.json`<br>• Lint, test, `npm run build:prod`<br>• `npm publish ./dist/popover --provenance`<br>• Creates the GitHub Release from `CHANGELOG.md` | [🔧 Config](.github/workflows/release.yml)                                                                   |
+   | Workflow                                                                                                                   | Trigger                                         | What Happens                                                                                                                                                         | Status Link                                                                                                  |
+   | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+   | **[Deploy to GitHub Pages](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22)** | `push` to `main` (includes `dist/demo` changes) | • Checks out code<br>• Installs Node.js & deps (`npm ci`)<br>• Builds project: `npm run build` → outputs `dist/demo/`<br>• Deploys `dist/demo/` to `gh-pages` branch | [✅ View runs](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22) |
+   | **[Release](https://github.com/ncstate-sat/popover/actions/workflows/release.yml)**                                        | `push` of Git tag matching `v*.*.*`             | • Checks the tag matches `package.json`<br>• Lint, test, `npm run build:prod`<br>• `npm publish ./dist/popover`<br>• Creates the GitHub Release from `CHANGELOG.md`  | [🔧 Config](.github/workflows/release.yml)                                                                   |
 
    🔍 **What to expect**:
    - You’ll see a **yellow “Deploy to GitHub Pages” run** in [Actions](https://github.com/ncstate-sat/popover/actions)
@@ -133,7 +133,7 @@ It is safe to re-run after a partial failure: an existing release commit or tag 
 | 🚀 Deploy                 | [`deploy-gh-pages.yml`](.github/workflows/deploy-gh-pages.yml) | Pushes `dist/demo/` to `gh-pages` branch                        |
 | 📦 Publish & release      | [`release.yml`](.github/workflows/release.yml)                 | Publishes `dist/popover` to npm, creates the GitHub Release     |
 
-npm authentication uses [trusted publishing](https://docs.npmjs.com/trusted-publishers) (OIDC), so there is no `NPM_TOKEN` secret. It is configured once on npmjs.com → `@ncstate/sat-popover` → Settings → Trusted Publisher (GitHub Actions, `ncstate-sat` / `popover`, workflow `release.yml`).
+npm authentication uses the `NPM_TOKEN` repository secret (Settings → Secrets and variables → Actions): an npm [granular access token](https://docs.npmjs.com/creating-and-viewing-access-tokens) with read and write access to `@ncstate/sat-popover`. Tokens expire, so renew the secret before its expiry date or the Release workflow will fail at the publish step.
 
 ---
 
