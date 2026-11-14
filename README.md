@@ -34,6 +34,11 @@ bootstrapApplication(AppRootComponent, {
     // If you prefer to not have animations, you can use `provideNoopAnimations`.
     // provideNoopAnimations(),
 
+    // The popover works with both zone-based and zoneless change detection, and
+    // follows whichever one your application configures. If you use Zone.js,
+    // provide it here at bootstrap, not inside feature modules or components.
+    // provideZoneChangeDetection(),
+
     importProvidersFrom(SatPopoverModule)
   ]
 });
