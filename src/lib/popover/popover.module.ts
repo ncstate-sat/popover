@@ -1,4 +1,4 @@
-import { NgModule, provideZoneChangeDetection } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -20,8 +20,9 @@ import { DEFAULT_TRANSITION } from './tokens';
   ],
   providers: [
     // See http://cubic-bezier.com/#.25,.8,.25,1 for reference.
-    { provide: DEFAULT_TRANSITION, useValue: '200ms cubic-bezier(0.25, 0.8, 0.25, 1)' },
-    provideZoneChangeDetection()
+    // Change detection (zone-based or zoneless) is an application-level choice;
+    // do not provide `provideZoneChangeDetection()` here. See #364.
+    { provide: DEFAULT_TRANSITION, useValue: '200ms cubic-bezier(0.25, 0.8, 0.25, 1)' }
   ],
   exports: [SatPopoverComponent, SatPopoverAnchorDirective, SatPopoverHoverDirective, BidiModule]
 })

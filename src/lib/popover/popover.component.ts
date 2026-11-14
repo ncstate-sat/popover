@@ -1,5 +1,6 @@
 import {
   inject,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -328,8 +329,6 @@ export class SatPopoverComponent implements OnInit {
   /** Classes to be added to the popover for setting the correct transform origin. */
   _classList: { [className: string]: boolean } = {};
 
-  _defaultTransition: string = inject(DEFAULT_TRANSITION);
-
   _document = inject(DOCUMENT, { optional: true });
 
   /** Whether the popover is presently open. */
@@ -353,6 +352,8 @@ export class SatPopoverComponent implements OnInit {
   private _focusTrapFactory: ConfigurableFocusTrapFactory = inject(ConfigurableFocusTrapFactory);
 
   private _viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this._setAlignmentClasses();
@@ -436,6 +437,10 @@ export class SatPopoverComponent implements OnInit {
     this._classList['sat-popover-below'] = vertAlign === 'below' || vertAlign === 'start';
 
     this._classList['sat-popover-center'] = horizAlign === 'center' || vertAlign === 'center';
+
+    // Position changes from the CDK overlay can arrive outside any change detection
+    // cycle. Schedule one explicitly so the new classes render in zoneless apps too.
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Move the focus inside the focus trap and remember where to return later. */
