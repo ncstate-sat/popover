@@ -1,5 +1,17 @@
 <!-- markdownlint-disable -->
 
+## 16.3.1
+
+### Patch Changes
+
+- d0be537: fix(popover): stop `SatPopoverModule` from providing `provideZoneChangeDetection()` (#364)
+
+  Importing `SatPopoverModule` into a standalone component (directly or through another standalone component) created a nested `NgZone`, so `NgZone.runOutsideAngular()` could still run inside the Angular zone and trigger change detection. The module no longer configures change detection; the application's bootstrap providers decide.
+
+  The popover now also marks itself for check when the overlay changes position, so alignment classes update in zoneless applications.
+
+  If your application relies on Zone.js, make sure `provideZoneChangeDetection()` is in your bootstrap providers rather than relying on the popover module to supply it.
+
 ## 16.3.0
 
 ### Minor Changes
