@@ -1,0 +1,117 @@
+name: Release
+
+# Publishes @ncstate/sat-popover to npm and creates the GitHub release.
+#
+# Triggered by pushing a `vX.Y.Z` tag, which `npm run release` does after
+# `changeset version` has bumped package.json and CHANGELOG.md. It can also be
+# run by hand for an existing tag (e.g. to retry a failed publish).
+#
+# Authentication uses npm trusted publishing (OIDC): no NPM_TOKEN secret.
+# One-time setup on npmjs.com → @ncstate/sat-popover → Settings → Trusted
+# Publisher: GitHub Actions, organization `ncstate-sat`, repository `popover`,
+# workflow `release.yml`.
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to release (e.g. v16.3.1)'
+        required: true
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write # create the GitHub release
+  id-token: write # npm trusted publishing + provenance
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      # Trusted publishing needs npm >= 11.5.1.
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Check tag matches package version
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "v$VERSION" ]; then
+            echo "::error::Tag $TAG does not match package.json version $VERSION"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build library
+        run: npm run build:prod
+
+      - name: Check built package version
+        run: |
+          BUILT="$(node -p "require('./dist/popover/package.json').version")"
+          if [ "$BUILT" != "$VERSION" ]; then
+            echo "::error::dist/popover is $BUILT, expected $VERSION"
+            exit 1
+          fi
+
+      - name: Publish to npm
+        run: |
+          if npm view "@ncstate/sat-popover@$VERSION" version >/dev/null 2>&1; then
+            echo "::notice::@ncstate/sat-popover@$VERSION is already on npm; skipping publish"
+            exit 0
+          fi
+          # Only move the `latest` dist-tag forward. Publishing an older version
+          # (e.g. backfilling a missed release) goes under `previous` instead.
+          LATEST="$(npm view @ncstate/sat-popover dist-tags.latest 2>/dev/null || true)"
+          DIST_TAG="$(node -e '
+            const [v, l] = process.argv.slice(1).map((s) => (s || "0.0.0").split(".").map(Number));
+            const cmp = v.map((n, i) => n - l[i]).find((d) => d !== 0) ?? 0;
+            console.log(cmp >= 0 ? "latest" : "previous");
+          ' "$VERSION" "$LATEST")"
+          echo "Publishing $VERSION with dist-tag '$DIST_TAG' (current latest: ${LATEST:-none})"
+          npm publish ./dist/popover --access public --provenance --tag "$DIST_TAG"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::notice::GitHub release $TAG already exists; skipping"
+            exit 0
+          fi
+          # Release notes: this version's section of CHANGELOG.md.
+          awk -v v="$VERSION" '
+            $0 == "## " v { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            git log -1 --pretty=%B > release-notes.md
+          fi
+          gh release create "$TAG" --title "Release $TAG" --notes-file release-notes.md --verify-tag

@@ -1,4 +1,11 @@
 // tools/release.ts
+//
+// Versions and tags a release. Publishing happens in CI: pushing the tag
+// triggers .github/workflows/release.yml, which publishes to npm and creates
+// the GitHub release.
+//
+// Safe to re-run after a partial run: an existing release commit or tag for
+// the current version is reused rather than recreated.
 import { execa } from 'execa';
 import { dirname, resolve } from 'path';
 import { readFileSync } from 'fs';
@@ -9,96 +16,84 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-async function createGitHubRelease(version: string) {
-  console.log(pc.green(`\nCreating GitHub release for v${version}`));
+const RELEASE_BRANCH = 'master';
 
+async function git(args: string[]): Promise<string> {
+  return (await execa('git', args, { stdio: 'pipe' })).stdout.trim();
+}
+
+async function tagExists(tagName: string): Promise<boolean> {
   try {
-    // Use Changesets-generated CHANGELOG.md for release notes
-    const changelogPath = resolve(__dirname, '..', 'CHANGELOG.md');
-    const fullChangelog = readFileSync(changelogPath, 'utf8');
-
-    // Extract only the latest version section (up to next `##` or EOF)
-    const [header, ...rest] = fullChangelog.split('\n');
-    const lines = rest.join('\n');
-    const changelogForVersion = lines
-      .split('\n')
-      .reduce<string[]>((acc, line) => {
-        if (line.startsWith('## ') && acc.length > 0) return acc; // Stop at next version
-        if (acc.length > 0 || line.trim()) acc.push(line); // Include first line & non-blank lines after version header
-        return acc;
-      }, [])
-      .slice(0, -1) // Remove trailing newline
-      .join('\n')
-      .trim();
-
-    // Fallback: if no CHANGELOG, use last commit message
-    const notes =
-      changelogForVersion || (await execa('git', ['log', '-1', '--pretty=%B'], { stdio: 'pipe' })).stdout.trim();
-
-    await execa('gh', ['release', 'create', `v${version}`, '--title', `Release v${version}`, '--notes', notes], {
-      stdio: 'inherit'
-    });
-    console.log(pc.green('✅ GitHub release created'));
-  } catch (e: any) {
-    console.log(pc.yellow('⚠️ Failed to create GitHub release. Continuing...'));
-    console.error(e.message || e);
-    // Don't fail the whole release — GitHub Pages still deploys
+    await git(['rev-parse', '--verify', '--quiet', `refs/tags/${tagName}`]);
+    return true;
+  } catch {
+    return false;
   }
 }
 
 async function main() {
   const args = process.argv.slice(2);
-  const dryRun = args.includes('--dry-run'); // Dry-run
-  const skipTag = args.includes('--skip-tag');
-  const skipRelease = args.includes('--skip-release'); // Skip gh release create
+  const dryRun = args.includes('--dry-run'); // Version + checks only; no commit, tag or push
+  const skipPush = args.includes('--skip-push'); // Commit + tag locally, push yourself
 
-  // Step 1: Version with Changesets
+  const branch = await git(['branch', '--show-current']);
+  if (branch !== RELEASE_BRANCH) {
+    throw new Error(`Releases are cut from ${RELEASE_BRANCH}; currently on ${branch || '(detached HEAD)'}.`);
+  }
+
+  // Step 1: Version with Changesets (combines pending .changeset/*.md files)
   console.log(pc.blue('📝 Running `npx changeset version`...'));
   await execa('npx', ['changeset', 'version'], { stdio: 'inherit' });
-  const tagName = `v${JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf8')).version}`;
-  const version = tagName.replace('v', '');
+  const version = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf8')).version;
+  const tagName = `v${version}`;
 
-  console.log(pc.blue(`🏷️  New tag: ${tagName} for new version ${version}...`));
+  console.log(pc.blue(`🏷️  Releasing ${tagName}...`));
 
   // Step 2: Run checks
-  console.log(pc.blue('🔍 Running lint and tests...'));
+  console.log(pc.blue('🔍 Running lint, tests and build...'));
   await execa('npm', ['run', 'lint'], { stdio: 'inherit' });
   await execa('npm', ['run', 'test'], { stdio: 'inherit' });
   await execa('npm', ['run', 'build'], { stdio: 'inherit' });
 
-  // Step 3: Commit + Tag (if not --dry-run)
-  if (!dryRun) {
+  if (dryRun) {
+    console.log(pc.yellow(`\n✅ Dry run complete for ${tagName}. Revert the version changes with: git checkout -- .`));
+    return;
+  }
+
+  // Step 3: Commit version + changelog (skipped if a previous run already did)
+  await execa('git', ['add', '-A', 'package.json', 'CHANGELOG.md', '.changeset'], { stdio: 'inherit' });
+  const staged = await git(['diff', '--cached', '--name-only']);
+  if (staged) {
     console.log(pc.blue('📝 Committing version + changelog...'));
-    await execa('git', ['add', '.'], { stdio: 'inherit' });
-
-    const commitMsg = `chore(release): ${tagName}\n\nSee .changeset/*.md for details.`;
-    await execa('git', ['commit', '-m', commitMsg], { stdio: 'inherit' });
-
-    if (!skipTag) {
-      console.log(pc.blue(`🏷️  Tagging ${tagName}...`));
-      await execa('git', ['tag', '-f', tagName], { stdio: 'inherit' }); // force to overwrite stale tags
-    }
-
-    console.log(pc.blue(`🚀 Pushing to origin/main and tags...`));
-    await execa('git', ['push', 'origin', 'master', '--tags', '--force-with-lease'], { stdio: 'inherit' });
-
-    console.log('\n✅ New tag pushed!');
+    await execa('git', ['commit', '-m', `chore(release): ${tagName}\n\nSee CHANGELOG.md for details.`], {
+      stdio: 'inherit'
+    });
+  } else {
+    console.log(pc.yellow('Nothing to commit; using the existing release commit.'));
   }
 
-  // Step 4: Create GitHub release (optional: --skip-release)
-  if (!skipRelease && !dryRun) {
-    try {
-      await createGitHubRelease(version);
-    } catch (e) {
-      console.log(pc.yellow('Failed to create GitHub release. Continuing...'));
-      console.error(e);
-    }
+  // Step 4: Tag. Annotated so it also works when git is configured to sign tags.
+  if (await tagExists(tagName)) {
+    console.log(pc.yellow(`Tag ${tagName} already exists; reusing it.`));
+  } else {
+    console.log(pc.blue(`🏷️  Tagging ${tagName}...`));
+    await execa('git', ['tag', '-a', tagName, '-m', `Release ${tagName}`], { stdio: 'inherit' });
   }
 
-  console.log('\n✅ Release v' + version + ' prepared' + (dryRun ? ' (dry-run)' : '') + '!');
-  console.log('\n🌐 Deployment will auto-start via GitHub Actions:');
-  console.log('   🔗 https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22');
-  console.log('\n📦 Live at: https://ncstate-sat.github.io/popover/\n');
+  if (skipPush) {
+    console.log(pc.yellow(`\nSkipped push. When ready: git push origin ${RELEASE_BRANCH} ${tagName}`));
+    return;
+  }
+
+  // Step 5: Push the branch, then the tag (the tag push triggers the Release workflow)
+  console.log(pc.blue(`🚀 Pushing ${RELEASE_BRANCH} and ${tagName}...`));
+  await execa('git', ['push', 'origin', RELEASE_BRANCH], { stdio: 'inherit' });
+  await execa('git', ['push', 'origin', `refs/tags/${tagName}`], { stdio: 'inherit' });
+
+  console.log(pc.green(`\n✅ ${tagName} pushed.`));
+  console.log('\n📦 npm publish + GitHub release run in the Release workflow:');
+  console.log('   🔗 https://github.com/ncstate-sat/popover/actions/workflows/release.yml');
+  console.log('\n🌐 Demo deploys via the "Deploy to GitHub Pages" workflow: https://ncstate-sat.github.io/popover/\n');
 }
 
 main().catch((error) => {

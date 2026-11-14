@@ -58,22 +58,20 @@ npm run lint      # runs ESLint + Prettier
 
 ### 🚀 Releases
 
-We use Changesets + GitHub Actions for fully automated, semver-compliant releases. This ensures:
+We use Changesets for versioning and GitHub Actions for publishing:
 
-- Accurate versioning based on PR-level change types (patch, minor, major)
-- Auto-generated GitHub Releases with rich changelogs
-- Zero local dependency on gh CLI or manual deployment
+- Changesets combines the pending `.changeset/*.md` files into one semver bump (patch, minor, major) and a `CHANGELOG.md` entry
+- Pushing the version tag runs the [Release workflow](.github/workflows/release.yml), which publishes to npm (with provenance) and creates the GitHub Release
+- No npm token or OTP is needed locally
 
 ### How to Publish a New Release
 
-- Ensure main is clean and passing
+1. Make sure `master` is clean, up to date, and has at least one pending changeset
 
 ```bash
-git checkout main
-git pull origin main
-npm run test
-npm run lint
-npm run build
+git checkout master
+git pull origin master
+ls .changeset/*.md   # besides README.md
 ```
 
 2. Run the release script
@@ -82,38 +80,41 @@ npm run build
 npm run release
 ```
 
-This script (defined in tools/release.ts) will:
+This script (`tools/release.ts`) will:
 
-- Run linting, type-checking, and tests
-- Bump versions using `npx changeset version`
-  → reads .changeset/\*.md files to determine patch/minor/major bumps
-- Update CHANGELOG.md, package.json, and commit changes
-- Tag the commit (e.g., v1.2.3)
-- Push to origin/main
+- Run `npx changeset version` → bumps `package.json`, updates `CHANGELOG.md`, deletes the used changesets
+- Run lint, tests, and the library build
+- Commit `chore(release): vX.Y.Z` and create an annotated tag `vX.Y.Z` (signed if your git config signs tags)
+- Push `master`, then the tag. The tag push starts the Release workflow
 
-> 💡 To dry-run (no commit/push/tag):
+It is safe to re-run after a partial failure: an existing release commit or tag is reused.
+
+> 💡 Options:
 >
 > ```bash
-> npm run release -- --dry-run
+> npm run release -- --dry-run    # version + checks only; revert with: git checkout -- .
+> npm run release -- --skip-push  # commit + tag locally, push yourself
 > ```
 
 3. **Watch the automated pipeline**
    After pushing, two workflows run automatically:
 
-   | Workflow                                                                                                                   | Trigger                                         | What Happens                                                                                                                                                         | Status Link                                                                                                  |
-   | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-   | **[Deploy to GitHub Pages](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22)** | `push` to `main` (includes `dist/demo` changes) | • Checks out code<br>• Installs Node.js & deps (`npm ci`)<br>• Builds project: `npm run build` → outputs `dist/demo/`<br>• Deploys `dist/demo/` to `gh-pages` branch | [✅ View runs](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22) |
-   | **[Release Drafter](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Release+Drafter%22)**               | `push` of Git tag matching `v*`                 | • Creates/updates GitHub Release<br>• Uses `CHANGELOG.md` for release notes<br>• Publishes under [Releases](https://github.com/ncstate-sat/popover/releases)         | [🔧 Config](../.github/release-drafter.yml)                                                                  |
+   | Workflow                                                                                                                   | Trigger                                         | What Happens                                                                                                                                                                     | Status Link                                                                                                  |
+   | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+   | **[Deploy to GitHub Pages](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22)** | `push` to `main` (includes `dist/demo` changes) | • Checks out code<br>• Installs Node.js & deps (`npm ci`)<br>• Builds project: `npm run build` → outputs `dist/demo/`<br>• Deploys `dist/demo/` to `gh-pages` branch             | [✅ View runs](https://github.com/ncstate-sat/popover/actions?query=workflow%3A%22Deploy+to+GitHub+Pages%22) |
+   | **[Release](https://github.com/ncstate-sat/popover/actions/workflows/release.yml)**                                        | `push` of Git tag matching `v*.*.*`             | • Checks the tag matches `package.json`<br>• Lint, test, `npm run build:prod`<br>• `npm publish ./dist/popover --provenance`<br>• Creates the GitHub Release from `CHANGELOG.md` | [🔧 Config](.github/workflows/release.yml)                                                                   |
 
    🔍 **What to expect**:
    - You’ll see a **yellow “Deploy to GitHub Pages” run** in [Actions](https://github.com/ncstate-sat/popover/actions)
    - After ~1–2 minutes, it turns **green**
    - Your site is now live at:
      👉 **[https://ncstate-sat.github.io/popover/](https://ncstate-sat.github.io/popover/)**
-   - Separately, a **GitHub Release** will appear at:
+   - The **Release** run publishes to npm and creates a **GitHub Release** at:
      👉 **[https://github.com/ncstate-sat/popover/releases](https://github.com/ncstate-sat/popover/releases)**
+   - If it fails (e.g. npm hiccup), fix the cause and re-run it from Actions → Release → **Run workflow** with the tag. Steps that already succeeded are skipped.
 
 4. **Verify the release**
+   - `npm view @ncstate/sat-popover version` shows the new version
    - Open `https://ncstate-sat.github.io/popover/`
      → Confirm latest version appears (e.g., new demo components)
    - Open the GitHub Release for `vX.Y.Z`
@@ -130,9 +131,9 @@ This script (defined in tools/release.ts) will:
 | ✅ Versioning & changelog | `npx changeset version` (via `tools/release.ts`)               | Reads `.changeset/*.md`, bumps versions, updates `CHANGELOG.md` |
 | 🏗️ Build                  | `npm run build`                                                | Compiles source → static site in `dist/demo/`                   |
 | 🚀 Deploy                 | [`deploy-gh-pages.yml`](.github/workflows/deploy-gh-pages.yml) | Pushes `dist/demo/` to `gh-pages` branch                        |
-| 📝 Release Draft          | [`release-drafter.yml`](.github/workflows/release-drafter.yml) | Auto-generates GitHub Release notes from `CHANGELOG.md`         |
+| 📦 Publish & release      | [`release.yml`](.github/workflows/release.yml)                 | Publishes `dist/popover` to npm, creates the GitHub Release     |
 
-All steps are **idempotent, auditable, and self-documenting** — no local environment required.
+npm authentication uses [trusted publishing](https://docs.npmjs.com/trusted-publishers) (OIDC), so there is no `NPM_TOKEN` secret. It is configured once on npmjs.com → `@ncstate/sat-popover` → Settings → Trusted Publisher (GitHub Actions, `ncstate-sat` / `popover`, workflow `release.yml`).
 
 ---
 
