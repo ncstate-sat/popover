@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+## 16.3.2
+
+### Patch Changes
+
+- ab656ba: Stop emitting a spurious `afterClose` when a popover is reopened. The animation state left over from the previous close is now reset before the overlay is attached, so reopening emits only `opened` and `afterOpen`.
+
 ## 16.3.1
 
 ### Patch Changes
