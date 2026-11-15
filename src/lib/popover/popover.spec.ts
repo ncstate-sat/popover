@@ -202,6 +202,31 @@ describe('SatPopover', () => {
       });
     });
 
+    it('should not emit afterClose when reopened', async () => {
+      fixture.detectChanges();
+      const events: string[] = [];
+      comp.popover.opened.subscribe(() => events.push('opened'));
+      comp.popover.afterOpen.subscribe(() => events.push('afterOpen'));
+      comp.popover.closed.subscribe(() => events.push('closed'));
+      comp.popover.afterClose.subscribe(() => events.push('afterClose'));
+
+      // First open and close.
+      comp.popover.open();
+      await vi.waitFor(() => expect(events).toContain('afterOpen'));
+      comp.popover.close();
+      fixture.detectChanges();
+      await vi.waitFor(() => expect(events).toContain('afterClose'));
+
+      // Reopen. The new container must start in the `enter` state, not the
+      // `exit` state left over from the previous close.
+      events.length = 0;
+      comp.popover.open();
+      await vi.waitFor(() => expect(events).toContain('afterOpen'));
+      await fixture.whenStable();
+
+      expect(events).toEqual(['opened', 'afterOpen']);
+    });
+
     it('should emit a value when closed with a value', async () => {
       fixture.detectChanges();
       comp.popover.open();
