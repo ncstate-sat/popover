@@ -136,11 +136,6 @@ export class SatPopoverAnchoringService implements OnDestroy {
   openPopover(options: SatPopoverOpenOptions = {}): void {
     if (!this._popoverOpen) {
       this._applyOpenOptions(options);
-      // Reset the animation state before attaching. Attaching renders the
-      // container immediately; if it still carried the `exit` state from the
-      // previous close, its `void => exit` transition would complete at once
-      // and emit a spurious `afterClose`.
-      this._popover._state = 'enter';
       this._createOverlay();
       this._subscribeToBackdrop();
       this._subscribeToEscape();
@@ -298,6 +293,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
   /** Save the opened state of the popover and emit. */
   private _saveOpenedState(): void {
     if (!this._popoverOpen) {
+      this._popover._notifyOpened();
       this._popover._open = this._popoverOpen = true;
 
       this.popoverOpened.next();
@@ -310,7 +306,7 @@ export class SatPopoverAnchoringService implements OnDestroy {
     if (this._popoverOpen) {
       this._popover._open = this._popoverOpen = false;
 
-      this._popover._startExitAnimation();
+      this._popover._notifyClosed();
       this.popoverClosed.next(value);
       this._popover.closed.emit(value);
     }

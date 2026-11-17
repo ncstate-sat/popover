@@ -3,8 +3,14 @@
     class="sat-popover-container"
     #focusTrapElement
     [ngClass]="_classList"
-    [@transformPopover]="{ value: state, params: params }"
-    (@transformPopover.done)="_onAnimationDone($event)"
+    [class.sat-popover-animations-disabled]="_animationsDisabled"
+    [style.--sat-popover-open-transition]="openTransition"
+    [style.--sat-popover-close-transition]="closeTransition"
+    [style.--sat-popover-start-scale]="openAnimationStartAtScale"
+    [style.--sat-popover-end-scale]="closeAnimationEndAtScale"
+    animate.enter="sat-popover-enter"
+    (animate.leave)="_onLeave($event)"
+    (animationend)="_onAnimationDone($event)"
   >
     <ng-content></ng-content>
   </div>

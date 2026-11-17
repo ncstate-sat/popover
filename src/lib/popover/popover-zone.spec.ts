@@ -1,11 +1,13 @@
 import { Component, NgZone, ViewChild, inject, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { describe, it, expect, afterEach } from 'vitest';
 
 import { SatPopoverModule } from './popover.module';
 import { SatPopoverComponent } from './popover.component';
+import { SAT_POPOVER_ANIMATIONS } from './tokens';
+
+const disableAnimations = { provide: SAT_POPOVER_ANIMATIONS, useValue: { animationsDisabled: true } };
 
 /** Standalone component that imports the module directly (scenario 3 in #364). */
 @Component({
@@ -45,7 +47,7 @@ describe('SatPopoverModule change detection (#364)', () => {
   afterEach(() => TestBed.resetTestingModule());
 
   it('does not create a nested NgZone when imported by a standalone component', () => {
-    TestBed.configureTestingModule({ imports: [DirectImportHostComponent], providers: [provideNoopAnimations()] });
+    TestBed.configureTestingModule({ imports: [DirectImportHostComponent], providers: [disableAnimations] });
     const fixture = TestBed.createComponent(DirectImportHostComponent);
 
     expect(fixture.componentInstance.ngZone).toBe(TestBed.inject(NgZone));
@@ -53,7 +55,7 @@ describe('SatPopoverModule change detection (#364)', () => {
   });
 
   it('does not create a nested NgZone through a transitive standalone import', () => {
-    TestBed.configureTestingModule({ imports: [TransitiveImportHostComponent], providers: [provideNoopAnimations()] });
+    TestBed.configureTestingModule({ imports: [TransitiveImportHostComponent], providers: [disableAnimations] });
     const fixture = TestBed.createComponent(TransitiveImportHostComponent);
 
     expect(fixture.componentInstance.ngZone).toBe(TestBed.inject(NgZone));
@@ -79,7 +81,7 @@ describe('SatPopover in a zoneless application', () => {
   it('opens, applies alignment classes and closes without Zone.js change detection', async () => {
     TestBed.configureTestingModule({
       imports: [ZonelessHostComponent],
-      providers: [provideZonelessChangeDetection(), provideNoopAnimations()]
+      providers: [provideZonelessChangeDetection(), disableAnimations]
     });
     const fixture = TestBed.createComponent(ZonelessHostComponent);
     const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();

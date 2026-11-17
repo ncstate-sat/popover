@@ -1,6 +1,5 @@
 import { inject, ElementRef, Component, ViewChild, ViewContainerRef, importProvidersFrom } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   BlockScrollStrategy,
   FlexibleConnectedPositionStrategy,
@@ -23,8 +22,11 @@ import {
   getInvalidPopoverAnchorError,
   getInvalidSatPopoverAnchorError
 } from './popover.errors';
-import { DEFAULT_TRANSITION } from './tokens';
+import { DEFAULT_TRANSITION, SAT_POPOVER_ANIMATIONS } from './tokens';
 import { describe, beforeEach, it, expect, afterEach, vi } from 'vitest';
+
+/** Popovers skip animations in tests so that open/close completes deterministically. */
+const disableAnimations = { provide: SAT_POPOVER_ANIMATIONS, useValue: { animationsDisabled: true } };
 
 describe('SatPopover', () => {
   describe('passing an anchor', () => {
@@ -113,9 +115,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SimpleDirectiveAnchorPopoverTestComponent, NoopAnimationsModule],
+        imports: [SimpleDirectiveAnchorPopoverTestComponent],
         providers: [
           importProvidersFrom(SatPopoverModule),
+          disableAnimations,
           { provide: OverlayContainer, useFactory: overlayContainerFactory }
         ]
       });
@@ -217,14 +220,30 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       await vi.waitFor(() => expect(events).toContain('afterClose'));
 
-      // Reopen. The new container must start in the `enter` state, not the
-      // `exit` state left over from the previous close.
+      // Reopen. Nothing left over from the previous close may complete it again.
       events.length = 0;
       comp.popover.open();
       await vi.waitFor(() => expect(events).toContain('afterOpen'));
       await fixture.whenStable();
 
       expect(events).toEqual(['opened', 'afterOpen']);
+    });
+
+    it('should not throw when the environment is destroyed before open completes', async () => {
+      fixture.detectChanges();
+      let afterOpenEmitted = false;
+      comp.popover.afterOpen.subscribe(() => (afterOpenEmitted = true));
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      comp.popover.open();
+      TestBed.resetTestingModule();
+
+      await new Promise((resolve) => setTimeout(resolve));
+      const errors = consoleError.mock.calls;
+      consoleError.mockRestore();
+
+      expect(errors).toEqual([]);
+      expect(afterOpenEmitted).toBe(false);
     });
 
     it('should emit a value when closed with a value', async () => {
@@ -281,9 +300,10 @@ describe('SatPopover', () => {
 
       beforeEach(() => {
         TestBed.configureTestingModule({
-          imports: [DirectiveAnchorForPopoverTestComponent, NoopAnimationsModule],
+          imports: [DirectiveAnchorForPopoverTestComponent],
           providers: [
             importProvidersFrom(SatPopoverModule),
+            disableAnimations,
             { provide: OverlayContainer, useFactory: overlayContainerFactory }
           ]
         });
@@ -331,9 +351,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [BackdropPopoverTestComponent, NoopAnimationsModule],
+        imports: [BackdropPopoverTestComponent],
         providers: [
           importProvidersFrom(SatPopoverModule),
+          disableAnimations,
           { provide: OverlayContainer, useFactory: overlayContainerFactory }
         ]
       });
@@ -433,9 +454,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [KeyboardPopoverTestComponent, NoopAnimationsModule],
+        imports: [KeyboardPopoverTestComponent],
         providers: [
           importProvidersFrom(SatPopoverModule),
+          disableAnimations,
           { provide: OverlayContainer, useFactory: overlayContainerFactory }
         ]
       });
@@ -534,9 +556,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [FocusPopoverTestComponent, NoopAnimationsModule],
+        imports: [FocusPopoverTestComponent],
         providers: [
           importProvidersFrom(SatPopoverModule),
+          disableAnimations,
           { provide: OverlayContainer, useFactory: overlayContainerFactory }
         ]
       });
@@ -661,9 +684,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [PositioningTestComponent, PositioningAliasTestComponent, NoopAnimationsModule],
+        imports: [PositioningTestComponent, PositioningAliasTestComponent],
         providers: [
           importProvidersFrom(SatPopoverModule),
+          disableAnimations,
           { provide: OverlayContainer, useFactory: overlayContainerFactory }
         ]
       });
@@ -884,9 +908,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingTestComponent, NoopAnimationsModule],
+        imports: [ScrollingTestComponent],
         providers: [
           importProvidersFrom(SatPopoverModule),
+          disableAnimations,
           { provide: OverlayContainer, useFactory: overlayContainerFactory }
         ]
       });
@@ -922,7 +947,7 @@ describe('SatPopover', () => {
     });
 
     it('should wait until the popover is closed to update the strategy', async () => {
-      let strategy: ScrollStrategy| undefined;
+      let strategy: ScrollStrategy | undefined;
       fixture.detectChanges();
       comp.popover.open();
 
@@ -971,9 +996,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [ServiceTestComponent, NoopAnimationsModule],
+        imports: [ServiceTestComponent],
         providers: [
           importProvidersFrom(SatPopoverModule),
+          disableAnimations,
           { provide: OverlayContainer, useFactory: overlayContainerFactory }
         ]
       });
@@ -1029,9 +1055,10 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [HoverDirectiveTestComponent, NoopAnimationsModule],
+        imports: [HoverDirectiveTestComponent],
         providers: [
           importProvidersFrom(SatPopoverModule),
+          disableAnimations,
           { provide: OverlayContainer, useFactory: overlayContainerFactory }
         ]
       });
@@ -1100,6 +1127,82 @@ describe('SatPopover', () => {
     });
   });
 
+  describe('animation bindings', () => {
+    let fixture: ComponentFixture<SimpleDirectiveAnchorPopoverTestComponent>;
+    let comp: SimpleDirectiveAnchorPopoverTestComponent;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [SimpleDirectiveAnchorPopoverTestComponent],
+        providers: [
+          importProvidersFrom(SatPopoverModule),
+          disableAnimations,
+          { provide: OverlayContainer, useFactory: overlayContainerFactory }
+        ]
+      });
+
+      fixture = TestBed.createComponent(SimpleDirectiveAnchorPopoverTestComponent);
+      comp = fixture.componentInstance;
+      overlayContainerElement = fixture.debugElement.injector.get(OverlayContainer).getContainerElement();
+    });
+
+    afterEach(() => {
+      document.body.removeChild(overlayContainerElement);
+    });
+
+    function openAndGetContainer(): HTMLElement {
+      fixture.detectChanges();
+      comp.popover.open();
+      fixture.detectChanges();
+
+      return overlayContainerElement.querySelector('.sat-popover-container') as HTMLElement;
+    }
+
+    it('should expose the transitions as CSS custom properties', () => {
+      fixture.detectChanges();
+      comp.popover.openTransition = '500ms linear';
+      comp.popover.closeTransition = '250ms ease-in';
+
+      const container = openAndGetContainer();
+
+      expect(container.style.getPropertyValue('--sat-popover-open-transition')).toBe('500ms linear');
+      expect(container.style.getPropertyValue('--sat-popover-close-transition')).toBe('250ms ease-in');
+    });
+
+    it('should fall back to the default transition', () => {
+      const container = openAndGetContainer();
+
+      expect(container.style.getPropertyValue('--sat-popover-open-transition')).toBe(
+        '200ms cubic-bezier(0.25, 0.8, 0.25, 1)'
+      );
+    });
+
+    it('should apply openAnimationStartAtScale as a custom property', () => {
+      fixture.detectChanges();
+      comp.popover.openAnimationStartAtScale = 0.95;
+
+      const container = openAndGetContainer();
+
+      expect(container.style.getPropertyValue('--sat-popover-start-scale')).toBe('0.95');
+    });
+
+    it('should apply closeAnimationEndAtScale as a custom property', () => {
+      fixture.detectChanges();
+      comp.popover.closeAnimationEndAtScale = 0.8;
+
+      const container = openAndGetContainer();
+
+      expect(container.style.getPropertyValue('--sat-popover-end-scale')).toBe('0.8');
+    });
+
+    it('should mark the container as animations-disabled', () => {
+      const container = openAndGetContainer();
+
+      expect(container.classList.contains('sat-popover-animations-disabled')).toBe(true);
+    });
+  });
+
   describe('default transition', () => {
     let fixture: ComponentFixture<SimpleDirectiveAnchorPopoverTestComponent>;
     let comp: SimpleDirectiveAnchorPopoverTestComponent;
@@ -1107,8 +1210,8 @@ describe('SatPopover', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [SimpleDirectiveAnchorPopoverTestComponent, NoopAnimationsModule],
-        providers: [importProvidersFrom(SatPopoverModule)]
+        imports: [SimpleDirectiveAnchorPopoverTestComponent],
+        providers: [importProvidersFrom(SatPopoverModule), disableAnimations]
       });
       TestBed.overrideProvider(DEFAULT_TRANSITION, {
         useValue: '300ms ease'
