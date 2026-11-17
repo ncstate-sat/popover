@@ -34,7 +34,9 @@ bootstrapApplication(AppRootComponent, {
 ```
 
 Popover animations are plain CSS, so no animation providers are required. Popovers automatically
-skip their animations when the user has requested reduced motion. To turn them off entirely:
+skip their animations when the user has requested reduced motion. The preference is read when a
+popover is created, so changing it while the page is open affects only popovers created afterwards.
+To turn animations off entirely:
 
 ```ts
 import { SAT_POPOVER_ANIMATIONS } from '@ncstate/sat-popover';

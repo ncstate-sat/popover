@@ -220,14 +220,30 @@ describe('SatPopover', () => {
       fixture.detectChanges();
       await vi.waitFor(() => expect(events).toContain('afterClose'));
 
-      // Reopen. The new container must start in the `enter` state, not the
-      // `exit` state left over from the previous close.
+      // Reopen. Nothing left over from the previous close may complete it again.
       events.length = 0;
       comp.popover.open();
       await vi.waitFor(() => expect(events).toContain('afterOpen'));
       await fixture.whenStable();
 
       expect(events).toEqual(['opened', 'afterOpen']);
+    });
+
+    it('should not throw when the environment is destroyed before open completes', async () => {
+      fixture.detectChanges();
+      let afterOpenEmitted = false;
+      comp.popover.afterOpen.subscribe(() => (afterOpenEmitted = true));
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      comp.popover.open();
+      TestBed.resetTestingModule();
+
+      await new Promise((resolve) => setTimeout(resolve));
+      const errors = consoleError.mock.calls;
+      consoleError.mockRestore();
+
+      expect(errors).toEqual([]);
+      expect(afterOpenEmitted).toBe(false);
     });
 
     it('should emit a value when closed with a value', async () => {

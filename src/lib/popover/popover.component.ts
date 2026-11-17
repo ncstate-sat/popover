@@ -508,12 +508,7 @@ export class SatPopoverComponent implements OnInit {
         return;
       }
 
-      try {
-        afterNextRender(fn, { injector: this._injector });
-      } catch {
-        return;
-      }
-
+      afterNextRender(fn, { injector: this._injector });
       this._requestRenderSoon();
     });
   }
